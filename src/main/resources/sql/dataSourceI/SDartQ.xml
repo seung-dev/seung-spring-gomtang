@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sql.dataSourceI.SDartQ">
+
+<parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
+<resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
+
+<select id="d0101_SR" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	corp_code
+	, corp_hash
+FROM
+	t_fin_d0101
+WHERE 1 = 1
+	AND corp_code = #{corp_code}
+]]>
+</select>
+
+<insert id="d0101_IR" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_fin_d0101
+(
+	corp_code
+	, corp_hash
+	, corp_name
+	, stock_code
+	, modify_date
+	, date_inst
+	, date_updt
+)
+SELECT
+	#{corp_code}
+	, #{corp_hash}
+	, #{corp_name}
+	, #{stock_code}
+	, #{modify_date}
+	, NOW()
+	, NOW()
+WHERE
+	NOT EXISTS (
+		SELECT corp_code FROM t_fin_d0101 WHERE corp_code = #{corp_code}
+	)
+]]>
+</insert>
+
+<update id="d0101_UR" parameterMap="parameterMap">
+<![CDATA[
+UPDATE t_fin_d0101
+SET
+	corp_name = #{corp_name}
+	, corp_hash = #{corp_hash}
+	, stock_code = #{stock_code}
+	, modify_date = #{modify_date}
+	, date_updt = NOW()
+WHERE 1 = 1
+	AND corp_code = #{corp_code}
+]]>
+</update>
+
+</mapper>

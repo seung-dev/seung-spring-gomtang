@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sql.dataSourceI.SQuartzQ">
+
+<parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
+<resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
+
+<select id="schd_no" resultMap="resultMap">
+<![CDATA[
+SELECT
+	f_schd_no() AS schd_no
+]]>
+</select>
+
+<insert id="schd_prev" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_schd_prev (
+	schd_no
+	, schd_set
+	, schd_code
+	, schd_data
+	, date_inst
+	)
+VALUES (
+	#{schd_no}
+	, #{schd_set}
+	, #{schd_code}
+	, #{job_data}
+	, NOW()
+	)
+]]>
+</insert>
+
+<insert id="schd_post" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_schd_post (
+	schd_no
+	, error_code
+	, message
+	, date_inst
+	)
+VALUES (
+	#{schd_no}
+	, #{error_code}
+	, #{message}
+	, NOW()
+	)
+]]>
+</insert>
+
+<select id="quartz0101" resultMap="resultMap">
+<![CDATA[
+SELECT
+	sched_name AS schd_name
+	, job_group
+	, job_name
+	, description AS dscr
+FROM
+	qrtz_job_details
+]]>
+</select>
+
+<select id="quartz0102" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	sched_name AS schd_name
+	, job_group
+	, job_name
+	, description AS dscr
+FROM
+	qrtz_job_details
+WHERE 1 = 1
+	AND job_name = #{name}
+	AND job_group = #{group}
+]]>
+</select>
+
+</mapper>

@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sql.dataSourceI.SKiwoomQ">
+
+<parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
+<resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
+
+<select id="kw10000_SL" resultMap="resultMap">
+<![CDATA[
+SELECT
+    item_code
+FROM
+    t_etf_kw10000
+WHERE 1 = 1
+]]>
+</select>
+
+<select id="kw10000_SR" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+    item_code
+    , hash
+FROM
+    t_etf_kw10000
+WHERE 1 = 1
+    AND item_code = #{item_code}
+]]>
+</select>
+
+<insert id="kw10000_IR" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_etf_kw10000 (
+    item_code
+    , hash
+    , item_name
+    , etf_cnst
+    , etf_stts
+    , date_inst
+    , date_updt
+    )
+VALUES (
+    #{item_code}
+    , #{hash}
+    , #{item_name}
+    , #{etf_cnst}
+    , #{etf_stts}
+    , NOW()
+    , NOW()
+    )
+]]>
+</insert>
+
+<update id="kw10000_UR" parameterMap="parameterMap">
+<![CDATA[
+UPDATE t_etf_kw10000
+SET
+    item_code = #{item_code}
+    , hash = #{hash}
+    , item_name = #{item_name}
+    , etf_cnst = #{etf_cnst}
+    , etf_stts = #{etf_stts}
+    , date_updt = NOW()
+WHERE 1 = 1
+    AND item_code = #{item_code}
+]]>
+</update>
+
+<select id="tr10001_SR" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+    item_code
+    , hash
+FROM
+    t_etf_tr10001
+WHERE 1 = 1
+    AND item_code = #{item_code}
+]]>
+</select>
+
+<insert id="tr10001_IR" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_etf_tr10001 (
+    item_code
+    , hash
+    , item_name
+    , etf_fm
+    , etf_fv
+    , etf_equity
+    , etf_is
+    , etf_cr
+    , etf_yh
+    , etf_yl
+    , etf_mc
+    , etf_mcr
+    , etf_for
+    , etf_sp
+    , etf_250h
+    , etf_250l
+    , etf_op
+    , etf_hp
+    , etf_lp
+    , etf_hhp
+    , etf_llp
+    , etf_bp
+    , etf_ep
+    , etf_eq
+    , etf_d250h
+    , etf_vs250h
+    , etf_d250l
+    , etf_vs250l
+    , etf_pp
+    , etf_pinc
+    , etf_pcp
+    , etf_vol
+    , etf_pcv
+    , etf_fvu
+    , etf_os
+    , etf_osr
+    , date_inst
+    , date_updt
+    )
+VALUES (
+    #{item_code}
+    , #{hash}
+    , #{item_name}
+    , #{etf_fm}
+    , #{etf_fv}
+    , #{etf_equity}
+    , #{etf_is}
+    , #{etf_cr}
+    , #{etf_yh}
+    , #{etf_yl}
+    , #{etf_mc}
+    , #{etf_mcr}
+    , #{etf_for}
+    , #{etf_sp}
+    , #{etf_250h}
+    , #{etf_250l}
+    , #{etf_op}
+    , #{etf_hp}
+    , #{etf_lp}
+    , #{etf_hhp}
+    , #{etf_llp}
+    , #{etf_bp}
+    , #{etf_ep}
+    , #{etf_eq}
+    , #{etf_d250h}
+    , #{etf_vs250h}
+    , #{etf_d250l}
+    , #{etf_vs250l}
+    , #{etf_pp}
+    , #{etf_pinc}
+    , #{etf_pcp}
+    , #{etf_vol}
+    , #{etf_pcv}
+    , #{etf_fvu}
+    , #{etf_os}
+    , #{etf_osr}
+    , NOW()
+    , NOW()
+    )
+]]>
+</insert>
+
+<update id="tr10001_UR" parameterMap="parameterMap">
+<![CDATA[
+UPDATE t_etf_tr10001
+SET
+    hash = #{hash}
+    , item_name = #{item_name}
+    , etf_fm = #{etf_fm}
+    , etf_fv = #{etf_fv}
+    , etf_equity = #{etf_equity}
+    , etf_is = #{etf_is}
+    , etf_cr = #{etf_cr}
+    , etf_yh = #{etf_yh}
+    , etf_yl = #{etf_yl}
+    , etf_mc = #{etf_mc}
+    , etf_mcr = #{etf_mcr}
+    , etf_for = #{etf_for}
+    , etf_sp = #{etf_sp}
+    , etf_250h = #{etf_250h}
+    , etf_250l = #{etf_250l}
+    , etf_op = #{etf_op}
+    , etf_hp = #{etf_hp}
+    , etf_lp = #{etf_lp}
+    , etf_hhp = #{etf_hhp}
+    , etf_llp = #{etf_llp}
+    , etf_bp = #{etf_bp}
+    , etf_ep = #{etf_ep}
+    , etf_eq = #{etf_eq}
+    , etf_d250h = #{etf_d250h}
+    , etf_vs250h = #{etf_vs250h}
+    , etf_d250l = #{etf_d250l}
+    , etf_vs250l = #{etf_vs250l}
+    , etf_pp = #{etf_pp}
+    , etf_pinc = #{etf_pinc}
+    , etf_pcp = #{etf_pcp}
+    , etf_vol = #{etf_vol}
+    , etf_pcv = #{etf_pcv}
+    , etf_fvu = #{etf_fvu}
+    , etf_os = #{etf_os}
+    , etf_osr = #{etf_osr}
+    , date_updt = NOW()
+WHERE 1 = 1
+    AND item_code = #{item_code}
+]]>
+</update>
+
+<select id="tr40005_SR" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+    item_code
+    , hash
+FROM
+    t_etf_tr40005
+WHERE 1 = 1
+    AND trdd = #{trdd}
+    AND item_code = #{item_code}
+]]>
+</select>
+
+<insert id="tr40005_IR" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_etf_tr40005 (
+    trdd
+    , item_code
+    , hash
+    , etf_cp
+    , etf_inc
+    , etf_pcp
+    , etf_vol
+    , etf_nav
+    , etf_volaccu
+    , etf_indexd
+    , etf_etfd
+    , etf_ter
+    , etf_ti
+    , etf_tiinc
+    , date_inst
+    , date_updt
+    )
+VALUES (
+    #{trdd}
+    , #{item_code}
+    , #{hash}
+    , #{etf_cp}
+    , #{etf_inc}
+    , #{etf_pcp}
+    , #{etf_vol}
+    , #{etf_nav}
+    , #{etf_volaccu}
+    , #{etf_indexd}
+    , #{etf_etfd}
+    , #{etf_ter}
+    , #{etf_ti}
+    , #{etf_tiinc}
+    , NOW()
+    , NOW()
+    )
+]]>
+</insert>
+
+<update id="tr40005_UR" parameterMap="parameterMap">
+<![CDATA[
+UPDATE t_etf_tr40005
+SET
+    hash = #{hash}
+    , etf_cp = #{etf_cp}
+    , etf_inc = #{etf_inc}
+    , etf_pcp = #{etf_pcp}
+    , etf_vol = #{etf_vol}
+    , etf_nav = #{etf_nav}
+    , etf_volaccu = #{etf_volaccu}
+    , etf_indexd = #{etf_indexd}
+    , etf_etfd = #{etf_etfd}
+    , etf_ter = #{etf_ter}
+    , etf_ti = #{etf_ti}
+    , etf_tiinc = #{etf_tiinc}
+    , date_updt = NOW()
+WHERE 1 = 1
+    AND trdd = #{trdd}
+    AND item_code = #{item_code}
+]]>
+</update>
+
+</mapper>
