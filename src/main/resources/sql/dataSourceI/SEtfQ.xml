@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sql.dataSourceI.SEtfQ">
+
+<parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
+<resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
+
+<select id="etf0101" parameterMap="parameterMap" resultMap="resultMap" statementType="CALLABLE">
+<![CDATA[
+{call f_etf_etf0101(#{req_json})}
+]]>
+</select>
+
+<select id="etf0111" parameterMap="parameterMap" resultMap="resultMap" statementType="CALLABLE">
+<![CDATA[
+SELECT
+	*
+FROM (
+	SELECT
+		ROW_NUMBER() OVER(ORDER BY trd.trdd DESC) AS row_num
+		, tr40005.trdd
+		, trd.trdd_no
+		, tr40005.item_code
+		, tr40005.etf_cp
+		, tr40005.etf_inc
+		, tr40005.etf_pcp
+		, tr40005.etf_vol
+		, tr40005.etf_nav
+		, tr40005.etf_volaccu
+		, tr40005.etf_indexd
+		, tr40005.etf_etfd
+		, tr40005.etf_ter
+		, tr40005.etf_ti
+		, tr40005.etf_tiinc
+		, tr40005.date_updt
+	FROM
+		t_etf_trdd trd
+		, t_etf_tr40005 tr40005
+	WHERE 1 = 1
+		AND trd.trdd = tr40005.trdd
+		AND trd.trdd >= #{trdd_from}
+		AND trd.trdd <= #{trdd_to}
+	) etf0111
+WHERE 1 = 1
+	AND etf0111.row_num >= (#{page_index} - 1) * #{page_size} + 1
+	AND etf0111.row_num <= #{page_index} * #{page_size}
+]]>
+</select>
+
+</mapper>

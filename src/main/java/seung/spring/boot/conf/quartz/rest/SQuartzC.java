@@ -21,9 +21,9 @@ import seung.spring.boot.conf.web.util.SRequest;
 import seung.spring.boot.conf.web.util.SResponse;
 import springfox.documentation.annotations.ApiIgnore;
 
-@Api(tags = "QUARTZ API", value = "SQuartzC")
+@Api(tags = "QUARTZ REST SERVICE", value = "SQuartzC")
 @Slf4j
-@Controller
+//@Controller
 public class SQuartzC {
 
     @Resource(name = "sQuartzS")

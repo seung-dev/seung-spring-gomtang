@@ -49,6 +49,20 @@ VALUES (
 ]]>
 </insert>
 
+<select id="api_schema_SL" resultMap="resultMap">
+<![CDATA[
+SELECT
+	api_set
+	, api_code
+	, api_path
+	, api_dscr
+	, api_data
+	, api_rslt
+FROM
+	t_api_schm
+]]>
+</select>
+
 <select id="quartz0101" resultMap="resultMap">
 <![CDATA[
 SELECT

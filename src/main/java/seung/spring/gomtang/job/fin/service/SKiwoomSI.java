@@ -459,10 +459,13 @@ public class SKiwoomSI {
                         tr40005_IR += sMapperI.insert("tr40005_IR", queryMap);
                     } else if(queryMap.getString("hash", "").equals(tr40005_SR.getString("hash", "1"))) {
                         tr40005_DO_NOTHING++;
+                        break;
                     } else if(!queryMap.getString("hash", "").equals(tr40005_SR.getString("hash", "1"))) {
                         tr40005_UR += sMapperI.insert("tr40005_UR", queryMap);
+                        break;
                     } else {
                         tr40005_IGNORE++;
+                        break;
                     }
                     
                 }// end of tr40005

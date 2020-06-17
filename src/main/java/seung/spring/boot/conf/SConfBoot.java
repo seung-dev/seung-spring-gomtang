@@ -16,6 +16,7 @@ import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 
 import lombok.extern.slf4j.Slf4j;
+import seung.java.kimchi.util.SLinkedHashMap;
 
 @PropertySources({
     @PropertySource(value = "classpath:s-swagger.properties")
@@ -79,5 +80,11 @@ public class SConfBoot {
         return sProperties;
         
     }// end of addConfigProperties
+    
+    @Bean(name = "sApplicationData")
+    public SLinkedHashMap sApplicationData() {
+        return new SLinkedHashMap();
+    }
+    
     
 }

@@ -9,10 +9,15 @@
 <select id="kw10000_SL" resultMap="resultMap">
 <![CDATA[
 SELECT
-    item_code
+    tr10001.item_code
 FROM
-    t_etf_kw10000
+    t_etf_tr10001 tr10001
+LEFT OUTER JOIN t_etf_tr40005 tr40005
+    ON 1 = 1
+    AND tr10001.item_code = tr40005.item_code
+    AND tr40005.trdd >= TO_CHAR(NOW(), 'YYYYMMDD')
 WHERE 1 = 1
+    AND tr40005.item_code IS NULL
 ]]>
 </select>
 

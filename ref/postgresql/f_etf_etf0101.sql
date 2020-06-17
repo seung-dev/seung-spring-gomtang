@@ -1,8 +1,6 @@
+DROP FUNCTION f_etf_etf0101(text);
 CREATE OR REPLACE FUNCTION f_etf_etf0101 (
-	req_mmnt_date varchar(8)
-	, req_mmnt_unit varchar(1)
-	, req_mmnt_scope int
-	, req_mmnt_min decimal(10, 2)
+	req_json text
 )
 RETURNS TABLE (
 	item_code t_etf_tr10001.item_code%type
@@ -61,9 +59,27 @@ RETURNS TABLE (
 AS
 $$
 DECLARE
+	req_mmnt_date varchar(8);
+	req_mmnt_unit varchar(1);
+	req_mmnt_scope int;
+	req_mmnt_min decimal(10, 2);
 	mmnt_unit int := 1;
 BEGIN
 
+	SELECT
+		req::json->>'mmnt_date' AS mmnt_date
+		, req::json->>'mmnt_unit' AS mmnt_unit
+		, req::json->'mmnt_scope' AS mmnt_scope
+		, req::json->'mmnt_min' AS mmnt_min
+	INTO
+		req_mmnt_date
+		, req_mmnt_unit
+		, req_mmnt_scope
+		, req_mmnt_min
+	FROM
+		(SELECT CAST(req_json AS json) AS req) init
+	;
+	
 	IF req_mmnt_unit = 'W' THEN
 		mmnt_unit = 5;
 	ELSEIF req_mmnt_unit = 'M' THEN
@@ -179,8 +195,8 @@ BEGIN
 	WHERE 1 = 1
 		AND tr10001.item_code = kw10000.item_code
 		AND tr10001.item_code = tr40005.item_code
-		AND tr40005.trdd = req_mmnt_date--mmnt_date
-		AND calc.mmnt >= req_mmnt_min--mmnt_min
+		AND tr40005.trdd = (SELECT inln.trdd FROM t_etf_trdd inln ORDER BY inln.trdd_no DESC LIMIT 1)
+		AND calc.mmnt >= req_mmnt_min
 	ORDER BY calc.mmnt DESC
 	;
 

@@ -31,17 +31,17 @@ public class SJobKiwoom extends QuartzJobBean implements InterruptableJob {
         JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
         
         // kw10000
-        sKiwoomS.kw10000(
-                jobDataMap.getString("job_group")
-                , jobDataMap.getString("job_name")
-                );
+//        sKiwoomS.kw10000(
+//                jobDataMap.getString("job_group")
+//                , jobDataMap.getString("job_name")
+//                );
         // kw10000
         
         // tr10001
-        sKiwoomS.tr10001(
-                jobDataMap.getString("job_group")
-                , jobDataMap.getString("job_name")
-                );
+//        sKiwoomS.tr10001(
+//                jobDataMap.getString("job_group")
+//                , jobDataMap.getString("job_name")
+//                );
         // tr10001
         
         // tr40005

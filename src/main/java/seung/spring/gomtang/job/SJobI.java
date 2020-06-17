@@ -2,11 +2,15 @@ package seung.spring.gomtang.job;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import seung.java.kimchi.exception.SKimchiException;
@@ -25,13 +29,16 @@ import seung.spring.boot.conf.quartz.SQuartzH;
 @Component("sJobI")
 public class SJobI {
 
+    @Resource(name = "sApplicationData")
+    private SLinkedHashMap sApplicationData;
+    
     @Resource(name = "sMapperI")
     private SMapperI sMapperI;
     
     @Resource(name = "sQuartzH")
     private SQuartzH sQuartzH;
     
-    public void init() {
+    public void initJob() {
         
         log.info("run");
         
@@ -83,6 +90,29 @@ public class SJobI {
             
         }// end of cron jobs
         
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void apiSchema() {
+        
+        log.info("run");
+        
+        SLinkedHashMap schema = new SLinkedHashMap();
+        SLinkedHashMap api = null;
+        for(SLinkedHashMap api_schema_SR : sMapperI.selectList("api_schema_SL")) {
+            api = new SLinkedHashMap();
+            api.put("path", api_schema_SR.getString("api_path"));
+            api.put("description", api_schema_SR.getString("api_dscr"));
+            try {
+                api.put("data", new ObjectMapper().readValue(api_schema_SR.getString("api_data"), List.class));
+                api.put("result", new ObjectMapper().readValue(api_schema_SR.getString("api_rslt"), Map.class));
+            } catch (JsonProcessingException e) {
+                log.error("Failed to read api schema.", e);
+            }
+            schema.put(String.format("%s.%s", api_schema_SR.getString("api_set"), api_schema_SR.getString("api_code")), api);
+        }
+        
+        sApplicationData.put("schema", schema);
     }
     
 }

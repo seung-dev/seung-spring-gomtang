@@ -39,10 +39,10 @@ INSERT INTO t_api_schm VALUES
 	)
 , (
 	'etf'
-	, 'etf0102'
+	, 'etf0111'
 	, '/rest/etf/etf0111'
 	, 'ETF 키움 조회종목 일별 추이'
-	, '[{"field":"item_code","name":"종목코드","type":"string","nullable":"false"},{"field":"trdd_from","name":"주식거래일 시작일","type":"string","nullable":"true","default":"20","format":"yyyyMMdd"},{"field":"trdd_to","name":"주식거래일 종료일","type":"string","nullable":"true","default":"now","format":"yyyyMMdd"},{"field":"page_index","name":"페이지번호","type":"string","nullable":"true","default":"1"},{"field":"page_size","name":"페이지당 데이터 수","type":"string","nullable":"true","default":"10"}]'
+	, '[{"field":"item_code","name":"종목코드","type":"string","nullable":"false"},{"field":"trdd_from","name":"주식거래일 시작일","type":"string","nullable":"true","default":"주식거래일 20일 전","format":"yyyyMMdd"},{"field":"trdd_to","name":"주식거래일 종료일","type":"string","nullable":"true","default":"최신 주식거래일","format":"yyyyMMdd"},{"field":"page_index","name":"페이지번호","type":"string","nullable":"true","default":"1"},{"field":"page_size","name":"페이지당 데이터 수","type":"string","nullable":"true","default":"10"}]'
 	, '{"schema":"스키마","total_count":"데이터수","etf0102":[{"trdd":"주식거래일(trading day)","trdd_no":"주식거래일 회차","item_code":"종목코드","etf_cp":"종가","etf_inc":"전일대비","etf_pcp":"대비율","etf_vol":"거래량","etf_nav":"NAV","etf_volaccu":"누적거래대금","etf_indexd":"NAV/지수괴리율","etf_etfd":"NAV/ETF괴리율","etf_ter":"추적오차율","etf_ti":"추적지수","etf_tiinc":"추적전일대비","date_updt":"수정일시"}]}'
 	)
 --, ('etf', 'etf0201', '/rest/etf/etf0201', 'ETF 종목 상세정보(네이버)', '', '')
