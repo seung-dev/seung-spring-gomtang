@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sql.dataSourceI.SNaverQ">
+
+<parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
+<resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
+
+<select id="n0102_SR" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+    item_code
+    , hash
+FROM
+    t_etf_n0102
+WHERE 1 = 1
+    AND item_code = #{item_code}
+]]>
+</select>
+
+<insert id="n0102_IR" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_etf_n0102 (
+	item_code
+	, hash
+	, date_inst
+	, date_updt
+	, shar_oust
+	, indx_name
+	, date_set
+	, date_list
+	, asst_clss
+	, expn_rate
+	, acct_perd
+	, date_dstb
+	, issr
+	, issr_url
+	, item_dscr
+	, cu
+    )
+VALUES (
+	#{item_code}
+	, #{hash}
+    , NOW()
+    , NOW()
+	, #{shar_oust}
+	, #{indx_name}
+	, #{date_set}
+	, #{date_list}
+	, #{asst_clss}
+	, #{expn_rate}
+	, #{acct_perd}
+	, #{date_dstb}
+	, #{issr}
+	, #{issr_url}
+	, #{item_dscr}
+	, #{cu}
+    )
+]]>
+</insert>
+
+<update id="n0102_UR" parameterMap="parameterMap">
+<![CDATA[
+UPDATE t_etf_n0102
+SET
+	hash = #{hash}
+    , date_updt = NOW()
+	, shar_oust = #{shar_oust}
+	, indx_name = #{indx_name}
+	, date_set = #{date_set}
+	, date_list = #{date_list}
+	, asst_clss = #{asst_clss}
+	, expn_rate = #{expn_rate}
+	, acct_perd = #{acct_perd}
+	, date_dstb = #{date_dstb}
+	, issr = #{issr}
+	, issr_url = #{issr_url}
+	, item_dscr = #{item_dscr}
+	, cu = #{cu}
+WHERE 1 = 1
+    AND item_code = #{item_code}
+]]>
+</update>
+
+</mapper>

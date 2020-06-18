@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.quartz.JobExecutionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +18,7 @@ import seung.java.kimchi.util.SLinkedHashMap;
 import seung.spring.boot.conf.SProperties;
 import seung.spring.boot.conf.datasource.SMapperI;
 import seung.spring.boot.conf.web.util.SResponse;
+import seung.spring.gomtang.util.SGomtangException;
 
 @Slf4j
 @Service("sKiwoomS")
@@ -31,7 +31,7 @@ public class SKiwoomSI {
     private SMapperI sMapperI;
     
     @SuppressWarnings("unchecked")
-    public String kw10000(
+    public synchronized String kw10000(
             String jobGroup
             , String jobName
             ) {
@@ -50,7 +50,7 @@ public class SKiwoomSI {
         SLinkedHashMap queryMap = null;
         try {
             
-            jobHistMap.put("schd_no", sMapperI.selectOne("schd_no_SR").getString("schd_no", ""));
+            jobHistMap.put("schd_no", sMapperI.selectOne("schd_no").getString("schd_no", ""));
             jobHistMap.put("job_data", jobHistMap.toJsonString());
             
             log.info(
@@ -80,7 +80,7 @@ public class SKiwoomSI {
             SHttpResponse sHttpResponse = SHttp.request(sHttpRequest);
             
             if(HttpStatus.OK.value() != sHttpResponse.getResponseCode()) {
-                throw new JobExecutionException(String.format(
+                throw new SGomtangException(String.format(
                         "Failed to call kw10000. Response code is (%d)."
                         , sHttpResponse.getResponseCode()
                         ));
@@ -89,12 +89,12 @@ public class SKiwoomSI {
             SLinkedHashMap kiwoomKw10000 = new SLinkedHashMap(new String(sHttpResponse.getResponseBody(), sHttpResponse.getResponseCharset("UTF-8")));
             List<SLinkedHashMap> comm = kiwoomKw10000.getListSLinkedHashMap("comm");
             if(comm.isEmpty()) {
-                throw new JobExecutionException(String.format(
+                throw new SGomtangException(String.format(
                         "Failed to call kw10000. comm is empty."
                         ));
             }
             if(!SResponse.SUCCESS.equals(comm.get(0).getString("error_code", ""))) {
-                throw new JobExecutionException(String.format(
+                throw new SGomtangException(String.format(
                         "Failed to call kw10000. Error code is (%s)."
                         , comm.get(0).getString("error_code", "")
                         ));
@@ -151,6 +151,9 @@ public class SKiwoomSI {
         } catch (Exception e) {
             log.error("Failed to call kw10000.", e);
             jobHistMap.put("message", ExceptionUtils.getStackTrace(e));
+            if("".equals(jobHistMap.getString("message", ""))) {
+                jobHistMap.put("message", "" + e);
+            }
         } finally {
             jobHistMap.put("error_code", errorCode);
             log.info(
@@ -173,7 +176,7 @@ public class SKiwoomSI {
     }
     
     @SuppressWarnings("unchecked")
-    public String tr10001(
+    public synchronized String tr10001(
             String jobGroup
             , String jobName
             ) {
@@ -247,7 +250,7 @@ public class SKiwoomSI {
                 sHttpResponse = SHttp.request(sHttpRequest);
                 
                 if(HttpStatus.OK.value() != sHttpResponse.getResponseCode()) {
-                    throw new JobExecutionException(String.format(
+                    throw new SGomtangException(String.format(
                             "Failed to call %s. Response code is (%d)."
                             , jobHistMap.getString("schd_code", "")
                             , sHttpResponse.getResponseCode()
@@ -258,13 +261,13 @@ public class SKiwoomSI {
                 
                 tr10001Comm = kiwoomKr10001.getListSLinkedHashMap("comm");
                 if(tr10001Comm.isEmpty()) {
-                    throw new JobExecutionException(String.format(
+                    throw new SGomtangException(String.format(
                             "Failed to call %s. comm is empty."
                             , jobHistMap.getString("schd_code", "")
                             ));
                 }
                 if(!SResponse.SUCCESS.equals(tr10001Comm.get(0).getString("error_code", ""))) {
-                    throw new JobExecutionException(String.format(
+                    throw new SGomtangException(String.format(
                             "Failed to call tr10001. Error code is (%s)."
                             , tr10001Comm.get(0).getString("error_code", "")
                             ));
@@ -274,7 +277,7 @@ public class SKiwoomSI {
                 itemCode = "";
                 tr10001Data = kiwoomKr10001.getListSLinkedHashMap("data");
                 if(tr10001Data.isEmpty()) {
-                    throw new JobExecutionException(String.format(
+                    throw new SGomtangException(String.format(
                             "Failed to call %s. data is empty."
                             , jobHistMap.getString("schd_code", "")
                             ));
@@ -351,6 +354,9 @@ public class SKiwoomSI {
         } catch (Exception e) {
             log.error("Failed to call tr10001. queryMap={}", queryMap.toJsonString(true), e);
             jobHistMap.put("message", ExceptionUtils.getStackTrace(e));
+            if("".equals(jobHistMap.getString("message", ""))) {
+                jobHistMap.put("message", "" + e);
+            }
         } finally {
             jobHistMap.put("error_code", errorCode);
             log.info(
@@ -373,7 +379,7 @@ public class SKiwoomSI {
     }
     
     @SuppressWarnings("unchecked")
-    public String tr40005(
+    public synchronized String tr40005(
             String jobGroup
             , String jobName
             ) {
@@ -403,6 +409,14 @@ public class SKiwoomSI {
                     );
             
             sMapperI.insert("schd_prev", jobHistMap);
+            
+            String trddMin = "";
+            SLinkedHashMap trddMap = sMapperI.selectOne("tr40005");
+            if(trddMap == null) {
+                trddMin = "20200101";
+            } else {
+                trddMin = trddMap.getString("trdd_min", "20200101");
+            }
             
             int loopTry = 0;
             SLinkedHashMap data = null;
@@ -448,7 +462,7 @@ public class SKiwoomSI {
                 sHttpResponse = SHttp.request(sHttpRequest);
                 
                 if(HttpStatus.OK.value() != sHttpResponse.getResponseCode()) {
-                    throw new JobExecutionException(String.format(
+                    throw new SGomtangException(String.format(
                             "Failed to call %s. Response code is (%d)."
                             , jobHistMap.getString("schd_code", "")
                             , sHttpResponse.getResponseCode()
@@ -459,13 +473,13 @@ public class SKiwoomSI {
                 
                 tr40005Comm = kiwoomKr40005.getListSLinkedHashMap("comm");
                 if(tr40005Comm.isEmpty()) {
-                    throw new JobExecutionException(String.format(
+                    throw new SGomtangException(String.format(
                             "Failed to call %s. comm is empty."
                             , jobHistMap.getString("schd_code", "")
                             ));
                 }
                 if(!SResponse.SUCCESS.equals(tr40005Comm.get(0).getString("error_code", ""))) {
-                    throw new JobExecutionException(String.format(
+                    throw new SGomtangException(String.format(
                             "Failed to call kr40005. Error code is (%s)."
                             , tr40005Comm.get(0).getString("error_code", "")
                             ));
@@ -473,13 +487,17 @@ public class SKiwoomSI {
                 
                 tr40005 = kiwoomKr40005.getSLinkedHashMap("result").getListSLinkedHashMap("tr40005");
                 if(tr40005.isEmpty()) {
-                    throw new JobExecutionException(String.format(
+                    throw new SGomtangException(String.format(
                             "Failed to call %s. tr40005 is empty."
                             , jobHistMap.getString("schd_code", "")
                             ));
                 }
                 
                 for(SLinkedHashMap item : tr40005) {
+                    
+                    if(trddMin.equals(item.getString("date", trddMin))) {
+                        break;
+                    }
                     
                     queryMap = new SLinkedHashMap();
                     queryMap.put("trdd", item.getString("date"));
@@ -502,13 +520,10 @@ public class SKiwoomSI {
                         tr40005_IR += sMapperI.insert("tr40005_IR", queryMap);
                     } else if(queryMap.getString("hash", "").equals(tr40005_SR.getString("hash", "1"))) {
                         tr40005_DO_NOTHING++;
-                        break;
                     } else if(!queryMap.getString("hash", "").equals(tr40005_SR.getString("hash", "1"))) {
                         tr40005_UR += sMapperI.insert("tr40005_UR", queryMap);
-                        break;
                     } else {
                         tr40005_IGNORE++;
-                        break;
                     }
                     
                 }// end of tr40005
@@ -538,6 +553,9 @@ public class SKiwoomSI {
         } catch (Exception e) {
             log.error("Failed to call tr40005. queryMap={}", queryMap.toJsonString(true), e);
             jobHistMap.put("message", ExceptionUtils.getStackTrace(e));
+            if("".equals(jobHistMap.getString("message", ""))) {
+                jobHistMap.put("message", "" + e);
+            }
         } finally {
             jobHistMap.put("error_code", errorCode);
             log.info(

@@ -408,7 +408,7 @@ public class SQuartzH {
         TriggerKey triggerKey = triggersOfJob.get(0).getKey();
         TriggerState triggerState = scheduler.getTriggerState(triggerKey);
         
-        if(!triggerState.equals(TriggerState.PAUSED)) {
+        if(!triggerState.equals(TriggerState.PAUSED) && !triggerState.equals(TriggerState.ERROR)) {
             throw new SchedulerException(String.format("Trigger state is %s.", triggerState.name()));
         }
         
@@ -444,6 +444,7 @@ public class SQuartzH {
                 triggerState.equals(TriggerState.PAUSED)
                 || triggerState.equals(TriggerState.NORMAL)
                 || triggerState.equals(TriggerState.COMPLETE)
+                || triggerState.equals(TriggerState.ERROR)
                 ) {
             scheduler.triggerJob(jobKey);
         } else {

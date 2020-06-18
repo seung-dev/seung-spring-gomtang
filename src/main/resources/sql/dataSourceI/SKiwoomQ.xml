@@ -60,8 +60,7 @@ VALUES (
 <![CDATA[
 UPDATE t_etf_kw10000
 SET
-    item_code = #{item_code}
-    , hash = #{hash}
+    hash = #{hash}
     , item_name = #{item_name}
     , etf_cnst = #{etf_cnst}
     , etf_stts = #{etf_stts}
@@ -212,6 +211,22 @@ WHERE 1 = 1
     AND item_code = #{item_code}
 ]]>
 </update>
+
+<select id="tr40005" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	trdd AS trdd_min
+FROM
+	t_etf_trdd
+WHERE 1 = 1
+	AND trdd_no = (
+		SELECT
+			MAX(trdd_no) - 3
+		FROM
+			t_etf_trdd
+		)
+]]>
+</select>
 
 <select id="tr40005_SR" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[

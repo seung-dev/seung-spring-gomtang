@@ -6,7 +6,7 @@
 <parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
 <resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
 
-<select id="schd_no_SR" resultMap="resultMap">
+<select id="schd_no" resultMap="resultMap">
 <![CDATA[
 SELECT
 	f_schd_no() AS schd_no

@@ -45,23 +45,23 @@ public class SJobI {
         List<SLinkedHashMap> cronJobs = new ArrayList<>();
         cronJobs.add(
                 new SLinkedHashMap()
-                    .add("group", "fin")
-                    .add("name", "dart")
-                    .add("dscr", "DART API 수집.")
-                    .add("clss", "seung.spring.gomtang.job.fin.SJobDart")
-                    .add("dateFrom", "")
-                    .add("dateTo", "")
-                    .add("cronExpr", "0 0 1 ? * MON-FRI *")
+                .add("group", "fin")
+                .add("name", "etfA")
+                .add("dscr", "ETF DATA 수집 - KIWOOM")
+                .add("clss", "seung.spring.gomtang.job.fin.SJobEtfA")
+                .add("dateFrom", "")
+                .add("dateTo", "")
+                .add("cronExpr", "0 10 16,18 ? * MON-FRI *")
                 );
         cronJobs.add(
                 new SLinkedHashMap()
                 .add("group", "fin")
-                .add("name", "kiwoom")
-                .add("dscr", "키움 API 수집.")
-                .add("clss", "seung.spring.gomtang.job.fin.SJobKiwoom")
+                .add("name", "etfB")
+                .add("dscr", "ETF DATA 수집 - NAVER, DART")
+                .add("clss", "seung.spring.gomtang.job.fin.SJobEtfB")
                 .add("dateFrom", "")
                 .add("dateTo", "")
-                .add("cronExpr", "0 0 1,16 ? * MON-FRI *")
+                .add("cronExpr", "0 0 4 ? * MON-FRI *")
                 );
         
         for(SLinkedHashMap job : cronJobs) {
@@ -104,8 +104,16 @@ public class SJobI {
             api.put("path", api_schema_SR.getString("api_path"));
             api.put("description", api_schema_SR.getString("api_dscr"));
             try {
-                api.put("data", new ObjectMapper().readValue(api_schema_SR.getString("api_data"), List.class));
-                api.put("result", new ObjectMapper().readValue(api_schema_SR.getString("api_rslt"), Map.class));
+                if(api_schema_SR.getString("api_data", "").trim().startsWith("{")) {
+                    api.put("data", new ObjectMapper().readValue(api_schema_SR.getString("api_data"), Map.class));
+                } else if(api_schema_SR.getString("api_data", "").trim().startsWith("[")) {
+                    api.put("data", new ObjectMapper().readValue(api_schema_SR.getString("api_data"), List.class));
+                }
+                if(api_schema_SR.getString("api_rslt", "").trim().startsWith("{")) {
+                    api.put("result", new ObjectMapper().readValue(api_schema_SR.getString("api_rslt"), Map.class));
+                } else if(api_schema_SR.getString("api_rslt", "").trim().startsWith("[")) {
+                    api.put("result", new ObjectMapper().readValue(api_schema_SR.getString("api_rslt"), List.class));
+                }
             } catch (JsonProcessingException e) {
                 log.error("Failed to read api schema.", e);
             }

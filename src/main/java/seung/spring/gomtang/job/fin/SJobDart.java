@@ -80,7 +80,7 @@ public class SJobDart extends QuartzJobBean implements InterruptableJob {
                     .url("http://127.0.0.1:11131/rest/etf/d0101")
                     .url(sProperties.getJob().getProperty("seung.job.dart.d0101.url", ""))
                     .requestMethod(SRequestMethod.POST)
-                    .dataMap(Pair.of("request_code", requestCode))
+//                    .dataMap(Pair.of("request_code", requestCode))
                     .build()
                     ;
             

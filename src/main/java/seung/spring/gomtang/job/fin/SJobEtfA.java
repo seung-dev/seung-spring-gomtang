@@ -16,7 +16,7 @@ import seung.spring.gomtang.job.fin.service.SKiwoomSI;
 
 @Slf4j
 @Component
-public class SJobKiwoom extends QuartzJobBean implements InterruptableJob {
+public class SJobEtfA extends QuartzJobBean implements InterruptableJob {
 
     @Resource(name = "sKiwoomS")
     private SKiwoomSI sKiwoomS;
@@ -31,12 +31,11 @@ public class SJobKiwoom extends QuartzJobBean implements InterruptableJob {
         
         JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
         
-        int timesMax = -1;
+        int timesMax = 3;
         int timesTry = -1;
         
         // kw10000
         if(SDate.getDateInteger("HH") > 18) {
-            timesMax = 3;
             timesTry = 0;
             try {
                 while(timesTry++ < timesMax) {
@@ -53,7 +52,6 @@ public class SJobKiwoom extends QuartzJobBean implements InterruptableJob {
         
         // tr10001
         if(SDate.getDateInteger("HH") > 18) {
-            timesMax = 3;
             timesTry = 0;
             try {
                 while(timesTry++ < timesMax) {
@@ -69,6 +67,7 @@ public class SJobKiwoom extends QuartzJobBean implements InterruptableJob {
         // tr10001
         
         // tr40005
+        timesTry = 0;
         try {
             while(timesTry++ < timesMax) {
                 if("0000".equals(sKiwoomS.tr40005(jobDataMap.getString("job_group"), jobDataMap.getString("job_name")))) {
