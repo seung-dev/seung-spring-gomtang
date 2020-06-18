@@ -26,6 +26,7 @@ public class SEtfSI implements SEtfS {
     @Resource(name = "sMapperI")
     private SMapperI sMapperI;
     
+    @SuppressWarnings("unchecked")
     @Override
     public SResponse etf0101(SRequest sRequest) {
         
@@ -39,25 +40,25 @@ public class SEtfSI implements SEtfS {
                 .build()
                 ;
         
-        List<SLinkedHashMap> etf0101 = null;
+        SLinkedHashMap etf0101_SR = null;
+        List<SLinkedHashMap> etf0101_SL = null;
         try {
             
             log.debug("{}.sRequest: {}", requestCode, sRequest.toJsonString(true));
             
-            log.info(new SLinkedHashMap()
-                        .add("mmnt_date", sRequest.getData().getString("mmnt_date"))
-                        .add("mmnt_unit", sRequest.getData().getString("mmnt_unit"))
-                        .add("mmnt_scope", sRequest.getData().getInt("mmnt_scope"))
-                        .add("mmnt_min", sRequest.getData().getDouble("mmnt_min"))
-                        .toJsonString());
-            etf0101 = sMapperI.selectList(
-                    "etf0101"
-                    , new SLinkedHashMap()
-                        .add("mmnt_date", sRequest.getData().getString("mmnt_date"))
-                        .add("mmnt_unit", sRequest.getData().getString("mmnt_unit"))
-                        .add("mmnt_scope", sRequest.getData().getInt("mmnt_scope"))
-                        .add("mmnt_min", sRequest.getData().getDouble("mmnt_min"))
-                        .toJsonString()
+            etf0101_SR = sMapperI.selectOne("etf0101_SR");
+            
+            SLinkedHashMap queryMap = new SLinkedHashMap()
+                    .add("trdd", etf0101_SR.getString("trdd"))
+                    .add("mmnt_date", sRequest.getData().getString("mmnt_date"))
+                    .add("mmnt_unit", sRequest.getData().getString("mmnt_unit", "D"))
+                    .add("mmnt_scope", sRequest.getData().getInt("mmnt_scope", 3))
+                    .add("mmnt_min", sRequest.getData().getDouble("mmnt_min", 1.0))
+                    ;
+            queryMap.put("req_json", queryMap.toJsonString());
+            etf0101_SL = sMapperI.selectList(
+                    "etf0101_SL"
+                    , queryMap
                     );
             
             sResponse.putResult("schema", sApplicationData.getSLinkedHashMap("schema").get("etf.etf0101"));
@@ -68,19 +69,30 @@ public class SEtfSI implements SEtfS {
             log.error("(({})) Failed to get etf0101.", requestCode, e);
             sResponse.setError_message(ExceptionUtils.getStackTrace(e));
         } finally {
-            if(etf0101 == null) {
-                etf0101 = new ArrayList<>();
+            if(etf0101_SR == null) {
+                sResponse.putResult("trdd", "");
+                sResponse.putResult("trdd_no", "");
+            } else {
+                sResponse.putResult("trdd", etf0101_SR.getString("trdd", ""));
+                sResponse.putResult("trdd_no", etf0101_SR.getString("trdd_no", ""));
             }
-            sResponse.putResult("total_count", etf0101.size());
-            sResponse.putResult("etf0101", etf0101);
+            if(etf0101_SL == null) {
+                sResponse.putResult("etf0101", new ArrayList<>());
+                sResponse.putResult("total_count", "-1");
+            } else {
+                sResponse.putResult("etf0101", etf0101_SL == null ? new ArrayList<>() : etf0101_SL);
+                sResponse.putResult("total_count", etf0101_SL.size());
+            }
         }
         
         sResponse.setResponse_time(SDate.getDateString());
         return sResponse;
     }
     
+    @SuppressWarnings("unchecked")
     @Override
     public SResponse etf0111(SRequest sRequest) {
+        
         log.debug("run");
         
         String requestCode = sRequest.getData().getString("request_code", "");
@@ -91,34 +103,42 @@ public class SEtfSI implements SEtfS {
                 .build()
                 ;
         
-        List<SLinkedHashMap> etf0111 = null;
+        SLinkedHashMap etf0111_SR = null;
+        List<SLinkedHashMap> etf0111_SL = null;
         try {
             
             log.debug("{}.sRequest: {}", requestCode, sRequest.toJsonString(true));
             
-            etf0111 = sMapperI.selectList(
-                    "etf0111"
-                    , new SLinkedHashMap()
-                        .add("item_code", sRequest.getData().getString("item_code"))
-                        .add("trdd_from", sRequest.getData().getString("trdd_from"))
-                        .add("trdd_to", sRequest.getData().getString("trdd_to"))
-                        .add("page_index", sRequest.getData().getInt("page_index"))
-                        .add("page_size", sRequest.getData().getInt("page_size"))
-                    );
+            SLinkedHashMap queryMap = new SLinkedHashMap()
+                    .add("item_code", sRequest.getData().getString("item_code"))
+                    .add("trdd_from", sRequest.getData().getString("trdd_from"))
+                    .add("trdd_to", sRequest.getData().getString("trdd_to"))
+                    .add("page_index", sRequest.getData().getInt("page_index"))
+                    .add("page_size", sRequest.getData().getInt("page_size"))
+                    ;
+            queryMap.put("req_json", queryMap.toJsonString());
+            
+            etf0111_SR = sMapperI.selectOne("etf0111_SR", queryMap);
+            etf0111_SL = sMapperI.selectList("etf0111_SL", queryMap);
             
             sResponse.putResult("schema", sApplicationData.getSLinkedHashMap("schema").get("etf.etf0111"));
             
             sResponse.success();
             
         } catch (Exception e) {
-            log.error("(({})) Failed to get etf0101.", requestCode, e);
+            log.error("(({})) Failed to get etf0111.", requestCode, e);
             sResponse.setError_message(ExceptionUtils.getStackTrace(e));
         } finally {
-            if(etf0111 == null) {
-                etf0111 = new ArrayList<>();
+            if(etf0111_SR == null) {
+                sResponse.putResult("total_count", "");
+            } else {
+                sResponse.putResult("total_count", etf0111_SR.getString("total_count", ""));
             }
-            sResponse.putResult("total_count", etf0111.size());
-            sResponse.putResult("etf0111", etf0111);
+            if(etf0111_SL == null) {
+                sResponse.putResult("etf0111", new ArrayList<>());
+            } else {
+                sResponse.putResult("etf0111", etf0111_SL);
+            }
         }
         
         sResponse.setResponse_time(SDate.getDateString());
