@@ -31,19 +31,22 @@ public class SKiwoomSI {
     private SMapperI sMapperI;
     
     @SuppressWarnings("unchecked")
-    public void kw10000(
+    public String kw10000(
             String jobGroup
             , String jobName
             ) {
+        
+        String errorCode = "E999";
         
         SLinkedHashMap jobHistMap = new SLinkedHashMap()
                 .add("job_group", jobGroup)
                 .add("job_name", jobName)
                 .add("schd_set", jobName)
                 .add("schd_code", "kw10000")
-                .add("error_code", "E999")
+                .add("error_code", errorCode)
                 .add("message", "")
                 ;
+        
         SLinkedHashMap queryMap = null;
         try {
             
@@ -99,12 +102,22 @@ public class SKiwoomSI {
             
             List<SLinkedHashMap> etf = kiwoomKw10000.getSLinkedHashMap("result").getListSLinkedHashMap("etf");
             
+            int loopTry = 0;
             int kw10000_IR = 0;
             int kw10000_UR = 0;
             int kw10000_DO_NOTHING = 0;
             int kw10000_IGNORE = 0;
             SLinkedHashMap kw10000_SR = null;
             for(SLinkedHashMap item : etf) {
+                if(loopTry++ % 100 == 0) {
+                    log.info(
+                            "{}.{}.{}.try {}"
+                            , jobHistMap.getString("schd_set", "")
+                            , jobHistMap.getString("schd_code", "")
+                            , jobHistMap.getString("schd_no", "")
+                            , loopTry
+                            );
+                }
                 queryMap = new SLinkedHashMap();
                 queryMap.put("item_code", item.getString("item_code", ""));
                 queryMap.put("item_name", item.getString("item_name", ""));
@@ -133,12 +146,13 @@ public class SKiwoomSI {
                             , kw10000_IGNORE
                             )
                     );
-            jobHistMap.put("error_code", "0000");
+            errorCode = "0000";
             
         } catch (Exception e) {
             log.error("Failed to call kw10000.", e);
             jobHistMap.put("message", ExceptionUtils.getStackTrace(e));
         } finally {
+            jobHistMap.put("error_code", errorCode);
             log.info(
                     "{}.{}.{}.error_code {}"
                     , jobHistMap.getString("schd_set", "")
@@ -155,20 +169,23 @@ public class SKiwoomSI {
                     );
         }
         
+        return errorCode;
     }
     
     @SuppressWarnings("unchecked")
-    public void tr10001(
+    public String tr10001(
             String jobGroup
             , String jobName
             ) {
+        
+        String errorCode = "E999";
         
         SLinkedHashMap jobHistMap = new SLinkedHashMap()
                 .add("job_group", jobGroup)
                 .add("job_name", jobName)
                 .add("schd_set", jobName)
                 .add("schd_code", "tr10001")
-                .add("error_code", "E999")
+                .add("error_code", errorCode)
                 .add("message", "")
                 ;
         SLinkedHashMap queryMap = null;
@@ -186,6 +203,7 @@ public class SKiwoomSI {
             
             sMapperI.insert("schd_prev", jobHistMap);
             
+            int loopTry = 0;
             SLinkedHashMap data = null;
             SHttpRequest sHttpRequest = null;
             SHttpResponse sHttpResponse = null;
@@ -201,6 +219,16 @@ public class SKiwoomSI {
             int tr10001_IGNORE = 0;
             SLinkedHashMap tr10001_SR = null;
             for(SLinkedHashMap kw10000_SR : sMapperI.selectList("kw10000_SL")) {
+                
+                if(loopTry++ % 100 == 0) {
+                    log.info(
+                            "{}.{}.{}.try {}"
+                            , jobHistMap.getString("schd_set", "")
+                            , jobHistMap.getString("schd_code", "")
+                            , jobHistMap.getString("schd_no", "")
+                            , loopTry
+                            );
+                }
                 
                 data = new SLinkedHashMap();
                 data.put("item_code", kw10000_SR.getString("item_code"));
@@ -318,12 +346,13 @@ public class SKiwoomSI {
                             , tr10001_IGNORE
                             )
                     );
-            jobHistMap.put("error_code", "0000");
+            errorCode = "0000";
             
         } catch (Exception e) {
             log.error("Failed to call tr10001. queryMap={}", queryMap.toJsonString(true), e);
             jobHistMap.put("message", ExceptionUtils.getStackTrace(e));
         } finally {
+            jobHistMap.put("error_code", errorCode);
             log.info(
                     "{}.{}.{}.error_code {}"
                     , jobHistMap.getString("schd_set", "")
@@ -340,22 +369,26 @@ public class SKiwoomSI {
                     );
         }
         
+        return errorCode;
     }
     
     @SuppressWarnings("unchecked")
-    public void tr40005(
+    public String tr40005(
             String jobGroup
             , String jobName
             ) {
+        
+        String errorCode = "E999";
         
         SLinkedHashMap jobHistMap = new SLinkedHashMap()
                 .add("job_group", jobGroup)
                 .add("job_name", jobName)
                 .add("schd_set", jobName)
                 .add("schd_code", "tr40005")
-                .add("error_code", "E999")
+                .add("error_code", errorCode)
                 .add("message", "")
                 ;
+        
         SLinkedHashMap queryMap = null;
         try {
             
@@ -371,21 +404,31 @@ public class SKiwoomSI {
             
             sMapperI.insert("schd_prev", jobHistMap);
             
+            int loopTry = 0;
             SLinkedHashMap data = null;
             SHttpRequest sHttpRequest = null;
             SHttpResponse sHttpResponse = null;
             SLinkedHashMap kiwoomKr40005 = null;
             List<SLinkedHashMap> tr40005Comm = null;
             List<SLinkedHashMap> tr40005 = null;
-//            String itemName = "";
-//            String itemCode = "";
-//            SLinkedHashMap tr10001 = null;
             int tr40005_IR = 0;
             int tr40005_UR = 0;
             int tr40005_DO_NOTHING = 0;
             int tr40005_IGNORE = 0;
             SLinkedHashMap tr40005_SR = null;
+            int prev_IR = 0;
+            int post_IR = 0;
             for(SLinkedHashMap kw10000_SR : sMapperI.selectList("kw10000_SL")) {
+                
+                if(loopTry++ % 100 == 0) {
+                    log.info(
+                            "{}.{}.{}.try {}"
+                            , jobHistMap.getString("schd_set", "")
+                            , jobHistMap.getString("schd_code", "")
+                            , jobHistMap.getString("schd_no", "")
+                            , loopTry
+                            );
+                }
                 
                 data = new SLinkedHashMap();
                 data.put("item_code", kw10000_SR.getString("item_code"));
@@ -474,22 +517,29 @@ public class SKiwoomSI {
                 
             }// end of kw10000_SL
             
+            SLinkedHashMap trddNo = sMapperI.selectOne("trdd_no");
+            prev_IR = trddNo.getInt("prev");
+            post_IR = trddNo.getInt("post");
+            
             jobHistMap.put(
                     "message"
                     , String.format(
-                            "tr40005_IR=%d, tr40005_UR=%d, tr40005_DO_NOTHING=%d, tr40005_IGNORE=%d"
+                            "tr40005_IR=%d, tr40005_UR=%d, tr40005_DO_NOTHING=%d, tr40005_IGNORE=%d, prev_IR=%d, post_IR=%d"
                             , tr40005_IR
                             , tr40005_UR
                             , tr40005_DO_NOTHING
                             , tr40005_IGNORE
+                            , prev_IR
+                            , post_IR
                             )
                     );
-            jobHistMap.put("error_code", "0000");
+            errorCode = "0000";
             
         } catch (Exception e) {
             log.error("Failed to call tr40005. queryMap={}", queryMap.toJsonString(true), e);
             jobHistMap.put("message", ExceptionUtils.getStackTrace(e));
         } finally {
+            jobHistMap.put("error_code", errorCode);
             log.info(
                     "{}.{}.{}.error_code {}"
                     , jobHistMap.getString("schd_set", "")
@@ -506,6 +556,7 @@ public class SKiwoomSI {
                     );
         }
         
+        return errorCode;
     }
     
 }

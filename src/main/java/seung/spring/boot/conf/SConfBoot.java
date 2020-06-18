@@ -24,6 +24,7 @@ import seung.java.kimchi.util.SLinkedHashMap;
     , @PropertySource(value = "classpath:s-jpa.properties")
     , @PropertySource(value = "classpath:s-quartz.properties")
     , @PropertySource(value = "classpath:s-job.properties")
+    , @PropertySource(value = "classpath:s-security.properties")
 })
 @ComponentScan(value = {"seung.spring"})
 @Slf4j

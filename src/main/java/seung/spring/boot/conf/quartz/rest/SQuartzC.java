@@ -23,7 +23,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Api(tags = "QUARTZ REST SERVICE", value = "SQuartzC")
 @Slf4j
-//@Controller
+@Controller
 public class SQuartzC {
 
     @Resource(name = "sQuartzS")

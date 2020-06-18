@@ -44,7 +44,7 @@ public class SEtfSI implements SEtfS {
         List<SLinkedHashMap> etf0101_SL = null;
         try {
             
-            log.debug("{}.sRequest: {}", requestCode, sRequest.toJsonString(true));
+            log.info("{}.sRequest: {}", requestCode, sRequest.toJsonString(true));
             
             etf0101_SR = sMapperI.selectOne("etf0101_SR");
             
@@ -107,7 +107,7 @@ public class SEtfSI implements SEtfS {
         List<SLinkedHashMap> etf0111_SL = null;
         try {
             
-            log.debug("{}.sRequest: {}", requestCode, sRequest.toJsonString(true));
+            log.info("{}.sRequest: {}", requestCode, sRequest.toJsonString(true));
             
             SLinkedHashMap queryMap = new SLinkedHashMap()
                     .add("item_code", sRequest.getData().getString("item_code"))

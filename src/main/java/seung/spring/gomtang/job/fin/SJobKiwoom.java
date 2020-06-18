@@ -11,6 +11,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
+import seung.java.kimchi.SDate;
 import seung.spring.gomtang.job.fin.service.SKiwoomSI;
 
 @Slf4j
@@ -30,25 +31,54 @@ public class SJobKiwoom extends QuartzJobBean implements InterruptableJob {
         
         JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
         
+        int timesMax = -1;
+        int timesTry = -1;
+        
         // kw10000
-//        sKiwoomS.kw10000(
-//                jobDataMap.getString("job_group")
-//                , jobDataMap.getString("job_name")
-//                );
+        if(SDate.getDateInteger("HH") > 18) {
+            timesMax = 3;
+            timesTry = 0;
+            try {
+                while(timesTry++ < timesMax) {
+                    if("0000".equals(sKiwoomS.kw10000(jobDataMap.getString("job_group"), jobDataMap.getString("job_name")))) {
+                        break;
+                    }
+                    Thread.sleep(1000 * 60 * 10);
+                }
+            } catch (InterruptedException e) {
+                log.error("Failed to do job {}.{}.", jobDataMap.getString("job_group"), jobDataMap.getString("job_name"), e);
+            }
+        }
         // kw10000
         
         // tr10001
-//        sKiwoomS.tr10001(
-//                jobDataMap.getString("job_group")
-//                , jobDataMap.getString("job_name")
-//                );
+        if(SDate.getDateInteger("HH") > 18) {
+            timesMax = 3;
+            timesTry = 0;
+            try {
+                while(timesTry++ < timesMax) {
+                    if("0000".equals(sKiwoomS.tr10001(jobDataMap.getString("job_group"), jobDataMap.getString("job_name")))) {
+                        break;
+                    }
+                    Thread.sleep(1000 * 60 * 10);
+                }
+            } catch (InterruptedException e) {
+                log.error("Failed to do job {}.{}.", jobDataMap.getString("job_group"), jobDataMap.getString("job_name"), e);
+            }
+        }
         // tr10001
         
         // tr40005
-        sKiwoomS.tr40005(
-                jobDataMap.getString("job_group")
-                , jobDataMap.getString("job_name")
-                );
+        try {
+            while(timesTry++ < timesMax) {
+                if("0000".equals(sKiwoomS.tr40005(jobDataMap.getString("job_group"), jobDataMap.getString("job_name")))) {
+                    break;
+                }
+                Thread.sleep(1000 * 60 * 10);
+            }
+        } catch (InterruptedException e) {
+            log.error("Failed to do job {}.{}.", jobDataMap.getString("job_group"), jobDataMap.getString("job_name"), e);
+        }
         // tr40005
         
     }

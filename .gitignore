@@ -16,6 +16,10 @@ build
 /src/main/resources/s-jpa.properties
 /src/main/resources/s-quartz.properties
 /src/main/resources/s-swagger.properties
+/src/main/resources/s-security.properties
 
 # test
 /src/test
+
+# log
+/logs/
