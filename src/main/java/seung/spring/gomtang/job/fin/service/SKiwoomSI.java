@@ -50,7 +50,7 @@ public class SKiwoomSI {
         SLinkedHashMap queryMap = null;
         try {
             
-            jobHistMap.put("schd_no", sMapperI.selectOne("schd_no").getString("schd_no", ""));
+            jobHistMap.put("schd_no", sMapperI.selectOne("schd_no_SR").getString("schd_no", ""));
             jobHistMap.put("job_data", jobHistMap.toJsonString());
             
             log.info(
@@ -517,7 +517,7 @@ public class SKiwoomSI {
                 
             }// end of kw10000_SL
             
-            SLinkedHashMap trddNo = sMapperI.selectOne("trdd_no");
+            SLinkedHashMap trddNo = sMapperI.selectOne("trdd_no_IL");
             prev_IR = trddNo.getInt("prev");
             post_IR = trddNo.getInt("post");
             

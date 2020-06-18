@@ -290,4 +290,14 @@ WHERE 1 = 1
 ]]>
 </update>
 
+<select id="trdd_no_IL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	*
+FROM
+	f_trdd_no()
+LIMIT 1
+]]>
+</select>
+
 </mapper>
