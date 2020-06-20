@@ -15,7 +15,6 @@ CREATE TABLE t_etf_n0102 (
 	, issr varchar(64)
 	, issr_url varchar(128)
 	, item_dscr text
-	, cu text
 );
 CREATE UNIQUE INDEX pk_t_etf_n0102 ON t_etf_n0102 (item_code);
 
@@ -35,6 +34,5 @@ COMMENT ON COLUMN t_etf_n0102.date_dstb IS '분배금기준일';
 COMMENT ON COLUMN t_etf_n0102.issr IS '자산운용사';
 COMMENT ON COLUMN t_etf_n0102.issr_url IS '홈페이지';
 COMMENT ON COLUMN t_etf_n0102.item_dscr IS '상품설명';
-COMMENT ON COLUMN t_etf_n0102.cu IS '구성종목';
 
 COMMIT;

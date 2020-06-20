@@ -68,7 +68,7 @@ BEGIN
 		, etf0111.etf_ter::varchar
 		, etf0111.etf_ti::varchar
 		, etf0111.etf_tiinc::varchar
-		, etf0111.date_updt::varchar
+		, EXTRACT(EPOCH FROM etf0111.date_updt)::varchar AS date_updt
 	FROM (
 		SELECT
 			ROW_NUMBER() OVER(ORDER BY trd.trdd DESC) AS row_num
@@ -86,7 +86,7 @@ BEGIN
 			, tr40005.etf_ter
 			, tr40005.etf_ti
 			, tr40005.etf_tiinc
-			, EXTRACT(EPOCH FROM tr40005.date_updt) AS date_updt
+			, tr40005.date_updt
 		FROM
 			t_etf_trdd trd
 			, t_etf_tr40005 tr40005

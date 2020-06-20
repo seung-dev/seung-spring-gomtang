@@ -2,7 +2,10 @@ DROP TABLE IF EXISTS t_etf_tr10001 CASCADE;
 CREATE TABLE t_etf_tr10001 (
 	item_code varchar(6) NOT NULL
 	, hash varchar(32) NOT NULL
+	, date_inst timestamp DEFAULT NOW()
+	, date_updt timestamp DEFAULT NOW()
 	, item_name varchar(128) NOT NULL
+	, etf_type varchar(1)
 	, etf_fm varchar(2)
 	, etf_fv decimal(10, 2)
 	, etf_equity decimal(10, 2)
@@ -36,15 +39,16 @@ CREATE TABLE t_etf_tr10001 (
 	, etf_fvu varchar(4)
 	, etf_os varchar(8)
 	, etf_osr varchar(8)
-	, date_inst timestamp DEFAULT NOW()
-	, date_updt timestamp DEFAULT NOW()
 );
 CREATE UNIQUE INDEX pk_t_etf_tr10001 ON t_etf_tr10001 (item_code);
 
 COMMENT ON TABLE t_etf_tr10001 IS '키움 주식기본정보';
 COMMENT ON COLUMN t_etf_tr10001.item_code IS '종목코드';
 COMMENT ON COLUMN t_etf_tr10001.hash IS 'data hash';
+COMMENT ON COLUMN t_etf_tr10001.date_inst IS '등록일시';
+COMMENT ON COLUMN t_etf_tr10001.date_updt IS '수정일시';
 COMMENT ON COLUMN t_etf_tr10001.item_name IS '종목명';
+COMMENT ON COLUMN t_etf_tr10001.etf_type IS '분류 - 네이버 기준';
 COMMENT ON COLUMN t_etf_tr10001.etf_fm IS '결산월';
 COMMENT ON COLUMN t_etf_tr10001.etf_fv IS '액면가';
 COMMENT ON COLUMN t_etf_tr10001.etf_equity IS '자본금';
@@ -78,7 +82,5 @@ COMMENT ON COLUMN t_etf_tr10001.etf_pcv IS '거래대비';
 COMMENT ON COLUMN t_etf_tr10001.etf_fvu IS '액면가단위';
 COMMENT ON COLUMN t_etf_tr10001.etf_os IS '유통주식';
 COMMENT ON COLUMN t_etf_tr10001.etf_osr IS '유통비율';
-COMMENT ON COLUMN t_etf_tr10001.date_inst IS '등록일시';
-COMMENT ON COLUMN t_etf_tr10001.date_updt IS '수정일시';
 
 COMMIT;

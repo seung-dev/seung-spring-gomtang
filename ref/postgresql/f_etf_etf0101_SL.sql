@@ -9,6 +9,7 @@ RETURNS TABLE (
 	, date_count character varying
 	, etf_cnst character varying
 	, etf_stts character varying
+	, etf_type character varying
 	, etf_fm character varying
 	, etf_fv character varying
 	, etf_equity character varying
@@ -95,6 +96,7 @@ BEGIN
 		, calc.date_count::varchar
 		, kw10000.etf_cnst::varchar
 		, kw10000.etf_stts::varchar
+		, tr10001.etf_type
 		, tr10001.etf_fm::varchar
 		, tr10001.etf_fv::varchar
 		, tr10001.etf_equity::varchar
