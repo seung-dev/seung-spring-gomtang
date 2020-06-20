@@ -29,9 +29,6 @@ import seung.spring.boot.conf.quartz.SQuartzH;
 @Component("sJobI")
 public class SJobI {
 
-    @Resource(name = "sApplicationData")
-    private SLinkedHashMap sApplicationData;
-    
     @Resource(name = "sMapperI")
     private SMapperI sMapperI;
     
@@ -90,37 +87,6 @@ public class SJobI {
             
         }// end of cron jobs
         
-    }
-    
-    @SuppressWarnings("unchecked")
-    public void apiSchema() {
-        
-        log.info("run");
-        
-        SLinkedHashMap schema = new SLinkedHashMap();
-        SLinkedHashMap api = null;
-        for(SLinkedHashMap api_schema_SR : sMapperI.selectList("api_schema_SL")) {
-            api = new SLinkedHashMap();
-            api.put("path", api_schema_SR.getString("api_path"));
-            api.put("description", api_schema_SR.getString("api_dscr"));
-            try {
-                if(api_schema_SR.getString("api_data", "").trim().startsWith("{")) {
-                    api.put("data", new ObjectMapper().readValue(api_schema_SR.getString("api_data"), Map.class));
-                } else if(api_schema_SR.getString("api_data", "").trim().startsWith("[")) {
-                    api.put("data", new ObjectMapper().readValue(api_schema_SR.getString("api_data"), List.class));
-                }
-                if(api_schema_SR.getString("api_rslt", "").trim().startsWith("{")) {
-                    api.put("result", new ObjectMapper().readValue(api_schema_SR.getString("api_rslt"), Map.class));
-                } else if(api_schema_SR.getString("api_rslt", "").trim().startsWith("[")) {
-                    api.put("result", new ObjectMapper().readValue(api_schema_SR.getString("api_rslt"), List.class));
-                }
-            } catch (JsonProcessingException e) {
-                log.error("Failed to read api schema.", e);
-            }
-            schema.put(String.format("%s.%s", api_schema_SR.getString("api_set"), api_schema_SR.getString("api_code")), api);
-        }
-        
-        sApplicationData.put("schema", schema);
     }
     
 }

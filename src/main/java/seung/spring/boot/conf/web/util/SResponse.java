@@ -1,5 +1,7 @@
 package seung.spring.boot.conf.web.util;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +13,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import seung.java.kimchi.SDate;
 import seung.java.kimchi.exception.SKimchiException;
 import seung.java.kimchi.util.SLinkedHashMap;
 
@@ -56,7 +57,7 @@ public class SResponse {
             , example = "yyyy-MM-dd HH:mm:ss.SSSXXX"
             )
     @Builder.Default
-    private String request_time = SDate.getDateString();
+    private String request_time = String.valueOf(new Date().getTime());
     
     @ApiModelProperty(
             dataType = "String"

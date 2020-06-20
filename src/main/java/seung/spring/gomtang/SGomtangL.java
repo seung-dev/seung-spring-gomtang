@@ -32,9 +32,6 @@ public class SGomtangL {
         // job init
         sJobI.initJob();
         
-        // api schema
-        sJobI.apiSchema();
-        
     }
     
     @PreDestroy

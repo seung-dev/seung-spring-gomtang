@@ -71,5 +71,21 @@ public class SConfWeb extends WebMvcConfigurationSupport {
         log.info("addNotWrappedModelKeys={}", "no-wrap");
         return sMappingJackson2JsonView;
     }// end of addSMappingJackson2JsonView
+//    
+//    @Bean
+//    public WebMvcConfigurer webMvcConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry
+//                    .addMapping("/rest/**")
+//                    .allowedMethods(HttpMethod.POST.name())
+//                    .allowedOrigins("*")
+//                    .allowCredentials(true)
+//                    .maxAge(10)
+//                    ;
+//            }
+//        };
+//    }
     
 }

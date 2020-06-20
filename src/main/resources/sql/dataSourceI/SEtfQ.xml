@@ -6,6 +6,35 @@
 <parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
 <resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
 
+<select id="etf0000_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	*
+FROM
+	t_api_schm
+WHERE 1 = 1
+]]>
+	<if test="api_set != null and api_set != ''"><![CDATA[
+	AND api_set = #{api_set}
+	]]></if>
+	<if test="api_code != null and api_code != ''"><![CDATA[
+	AND api_code = #{api_code}
+	]]></if>
+</select>
+
+<select id="etf0001_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	*
+FROM
+	t_api_optn
+WHERE 1 = 1
+]]>
+	<if test="optn_set != null and optn_set != ''"><![CDATA[
+	AND optn_set = #{optn_set}
+	]]></if>
+</select>
+
 <select id="etf0101_SR" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
 SELECT
@@ -42,6 +71,28 @@ SELECT
 	*
 FROM
 	f_etf_etf0111_SL(#{req_json})
+]]>
+</select>
+
+<select id="etf0112_SR" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	*
+FROM
+	v_etf_etf0112
+WHERE 1 = 1
+	AND item_code = #{item_code}
+]]>
+</select>
+
+<select id="etf0113_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	*
+FROM
+	v_etf_etf0113
+WHERE 1 = 1
+	AND item_code = #{item_code}
 ]]>
 </select>
 

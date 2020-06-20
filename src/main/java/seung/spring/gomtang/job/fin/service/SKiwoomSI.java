@@ -8,12 +8,10 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
 import lombok.extern.slf4j.Slf4j;
 import seung.java.kimchi.SConvert;
-import seung.java.kimchi.http.SHttp;
-import seung.java.kimchi.http.SHttpRequest;
-import seung.java.kimchi.http.SHttpResponse;
-import seung.java.kimchi.http.SRequestMethod;
 import seung.java.kimchi.util.SLinkedHashMap;
 import seung.spring.boot.conf.SProperties;
 import seung.spring.boot.conf.datasource.SMapperI;
@@ -37,6 +35,8 @@ public class SKiwoomSI {
             ) {
         
         String errorCode = "E999";
+        String message = "";
+        String schdNo = "";
         
         SLinkedHashMap jobHistMap = new SLinkedHashMap()
                 .add("job_group", jobGroup)
@@ -44,63 +44,75 @@ public class SKiwoomSI {
                 .add("schd_set", jobName)
                 .add("schd_code", "kw10000")
                 .add("error_code", errorCode)
-                .add("message", "")
+                .add("message", message)
                 ;
         
-        SLinkedHashMap queryMap = null;
+        SLinkedHashMap query = null;
         try {
             
-            jobHistMap.put("schd_no", sMapperI.selectOne("schd_no").getString("schd_no", ""));
+            schdNo = sMapperI.selectOne("schd_no").getString("schd_no", "");
+            jobHistMap.put("schd_no", schdNo);
             jobHistMap.put("job_data", jobHistMap.toJsonString());
             
             log.info(
                     "{}.{}.{} ((START))"
                     , jobHistMap.getString("schd_set", "")
                     , jobHistMap.getString("schd_code", "")
-                    , jobHistMap.getString("schd_no", "")
+                    , schdNo
                     );
             
             sMapperI.insert("schd_prev", jobHistMap);
             
             SLinkedHashMap data = new SLinkedHashMap();
             data.put("market_type", "3");
-            SHttpRequest sHttpRequest = SHttpRequest
-                    .builder()
-                    .url(sProperties.getJob().getProperty("seung.job.kiwoom.kw10000.url", ""))
-                    .requestMethod(SRequestMethod.POST)
-                    .readTimeout(1000 * 10)
-                    .useBody(true)
-                    .body(data.toJsonString())
-                    .build()
+            
+            HttpResponse<byte[]> httpResponse = Unirest
+                    .post(sProperties.getJob().getProperty("seung.job.kiwoom.kw10000.url", ""))
+                    .connectTimeout(1000 * 3)
+                    .socketTimeout(1000 * 10)
+                    .header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+                    .body(new SLinkedHashMap().add("market_type", "3").toJsonString())
+                    .asBytes()
                     ;
             
-            sHttpRequest.addHeader("Content-Type", "application/json");
-            sHttpRequest.addHeader(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""));
-            
-            SHttpResponse sHttpResponse = SHttp.request(sHttpRequest);
-            
-            if(HttpStatus.OK.value() != sHttpResponse.getResponseCode()) {
-                throw new SGomtangException(String.format(
-                        "Failed to call kw10000. Response code is (%d)."
-                        , sHttpResponse.getResponseCode()
-                        ));
+            if(HttpStatus.OK.value() != httpResponse.getStatus()) {
+                message = String.format(
+                        "%s.%s.%s.response_code %d"
+                        , jobHistMap.getString("schd_set", "")
+                        , jobHistMap.getString("schd_code", "")
+                        , schdNo
+                        , httpResponse.getStatus()
+                        );
+                log.error(message);
+                throw new SGomtangException(message);
             }
             
-            SLinkedHashMap kiwoomKw10000 = new SLinkedHashMap(new String(sHttpResponse.getResponseBody(), sHttpResponse.getResponseCharset("UTF-8")));
-            List<SLinkedHashMap> comm = kiwoomKw10000.getListSLinkedHashMap("comm");
+            SLinkedHashMap response = new SLinkedHashMap(new String(httpResponse.getBody(), "UTF-8"));
+            
+            List<SLinkedHashMap> comm = response.getListSLinkedHashMap("comm");
             if(comm.isEmpty()) {
-                throw new SGomtangException(String.format(
-                        "Failed to call kw10000. comm is empty."
-                        ));
+                message = String.format(
+                        "%s.%s.%s.comm empty"
+                        , jobHistMap.getString("schd_set", "")
+                        , jobHistMap.getString("schd_code", "")
+                        , schdNo
+                        );
+                log.error(message);
+                throw new SGomtangException(message);
             }
             if(!SResponse.SUCCESS.equals(comm.get(0).getString("error_code", ""))) {
-                throw new SGomtangException(String.format(
-                        "Failed to call kw10000. Error code is (%s)."
+                message = String.format(
+                        "%s.%s.%s.error_code %s"
+                        , jobHistMap.getString("schd_set", "")
+                        , jobHistMap.getString("schd_code", "")
+                        , schdNo
                         , comm.get(0).getString("error_code", "")
-                        ));
+                        );
+                log.error(message);
+                throw new SGomtangException(message);
             }
             
-            List<SLinkedHashMap> etf = kiwoomKw10000.getSLinkedHashMap("result").getListSLinkedHashMap("etf");
+            List<SLinkedHashMap> etf = response.getSLinkedHashMap("result").getListSLinkedHashMap("etf");
             
             int loopTry = 0;
             int kw10000_IR = 0;
@@ -109,6 +121,7 @@ public class SKiwoomSI {
             int kw10000_IGNORE = 0;
             SLinkedHashMap kw10000_SR = null;
             for(SLinkedHashMap item : etf) {
+                
                 if(loopTry++ % 100 == 0) {
                     log.info(
                             "{}.{}.{}.try {}"
@@ -118,49 +131,62 @@ public class SKiwoomSI {
                             , loopTry
                             );
                 }
-                queryMap = new SLinkedHashMap();
-                queryMap.put("item_code", item.getString("item_code", ""));
-                queryMap.put("item_name", item.getString("item_name", ""));
-                queryMap.put("etf_cnst", item.getString("cnst", ""));
-                queryMap.put("etf_stts", item.getString("stts", ""));
-                queryMap.put("hash", SConvert.digestToHex("MD5", queryMap.toJsonString()));
-                kw10000_SR = sMapperI.selectOne("kw10000_SR", queryMap);
+                
+                query = new SLinkedHashMap();
+                query.put("item_code", item.getString("item_code", ""));
+                query.put("item_name", item.getString("item_name", ""));
+                query.put("etf_cnst", item.getString("cnst", ""));
+                query.put("etf_stts", item.getString("stts", ""));
+                query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
+                kw10000_SR = sMapperI.selectOne("kw10000_SR", query);
                 if(kw10000_SR == null) {
-                    kw10000_IR += sMapperI.insert("kw10000_IR", queryMap);
-                } else if(queryMap.getString("hash", "").equals(kw10000_SR.getString("hash", "1"))) {
+                    kw10000_IR += sMapperI.insert("kw10000_IR", query);
+                } else if(query.getString("hash", "").equals(kw10000_SR.getString("hash", "1"))) {
                     kw10000_DO_NOTHING++;
-                } else if(!queryMap.getString("hash", "").equals(kw10000_SR.getString("hash", "1"))) {
-                    kw10000_UR += sMapperI.insert("kw10000_UR", queryMap);
+                } else if(!query.getString("hash", "").equals(kw10000_SR.getString("hash", "1"))) {
+                    kw10000_UR += sMapperI.insert("kw10000_UR", query);
                 } else {
                     kw10000_IGNORE++;
                 }
-            }
+                
+            }// end of etf
             
-            jobHistMap.put(
-                    "message"
-                    , String.format(
-                            "kw10000_IR=%d, kw10000_UR=%d, kw10000_DO_NOTHING=%d, kw10000_IGNORE=%d"
-                            , kw10000_IR
-                            , kw10000_UR
-                            , kw10000_DO_NOTHING
-                            , kw10000_IGNORE
-                            )
+            message = String.format(
+                    "kw10000_IR=%d, kw10000_UR=%d, kw10000_DO_NOTHING=%d, kw10000_IGNORE=%d"
+                    , kw10000_IR
+                    , kw10000_UR
+                    , kw10000_DO_NOTHING
+                    , kw10000_IGNORE
                     );
             errorCode = "0000";
             
         } catch (Exception e) {
-            log.error("Failed to call kw10000.", e);
-            jobHistMap.put("message", ExceptionUtils.getStackTrace(e));
-            if("".equals(jobHistMap.getString("message", ""))) {
-                jobHistMap.put("message", "" + e);
+            log.error(
+                    "{}.{}.{}.exception {}"
+                    , jobHistMap.getString("schd_set", "")
+                    , jobHistMap.getString("schd_code", "")
+                    , schdNo
+                    , jobHistMap.getString("exception", "" + e)
+                    , e
+                    );
+            if(query != null) {
+                log.error(
+                        "{}.{}.{}.query {}"
+                        , jobHistMap.getString("schd_set", "")
+                        , jobHistMap.getString("schd_code", "")
+                        , schdNo
+                        , query.toJsonString(true)
+                        );
             }
+            jobHistMap.put("message", ExceptionUtils.getStackTrace(e));
         } finally {
             jobHistMap.put("error_code", errorCode);
+            jobHistMap.put("message", message);
             log.info(
                     "{}.{}.{}.error_code {}"
                     , jobHistMap.getString("schd_set", "")
                     , jobHistMap.getString("schd_code", "")
-                    , jobHistMap.getString("schd_no", "")
+                    , schdNo
                     , jobHistMap.getString("error_code", "")
                     );
             sMapperI.insert("schd_post", jobHistMap);
@@ -168,7 +194,7 @@ public class SKiwoomSI {
                     "{}.{}.{} ((END))"
                     , jobHistMap.getString("schd_set", "")
                     , jobHistMap.getString("schd_code", "")
-                    , jobHistMap.getString("schd_no", "")
+                    , schdNo
                     );
         }
         
@@ -182,6 +208,8 @@ public class SKiwoomSI {
             ) {
         
         String errorCode = "E999";
+        String message = "";
+        String schdNo = "";
         
         SLinkedHashMap jobHistMap = new SLinkedHashMap()
                 .add("job_group", jobGroup)
@@ -189,30 +217,30 @@ public class SKiwoomSI {
                 .add("schd_set", jobName)
                 .add("schd_code", "tr10001")
                 .add("error_code", errorCode)
-                .add("message", "")
+                .add("message", message)
                 ;
-        SLinkedHashMap queryMap = null;
+        
+        SLinkedHashMap query = null;
         try {
             
-            jobHistMap.put("schd_no", sMapperI.selectOne("schd_no").getString("schd_no", ""));
+            schdNo = sMapperI.selectOne("schd_no").getString("schd_no", "");
+            jobHistMap.put("schd_no", schdNo);
             jobHistMap.put("job_data", jobHistMap.toJsonString());
             
             log.info(
                     "{}.{}.{} ((START))"
                     , jobHistMap.getString("schd_set", "")
                     , jobHistMap.getString("schd_code", "")
-                    , jobHistMap.getString("schd_no", "")
+                    , schdNo
                     );
             
             sMapperI.insert("schd_prev", jobHistMap);
             
             int loopTry = 0;
-            SLinkedHashMap data = null;
-            SHttpRequest sHttpRequest = null;
-            SHttpResponse sHttpResponse = null;
-            SLinkedHashMap kiwoomKr10001 = null;
-            List<SLinkedHashMap> tr10001Comm = null;
-            List<SLinkedHashMap> tr10001Data = null;
+            HttpResponse<byte[]> httpResponse = null;
+            SLinkedHashMap response = null;
+            List<SLinkedHashMap> comm = null;
+            List<SLinkedHashMap> data = null;
             String itemName = "";
             String itemCode = "";
             SLinkedHashMap tr10001 = null;
@@ -233,137 +261,159 @@ public class SKiwoomSI {
                             );
                 }
                 
-                data = new SLinkedHashMap();
-                data.put("item_code", kw10000_SR.getString("item_code"));
-                sHttpRequest = SHttpRequest
-                        .builder()
-                        .url(sProperties.getJob().getProperty("seung.job.kiwoom.tr10001.url", ""))
-                        .requestMethod(SRequestMethod.POST)
-                        .readTimeout(1000 * 10)
-                        .useBody(true)
-                        .body(data.toJsonString())
-                        .build()
+                httpResponse = Unirest
+                        .post(sProperties.getJob().getProperty("seung.job.kiwoom.tr10001.url", ""))
+                        .connectTimeout(1000 * 3)
+                        .socketTimeout(1000 * 3)
+                        .header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+                        .body(new SLinkedHashMap().add("item_code", kw10000_SR.getString("item_code")).toJsonString())
+                        .asBytes()
                         ;
-                sHttpRequest.addHeader("Content-Type", "application/json");
-                sHttpRequest.addHeader(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""));
                 
-                sHttpResponse = SHttp.request(sHttpRequest);
-                
-                if(HttpStatus.OK.value() != sHttpResponse.getResponseCode()) {
-                    throw new SGomtangException(String.format(
-                            "Failed to call %s. Response code is (%d)."
+                if(HttpStatus.OK.value() != httpResponse.getStatus()) {
+                    message = String.format(
+                            "%s.%s.%s.response_code %d"
+                            , jobHistMap.getString("schd_set", "")
                             , jobHistMap.getString("schd_code", "")
-                            , sHttpResponse.getResponseCode()
-                            ));
+                            , schdNo
+                            , httpResponse.getStatus()
+                            );
+                    log.error(message);
+                    throw new SGomtangException(message);
                 }
                 
-                kiwoomKr10001 = new SLinkedHashMap(new String(sHttpResponse.getResponseBody(), sHttpResponse.getResponseCharset("UTF-8")));
+                response = new SLinkedHashMap(new String(httpResponse.getBody(), "UTF-8"));
                 
-                tr10001Comm = kiwoomKr10001.getListSLinkedHashMap("comm");
-                if(tr10001Comm.isEmpty()) {
-                    throw new SGomtangException(String.format(
-                            "Failed to call %s. comm is empty."
+                comm = response.getListSLinkedHashMap("comm");
+                if(comm.isEmpty()) {
+                    message = String.format(
+                            "%s.%s.%s.comm empty"
+                            , jobHistMap.getString("schd_set", "")
                             , jobHistMap.getString("schd_code", "")
-                            ));
+                            , schdNo
+                            );
+                    log.error(message);
+                    throw new SGomtangException(message);
                 }
-                if(!SResponse.SUCCESS.equals(tr10001Comm.get(0).getString("error_code", ""))) {
-                    throw new SGomtangException(String.format(
-                            "Failed to call tr10001. Error code is (%s)."
-                            , tr10001Comm.get(0).getString("error_code", "")
-                            ));
+                if(!SResponse.SUCCESS.equals(comm.get(0).getString("error_code", ""))) {
+                    message = String.format(
+                            "%s.%s.%s.error_code %s"
+                            , jobHistMap.getString("schd_set", "")
+                            , jobHistMap.getString("schd_code", "")
+                            , schdNo
+                            , comm.get(0).getString("error_code", "")
+                            );
+                    log.error(message);
+                    throw new SGomtangException(message);
                 }
                 
                 itemName = "";
                 itemCode = "";
-                tr10001Data = kiwoomKr10001.getListSLinkedHashMap("data");
-                if(tr10001Data.isEmpty()) {
-                    throw new SGomtangException(String.format(
-                            "Failed to call %s. data is empty."
+                data = response.getListSLinkedHashMap("data");
+                if(data.isEmpty()) {
+                    message = String.format(
+                            "%s.%s.%s.data empty"
+                            , jobHistMap.getString("schd_set", "")
                             , jobHistMap.getString("schd_code", "")
-                            ));
+                            , schdNo
+                            );
+                    log.error(message);
+                    throw new SGomtangException(message);
                 }
-                itemName = tr10001Data.get(0).getString("item_name", "");
-                itemCode = tr10001Data.get(0).getString("item_code", "");
+                itemName = data.get(0).getString("item_name", "");
+                itemCode = data.get(0).getString("item_code", "");
                 
-                tr10001 = kiwoomKr10001.getSLinkedHashMap("result").getListSLinkedHashMap("tr10001").get(0);
+                tr10001 = response.getSLinkedHashMap("result").getListSLinkedHashMap("tr10001").get(0);
                 
-                queryMap = new SLinkedHashMap();
-                queryMap.put("item_code", itemCode);
-                queryMap.put("item_name", itemName);
-                queryMap.put("etf_fm", tr10001.getString("fm", ""));
-                queryMap.put("etf_fv", tr10001.getDouble("fv"));
-                queryMap.put("etf_equity", tr10001.getDouble("equity"));
-                queryMap.put("etf_is", tr10001.getBigInteger("is"));
-                queryMap.put("etf_cr", tr10001.getDouble("cr"));
-                queryMap.put("etf_yh", tr10001.getDouble("yh"));
-                queryMap.put("etf_yl", tr10001.getDouble("yl"));
-                queryMap.put("etf_mc", tr10001.getDouble("mc"));
-                queryMap.put("etf_mcr", tr10001.getString("mcr", ""));
-                queryMap.put("etf_for", tr10001.getDouble("for"));
-                queryMap.put("etf_sp", tr10001.getDouble("sp"));
-                queryMap.put("etf_250h", tr10001.getDouble("250h"));
-                queryMap.put("etf_250l", tr10001.getDouble("250l"));
-                queryMap.put("etf_op", tr10001.getDouble("op"));
-                queryMap.put("etf_hp", tr10001.getDouble("hp"));
-                queryMap.put("etf_lp", tr10001.getDouble("lp"));
-                queryMap.put("etf_hhp", tr10001.getDouble("hhp"));
-                queryMap.put("etf_llp", tr10001.getDouble("llp"));
-                queryMap.put("etf_bp", tr10001.getDouble("bp"));
-                queryMap.put("etf_ep", tr10001.getDouble("ep"));
-                queryMap.put("etf_eq", tr10001.getDouble("eq"));
-                queryMap.put("etf_d250h", tr10001.getString("d250h", ""));
-                queryMap.put("etf_vs250h", tr10001.getDouble("vs250h"));
-                queryMap.put("etf_d250l", tr10001.getString("d250l", ""));
-                queryMap.put("etf_vs250l", tr10001.getDouble("vs250l"));
-                queryMap.put("etf_pp", tr10001.getDouble("pp"));
-                queryMap.put("etf_pinc", tr10001.getDouble("pinc"));
-                queryMap.put("etf_pcp", tr10001.getDouble("pcp"));
-                queryMap.put("etf_vol", tr10001.getBigInteger("vol"));
-                queryMap.put("etf_pcv", tr10001.getDouble("pcv"));
-                queryMap.put("etf_fvu", tr10001.getString("fvu", ""));
-                queryMap.put("etf_os", tr10001.getString("os", ""));
-                queryMap.put("etf_osr", tr10001.getString("osr", ""));
-                queryMap.put("hash", SConvert.digestToHex("MD5", queryMap.toJsonString()));
-                tr10001_SR = sMapperI.selectOne("tr10001_SR", queryMap);
+                query = new SLinkedHashMap();
+                query.put("item_code", itemCode);
+                query.put("item_name", itemName);
+                query.put("etf_fm", tr10001.getString("fm", ""));
+                query.put("etf_fv", tr10001.getDouble("fv"));
+                query.put("etf_equity", tr10001.getDouble("equity"));
+                query.put("etf_is", tr10001.getBigInteger("is"));
+                query.put("etf_cr", tr10001.getDouble("cr"));
+                query.put("etf_yh", tr10001.getDouble("yh"));
+                query.put("etf_yl", tr10001.getDouble("yl"));
+                query.put("etf_mc", tr10001.getDouble("mc"));
+                query.put("etf_mcr", tr10001.getString("mcr", ""));
+                query.put("etf_for", tr10001.getDouble("for"));
+                query.put("etf_sp", tr10001.getDouble("sp"));
+                query.put("etf_250h", tr10001.getDouble("250h"));
+                query.put("etf_250l", tr10001.getDouble("250l"));
+                query.put("etf_op", tr10001.getDouble("op"));
+                query.put("etf_hp", tr10001.getDouble("hp"));
+                query.put("etf_lp", tr10001.getDouble("lp"));
+                query.put("etf_hhp", tr10001.getDouble("hhp"));
+                query.put("etf_llp", tr10001.getDouble("llp"));
+                query.put("etf_bp", tr10001.getDouble("bp"));
+                query.put("etf_ep", tr10001.getDouble("ep"));
+                query.put("etf_eq", tr10001.getDouble("eq"));
+                query.put("etf_d250h", tr10001.getString("d250h", ""));
+                query.put("etf_vs250h", tr10001.getDouble("vs250h"));
+                query.put("etf_d250l", tr10001.getString("d250l", ""));
+                query.put("etf_vs250l", tr10001.getDouble("vs250l"));
+                query.put("etf_pp", tr10001.getDouble("pp"));
+                query.put("etf_pinc", tr10001.getDouble("pinc"));
+                query.put("etf_pcp", tr10001.getDouble("pcp"));
+                query.put("etf_vol", tr10001.getBigInteger("vol"));
+                query.put("etf_pcv", tr10001.getDouble("pcv"));
+                query.put("etf_fvu", tr10001.getString("fvu", ""));
+                query.put("etf_os", tr10001.getString("os", ""));
+                query.put("etf_osr", tr10001.getString("osr", ""));
+                query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
+                
+                tr10001_SR = sMapperI.selectOne("tr10001_SR", query);
                 if(tr10001_SR == null) {
-                    tr10001_IR += sMapperI.insert("tr10001_IR", queryMap);
-                } else if(queryMap.getString("hash", "").equals(tr10001_SR.getString("hash", "1"))) {
+                    tr10001_IR += sMapperI.insert("tr10001_IR", query);
+                } else if(query.getString("hash", "").equals(tr10001_SR.getString("hash", "1"))) {
                     tr10001_DO_NOTHING++;
-                } else if(!queryMap.getString("hash", "").equals(tr10001_SR.getString("hash", "1"))) {
-                    tr10001_UR += sMapperI.insert("tr10001_UR", queryMap);
+                } else if(!query.getString("hash", "").equals(tr10001_SR.getString("hash", "1"))) {
+                    tr10001_UR += sMapperI.insert("tr10001_UR", query);
                 } else {
                     tr10001_IGNORE++;
                 }
                 
                 Thread.sleep(500);
                 
-            }
+            }// end of kw10000_SL
             
-            jobHistMap.put(
-                    "message"
-                    , String.format(
-                            "tr10001_IR=%d, tr10001_UR=%d, tr10001_DO_NOTHING=%d, tr10001_IGNORE=%d"
-                            , tr10001_IR
-                            , tr10001_UR
-                            , tr10001_DO_NOTHING
-                            , tr10001_IGNORE
-                            )
+            message = String.format(
+                    "tr10001_IR=%d, tr10001_UR=%d, tr10001_DO_NOTHING=%d, tr10001_IGNORE=%d"
+                    , tr10001_IR
+                    , tr10001_UR
+                    , tr10001_DO_NOTHING
+                    , tr10001_IGNORE
                     );
             errorCode = "0000";
             
         } catch (Exception e) {
-            log.error("Failed to call tr10001. queryMap={}", queryMap.toJsonString(true), e);
-            jobHistMap.put("message", ExceptionUtils.getStackTrace(e));
-            if("".equals(jobHistMap.getString("message", ""))) {
-                jobHistMap.put("message", "" + e);
+            log.error(
+                    "{}.{}.{}.exception {}"
+                    , jobHistMap.getString("schd_set", "")
+                    , jobHistMap.getString("schd_code", "")
+                    , schdNo
+                    , jobHistMap.getString("exception", "" + e)
+                    , e
+                    );
+            if(query != null) {
+                log.error(
+                        "{}.{}.{}.query {}"
+                        , jobHistMap.getString("schd_set", "")
+                        , jobHistMap.getString("schd_code", "")
+                        , schdNo
+                        , query != null ? query.toJsonString(true) : ""
+                        );
             }
+            message = ExceptionUtils.getStackTrace(e);
         } finally {
             jobHistMap.put("error_code", errorCode);
+            jobHistMap.put("message", message);
             log.info(
                     "{}.{}.{}.error_code {}"
                     , jobHistMap.getString("schd_set", "")
                     , jobHistMap.getString("schd_code", "")
-                    , jobHistMap.getString("schd_no", "")
+                    , schdNo
                     , jobHistMap.getString("error_code", "")
                     );
             sMapperI.insert("schd_post", jobHistMap);
@@ -371,7 +421,7 @@ public class SKiwoomSI {
                     "{}.{}.{} ((END))"
                     , jobHistMap.getString("schd_set", "")
                     , jobHistMap.getString("schd_code", "")
-                    , jobHistMap.getString("schd_no", "")
+                    , schdNo
                     );
         }
         
@@ -385,6 +435,8 @@ public class SKiwoomSI {
             ) {
         
         String errorCode = "E999";
+        String message = "";
+        String schdNo = "";
         
         SLinkedHashMap jobHistMap = new SLinkedHashMap()
                 .add("job_group", jobGroup)
@@ -392,38 +444,30 @@ public class SKiwoomSI {
                 .add("schd_set", jobName)
                 .add("schd_code", "tr40005")
                 .add("error_code", errorCode)
-                .add("message", "")
+                .add("message", message)
                 ;
         
-        SLinkedHashMap queryMap = null;
+        SLinkedHashMap query = null;
         try {
             
-            jobHistMap.put("schd_no", sMapperI.selectOne("schd_no").getString("schd_no", ""));
+            schdNo = sMapperI.selectOne("schd_no").getString("schd_no", "");
+            jobHistMap.put("schd_no", schdNo);
+            jobHistMap.put("rnk", 3);
             jobHistMap.put("job_data", jobHistMap.toJsonString());
             
             log.info(
                     "{}.{}.{} ((START))"
                     , jobHistMap.getString("schd_set", "")
                     , jobHistMap.getString("schd_code", "")
-                    , jobHistMap.getString("schd_no", "")
+                    , schdNo
                     );
             
             sMapperI.insert("schd_prev", jobHistMap);
             
-            String trddMin = "";
-            SLinkedHashMap trddMap = sMapperI.selectOne("tr40005");
-            if(trddMap == null) {
-                trddMin = "20200101";
-            } else {
-                trddMin = trddMap.getString("trdd_min", "20200101");
-            }
-            
             int loopTry = 0;
-            SLinkedHashMap data = null;
-            SHttpRequest sHttpRequest = null;
-            SHttpResponse sHttpResponse = null;
-            SLinkedHashMap kiwoomKr40005 = null;
-            List<SLinkedHashMap> tr40005Comm = null;
+            HttpResponse<byte[]> httpResponse = null;
+            SLinkedHashMap response = null;
+            List<SLinkedHashMap> comm = null;
             List<SLinkedHashMap> tr40005 = null;
             int tr40005_IR = 0;
             int tr40005_UR = 0;
@@ -432,137 +476,162 @@ public class SKiwoomSI {
             SLinkedHashMap tr40005_SR = null;
             int prev_IR = 0;
             int post_IR = 0;
-            for(SLinkedHashMap kw10000_SR : sMapperI.selectList("kw10000_SL")) {
+            for(SLinkedHashMap tr40005_rnk : sMapperI.selectList("tr40005_SL", jobHistMap)) {
                 
                 if(loopTry++ % 100 == 0) {
                     log.info(
                             "{}.{}.{}.try {}"
                             , jobHistMap.getString("schd_set", "")
                             , jobHistMap.getString("schd_code", "")
-                            , jobHistMap.getString("schd_no", "")
+                            , schdNo
                             , loopTry
                             );
                 }
                 
-                data = new SLinkedHashMap();
-                data.put("item_code", kw10000_SR.getString("item_code"));
-                data.put("repeat_30", "1");
-                sHttpRequest = SHttpRequest
-                        .builder()
-                        .url(sProperties.getJob().getProperty("seung.job.kiwoom.tr40005.url", ""))
-                        .requestMethod(SRequestMethod.POST)
-                        .readTimeout(1000 * 10)
-                        .useBody(true)
-                        .body(data.toJsonString())
-                        .build()
+                httpResponse = Unirest
+                        .post(sProperties.getJob().getProperty("seung.job.kiwoom.tr40005.url", ""))
+                        .connectTimeout(1000 * 3)
+                        .socketTimeout(1000 * 10)
+                        .header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+                        .body(new SLinkedHashMap()
+                                .add("repeat_30", "1")
+                                .add("item_code", tr40005_rnk.getString("item_code"))
+                                .toJsonString()
+                                )
+                        .asBytes()
                         ;
-                sHttpRequest.addHeader("Content-Type", "application/json");
-                sHttpRequest.addHeader(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""));
                 
-                sHttpResponse = SHttp.request(sHttpRequest);
-                
-                if(HttpStatus.OK.value() != sHttpResponse.getResponseCode()) {
-                    throw new SGomtangException(String.format(
-                            "Failed to call %s. Response code is (%d)."
+                if(HttpStatus.OK.value() != httpResponse.getStatus()) {
+                    message = String.format(
+                            "%s.%s.%s.response_code %d"
+                            , jobHistMap.getString("schd_set", "")
                             , jobHistMap.getString("schd_code", "")
-                            , sHttpResponse.getResponseCode()
-                            ));
+                            , schdNo
+                            , httpResponse.getStatus()
+                            );
+                    log.error(message);
+                    throw new SGomtangException(message);
                 }
                 
-                kiwoomKr40005 = new SLinkedHashMap(new String(sHttpResponse.getResponseBody(), sHttpResponse.getResponseCharset("UTF-8")));
+                response = new SLinkedHashMap(new String(httpResponse.getBody(), "UTF-8"));
                 
-                tr40005Comm = kiwoomKr40005.getListSLinkedHashMap("comm");
-                if(tr40005Comm.isEmpty()) {
-                    throw new SGomtangException(String.format(
-                            "Failed to call %s. comm is empty."
+                comm = response.getListSLinkedHashMap("comm");
+                if(comm.isEmpty()) {
+                    message = String.format(
+                            "%s.%s.%s.comm empty"
+                            , jobHistMap.getString("schd_set", "")
                             , jobHistMap.getString("schd_code", "")
-                            ));
+                            , schdNo
+                            );
+                    log.error(message);
+                    throw new SGomtangException(message);
                 }
-                if(!SResponse.SUCCESS.equals(tr40005Comm.get(0).getString("error_code", ""))) {
-                    throw new SGomtangException(String.format(
-                            "Failed to call kr40005. Error code is (%s)."
-                            , tr40005Comm.get(0).getString("error_code", "")
-                            ));
+                if(!SResponse.SUCCESS.equals(comm.get(0).getString("error_code", ""))) {
+                    message = String.format(
+                            "%s.%s.%s.error_code %s"
+                            , jobHistMap.getString("schd_set", "")
+                            , jobHistMap.getString("schd_code", "")
+                            , schdNo
+                            , comm.get(0).getString("error_code", "")
+                            );
+                    log.error(message);
+                    throw new SGomtangException(message);
                 }
                 
-                tr40005 = kiwoomKr40005.getSLinkedHashMap("result").getListSLinkedHashMap("tr40005");
+                tr40005 = response.getSLinkedHashMap("result").getListSLinkedHashMap("tr40005");
                 if(tr40005.isEmpty()) {
-                    throw new SGomtangException(String.format(
-                            "Failed to call %s. tr40005 is empty."
+                    message = String.format(
+                            "%s.%s.%s.tr40005 empty"
+                            , jobHistMap.getString("schd_set", "")
                             , jobHistMap.getString("schd_code", "")
-                            ));
+                            , schdNo
+                            );
+                    log.error(message);
+                    throw new SGomtangException(message);
                 }
                 
                 for(SLinkedHashMap item : tr40005) {
                     
-                    if(trddMin.equals(item.getString("date", trddMin))) {
-                        break;
-                    }
+                    query = new SLinkedHashMap();
+                    query.put("trdd", item.getString("date"));
+                    query.put("item_code", tr40005_rnk.getString("item_code"));
+                    query.put("etf_cp", item.getDouble("cp"));
+                    query.put("etf_inc", item.getDouble("inc"));
+                    query.put("etf_pcp", item.getDouble("pcp"));
+                    query.put("etf_vol", item.getBigInteger("vol"));
+                    query.put("etf_nav", item.getDouble("nav"));
+                    query.put("etf_volaccu", item.getBigInteger("volaccu"));
+                    query.put("etf_indexd", item.getDouble("indexd"));
+                    query.put("etf_etfd", item.getDouble("etfd"));
+                    query.put("etf_ter", item.getDouble("ter"));
+                    query.put("etf_ti", item.getDouble("ti"));
+                    query.put("etf_tiinc", item.getDouble("tiinc"));
+                    query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
                     
-                    queryMap = new SLinkedHashMap();
-                    queryMap.put("trdd", item.getString("date"));
-                    queryMap.put("item_code", kw10000_SR.getString("item_code"));
-                    queryMap.put("etf_cp", item.getDouble("cp"));
-                    queryMap.put("etf_inc", item.getDouble("inc"));
-                    queryMap.put("etf_pcp", item.getDouble("pcp"));
-                    queryMap.put("etf_vol", item.getBigInteger("vol"));
-                    queryMap.put("etf_nav", item.getDouble("nav"));
-                    queryMap.put("etf_volaccu", item.getBigInteger("volaccu"));
-                    queryMap.put("etf_indexd", item.getDouble("indexd"));
-                    queryMap.put("etf_etfd", item.getDouble("etfd"));
-                    queryMap.put("etf_ter", item.getDouble("ter"));
-                    queryMap.put("etf_ti", item.getDouble("ti"));
-                    queryMap.put("etf_tiinc", item.getDouble("tiinc"));
-                    queryMap.put("hash", SConvert.digestToHex("MD5", queryMap.toJsonString()));
-                    tr40005_SR = sMapperI.selectOne("tr40005_SR", queryMap);
-                    
+                    tr40005_SR = sMapperI.selectOne("tr40005_SR", query);
                     if(tr40005_SR == null) {
-                        tr40005_IR += sMapperI.insert("tr40005_IR", queryMap);
-                    } else if(queryMap.getString("hash", "").equals(tr40005_SR.getString("hash", "1"))) {
+                        tr40005_IR += sMapperI.insert("tr40005_IR", query);
+                    } else if(query.getString("hash", "").equals(tr40005_SR.getString("hash", "1"))) {
                         tr40005_DO_NOTHING++;
-                    } else if(!queryMap.getString("hash", "").equals(tr40005_SR.getString("hash", "1"))) {
-                        tr40005_UR += sMapperI.insert("tr40005_UR", queryMap);
+                    } else if(!query.getString("hash", "").equals(tr40005_SR.getString("hash", "1"))) {
+                        tr40005_UR += sMapperI.insert("tr40005_UR", query);
                     } else {
                         tr40005_IGNORE++;
+                    }
+                    
+                    if(tr40005_rnk.getString("trdd", "20200101").equals(item.getString("date", ""))) {
+                        break;
                     }
                     
                 }// end of tr40005
                 
                 Thread.sleep(500);
                 
-            }// end of kw10000_SL
+            }// end of tr40005_SL
             
             SLinkedHashMap trddNo = sMapperI.selectOne("trdd_no_IL");
             prev_IR = trddNo.getInt("prev");
             post_IR = trddNo.getInt("post");
             
-            jobHistMap.put(
-                    "message"
-                    , String.format(
-                            "tr40005_IR=%d, tr40005_UR=%d, tr40005_DO_NOTHING=%d, tr40005_IGNORE=%d, prev_IR=%d, post_IR=%d"
-                            , tr40005_IR
-                            , tr40005_UR
-                            , tr40005_DO_NOTHING
-                            , tr40005_IGNORE
-                            , prev_IR
-                            , post_IR
-                            )
-                    );
+            message = String.format(
+                    "tr40005_IR=%d, tr40005_UR=%d, tr40005_DO_NOTHING=%d, tr40005_IGNORE=%d, prev_IR=%d, post_IR=%d"
+                    , tr40005_IR
+                    , tr40005_UR
+                    , tr40005_DO_NOTHING
+                    , tr40005_IGNORE
+                    , prev_IR
+                    , post_IR
+                    )
+                    ;
             errorCode = "0000";
             
         } catch (Exception e) {
-            log.error("Failed to call tr40005. queryMap={}", queryMap.toJsonString(true), e);
-            jobHistMap.put("message", ExceptionUtils.getStackTrace(e));
-            if("".equals(jobHistMap.getString("message", ""))) {
-                jobHistMap.put("message", "" + e);
+            log.error(
+                    "{}.{}.{}.exception {}"
+                    , jobHistMap.getString("schd_set", "")
+                    , jobHistMap.getString("schd_code", "")
+                    , schdNo
+                    , jobHistMap.getString("exception", "" + e)
+                    , e
+                    );
+            if(query != null) {
+                log.error(
+                        "{}.{}.{}.query {}"
+                        , jobHistMap.getString("schd_set", "")
+                        , jobHistMap.getString("schd_code", "")
+                        , schdNo
+                        , query.toJsonString(true)
+                        );
             }
+            jobHistMap.put("message", ExceptionUtils.getStackTrace(e));
         } finally {
             jobHistMap.put("error_code", errorCode);
+            jobHistMap.put("message", message);
             log.info(
                     "{}.{}.{}.error_code {}"
                     , jobHistMap.getString("schd_set", "")
                     , jobHistMap.getString("schd_code", "")
-                    , jobHistMap.getString("schd_no", "")
+                    , schdNo
                     , jobHistMap.getString("error_code", "")
                     );
             sMapperI.insert("schd_post", jobHistMap);
@@ -570,7 +639,7 @@ public class SKiwoomSI {
                     "{}.{}.{} ((END))"
                     , jobHistMap.getString("schd_set", "")
                     , jobHistMap.getString("schd_code", "")
-                    , jobHistMap.getString("schd_no", "")
+                    , schdNo
                     );
         }
         

@@ -4,17 +4,72 @@
 <mapper namespace="sql.dataSourceI.SNaverQ">
 
 <parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
-<resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
+<resultMap	id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
+
+<select id="n0101_SR" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	item_code
+	, hash
+FROM
+	t_etf_n0101
+WHERE 1 = 1
+	AND item_code = #{item_code}
+]]>
+</select>
+
+<insert id="n0101_IR" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_etf_n0101 (
+	item_code
+	, hash
+	, date_inst
+	, date_updt
+	, item_name
+	, etf_type
+	)
+VALUES (
+	#{item_code}
+	, #{hash}
+	, NOW()
+	, NOW()
+	, #{item_name}
+	, #{etf_type}
+	)
+]]>
+</insert>
+
+<update id="n0101_UR" parameterMap="parameterMap">
+<![CDATA[
+UPDATE t_etf_n0101
+SET
+	hash = #{hash}
+	, date_updt = NOW()
+	, item_name = #{item_name}
+	, etf_type = #{etf_type}
+WHERE 1 = 1
+	AND item_code = #{item_code}
+]]>
+</update>
+
+<select id="n0101_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	item_code
+FROM
+	t_etf_n0101
+]]>
+</select>
 
 <select id="n0102_SR" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
 SELECT
-    item_code
-    , hash
+	item_code
+	, hash
 FROM
-    t_etf_n0102
+	t_etf_n0102
 WHERE 1 = 1
-    AND item_code = #{item_code}
+	AND item_code = #{item_code}
 ]]>
 </select>
 
@@ -36,13 +91,12 @@ INSERT INTO t_etf_n0102 (
 	, issr
 	, issr_url
 	, item_dscr
-	, cu
-    )
+	)
 VALUES (
 	#{item_code}
 	, #{hash}
-    , NOW()
-    , NOW()
+	, NOW()
+	, NOW()
 	, #{shar_oust}
 	, #{indx_name}
 	, #{date_set}
@@ -54,8 +108,7 @@ VALUES (
 	, #{issr}
 	, #{issr_url}
 	, #{item_dscr}
-	, #{cu}
-    )
+	)
 ]]>
 </insert>
 
@@ -64,7 +117,7 @@ VALUES (
 UPDATE t_etf_n0102
 SET
 	hash = #{hash}
-    , date_updt = NOW()
+	, date_updt = NOW()
 	, shar_oust = #{shar_oust}
 	, indx_name = #{indx_name}
 	, date_set = #{date_set}
@@ -76,9 +129,72 @@ SET
 	, issr = #{issr}
 	, issr_url = #{issr_url}
 	, item_dscr = #{item_dscr}
-	, cu = #{cu}
 WHERE 1 = 1
-    AND item_code = #{item_code}
+	AND item_code = #{item_code}
+]]>
+</update>
+
+<select id="n0103_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	item_code
+	, item_name_cu
+	, hash
+FROM
+	t_etf_n0103
+WHERE 1 = 1
+	AND item_code = #{item_code}
+]]>
+</select>
+
+<select id="n0103_SR" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	item_code
+	, item_name_cu
+	, hash
+FROM
+	t_etf_n0103
+WHERE 1 = 1
+	AND item_code = #{item_code}
+	AND item_name_cu = #{item_name_cu}
+]]>
+</select>
+
+<insert id="n0103_IR" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_etf_n0103 (
+	item_code
+	, item_name_cu
+	, hash
+	, date_inst
+	, date_updt
+	, item_code_cu
+	, asst_wght
+	)
+VALUES (
+	#{item_code}
+	, #{item_name_cu}
+	, #{hash}
+	, NOW()
+	, NOW()
+	, ''
+	, #{asst_wght}
+	)
+]]>
+</insert>
+
+<update id="n0103_UR" parameterMap="parameterMap">
+<![CDATA[
+UPDATE t_etf_n0103
+SET
+	hash = #{hash}
+	, date_updt = NOW()
+	, item_code_cu = ''
+	, asst_wght = #{asst_wght}
+WHERE 1 = 1
+	AND item_code = #{item_code}
+	AND item_name_cu = #{item_name_cu}
 ]]>
 </update>
 

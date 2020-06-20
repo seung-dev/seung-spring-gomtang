@@ -82,10 +82,4 @@ public class SConfBoot {
         
     }// end of addConfigProperties
     
-    @Bean(name = "sApplicationData")
-    public SLinkedHashMap sApplicationData() {
-        return new SLinkedHashMap();
-    }
-    
-    
 }
