@@ -68,7 +68,7 @@ BEGIN
 
 	SELECT
 		req::json->>'trdd' AS trdd
-		, req::json->>'mmnt_date' AS mmnt_date
+		, REGEXP_REPLACE(req::json->>'mmnt_date', '[^0-9]', '', 'g') AS mmnt_date
 		, req::json->>'mmnt_unit' AS mmnt_unit
 		, req::json->'mmnt_scope' AS mmnt_scope
 		, req::json->'mmnt_min' AS mmnt_min
@@ -82,9 +82,9 @@ BEGIN
 		(SELECT CAST(req_json AS json) AS req) init
 	;
 	
-	IF req_mmnt_unit = 'W' THEN
+	IF req_mmnt_unit = 'W' OR req_mmnt_unit = 'w' THEN
 		mmnt_unit = 5;
-	ELSEIF req_mmnt_unit = 'M' THEN
+	ELSEIF req_mmnt_unit = 'M' or req_mmnt_unit = 'm' THEN
 		mmnt_unit = 20;
 	END IF;
 	

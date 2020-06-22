@@ -34,8 +34,8 @@ BEGIN
 
 	SELECT
 		req::json->>'item_code'
-		, req::json->>'trdd_from'
-		, req::json->>'trdd_to'
+		, REGEXP_REPLACE(req::json->>'trdd_from', '[^0-9]', '', 'g') AS trdd_from
+		, REGEXP_REPLACE(req::json->>'trdd_to', '[^0-9]', '', 'g') AS trdd_to
 		, req::json->'page_index'
 		, req::json->'page_size'
 	INTO
