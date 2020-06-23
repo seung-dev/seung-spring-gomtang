@@ -220,6 +220,7 @@ FROM
 	t_etf_tr10001 tr10001
 	LEFT OUTER JOIN v_etf_tr40005_prtt prtt
 		ON 1 = 1
+		AND tr10001.item_code = prtt.item_code
 		AND prtt.rnk = #{rnk}
 ]]>
 </select>
@@ -269,7 +270,7 @@ VALUES (
 	, #{etf_volaccu}
 	, #{etf_indexd}
 	, #{etf_etfd}
-	, #{etf_ter}
+	, #{etf_ter} / 100
 	, #{etf_ti}
 	, #{etf_tiinc}
 	, NOW()
@@ -291,7 +292,7 @@ SET
 	, etf_volaccu = #{etf_volaccu}
 	, etf_indexd = #{etf_indexd}
 	, etf_etfd = #{etf_etfd}
-	, etf_ter = #{etf_ter}
+	, etf_ter = #{etf_ter} / 100
 	, etf_ti = #{etf_ti}
 	, etf_tiinc = #{etf_tiinc}
 	, date_updt = NOW()

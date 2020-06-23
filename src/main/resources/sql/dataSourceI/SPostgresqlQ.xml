@@ -8,10 +8,10 @@
 
 <insert id="sql0000" parameterMap="parameterMap">
 <![CDATA[
-    SELECT
-        now(),
-        version(),
-        current_database()
+	SELECT
+		now(),
+		version(),
+		current_database()
 ]]>
 </insert>
 

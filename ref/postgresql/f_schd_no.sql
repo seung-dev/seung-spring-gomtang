@@ -1,48 +1,29 @@
-CREATE OR REPLACE FUNCTION f_schd_no (
-)
-RETURNS varchar(16)
-AS
-$$
+CREATE OR REPLACE FUNCTION public.f_schd_no()
+ RETURNS character varying
+ LANGUAGE plpgsql
+AS $function$
 DECLARE
-	schd_date int;
-	cast_date int;
-	schd_no varchar(16);
+	schd_no bigint;
+	next_val bigint;
 BEGIN
 
 	SELECT
-		LAST_VALUE
-	INTO
-		schd_date
-	FROM
-		s_date
-	;
-	
-	SELECT
-		CAST(TO_CHAR(CURRENT_DATE, 'yyyymmdd') AS int)
-	INTO
-		cast_date
-	;
-	
-	IF cast_date <> schd_date THEN
-		SELECT SETVAL('s_date', cast_date, false);
-		SELECT
-			NEXTVAL('s_date')
-		INTO
-			schd_date
-		;
-		ALTER SEQUENCE s_job_no_of_day RESTART WITH 1;
-	END IF;
-	
-	SELECT
-		CONCAT(schd_date::varchar, LPAD(NEXTVAL('s_schd_no_of_day')::varchar, 8, '0'))
+		TO_CHAR(CURRENT_DATE, 'yyyymmdd')::bigint * '100000000'::bigint + 1
 	INTO
 		schd_no
 	;
 	
-	RETURN schd_no;
+	next_val = NEXTVAL('s_schd_no');
+	
+	IF next_val < schd_no THEN
+		EXECUTE 'ALTER SEQUENCE s_schd_no RESTART WITH '||schd_no::varchar;
+		schd_no = NEXTVAL('s_schd_no');
+	ELSE
+		schd_no = next_val;
+	END IF;
+	
+	RETURN schd_no::varchar;
 	
 END;
-$$
-LANGUAGE plpgsql;
-
-COMMIT;
+$function$
+;

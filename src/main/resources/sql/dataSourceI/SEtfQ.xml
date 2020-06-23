@@ -52,7 +52,7 @@ LIMIT 1
 SELECT
 	*
 FROM
-	f_etf_etf0101_SL(#{req_json})
+	f_etf_etf0101_TEST(#{req_json})
 ]]>
 </select>
 
