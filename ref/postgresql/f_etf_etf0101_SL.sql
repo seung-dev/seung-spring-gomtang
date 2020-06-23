@@ -111,12 +111,12 @@ BEGIN
         , '      , tr10001.etf_os::varchar'
         , '      , tr10001.etf_osr::varchar'
         , '      , tr40005.trdd'
-        , '      , tr40005.etf_cp::varchar'
+        , '      , ABS(tr40005.etf_cp)::varchar'
         , '      , tr40005.etf_inc::varchar'
         , '      , tr40005.etf_pcp::varchar'
-        , '      , tr40005.etf_vol::varchar'
-        , '      , tr40005.etf_nav::varchar'
-        , '      , tr40005.etf_volaccu::varchar'
+        , '      , ABS(tr40005.etf_vol)::varchar'
+        , '      , ABS(tr40005.etf_nav)::varchar'
+        , '      , ABS(tr40005.etf_volaccu)::varchar'
         , '      , tr40005.etf_indexd::varchar'
         , '      , tr40005.etf_etfd::varchar'
         , '      , tr40005.etf_ter::varchar'
@@ -228,13 +228,13 @@ BEGIN
     ;
     
     query_text := REPLACE(query_text, 'v_trdd', CONCAT('''', v_trdd, ''''));
-    --query_text := REPLACE(query_text, 'v_mmnt_date', CONCAT('''', v_mmnt_date, ''''));
-    query_text := REPLACE(query_text, 'v_mmnt_date', CONCAT('''', '20200619', ''''));
+    query_text := REPLACE(query_text, 'v_mmnt_date', CONCAT('''', v_mmnt_date, ''''));
+    --query_text := REPLACE(query_text, 'v_mmnt_date', CONCAT('''', '20200619', ''''));
     query_text := REPLACE(query_text, 'v_mmnt_unit', v_mmnt_unit::varchar);
     query_text := REPLACE(query_text, 'v_mmnt_scope', v_mmnt_scope::varchar);
     query_text := REPLACE(query_text, 'v_mmnt_min', v_mmnt_min::varchar);
-    --query_text := REPLACE(query_text, 'v_rules', v_rules);
-    query_text := REPLACE(query_text, 'v_rules', '');
+    query_text := REPLACE(query_text, 'v_rules', v_rules);
+    --query_text := REPLACE(query_text, 'v_rules', '');
     
     RETURN QUERY EXECUTE query_text;
     --RETURN query_text;
