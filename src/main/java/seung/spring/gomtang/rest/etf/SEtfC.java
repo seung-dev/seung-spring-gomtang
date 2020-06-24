@@ -150,6 +150,38 @@ public class SEtfC {
 		return "jsonView";
 	}
 	
+	@ApiOperation(response = SResponse.class, value = "ETF TRADING DATE", notes = "ETF")
+	@ApiResponses(value = {
+			@ApiResponse(
+					code = 200
+					, message = ""
+					, examples = @Example(value = {
+							@ExampleProperty(
+									mediaType = "application/json"
+									, value = ""
+									)})
+					)
+	})
+	@CrossOrigin("*")
+	@RequestMapping(value = {"/rest/etf/etf0102"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public String etf0102(
+			Model model
+			, @ApiIgnore SRequest sRequest
+			, @ApiParam(
+					value = "request code"
+					, type = "string"
+					, required = true
+					, example = "request_code_test"
+					) @RequestParam String request_code
+			) throws Exception {
+		
+		log.debug("run");
+		
+		model.addAttribute("no-wrap", sEtfS.etf0102(sRequest));
+		
+		return "jsonView";
+	}
+	
 	@ApiOperation(response = SResponse.class, value = "ETF HISTORY", notes = "ETF")
 	@ApiResponses(value = {
 			@ApiResponse(

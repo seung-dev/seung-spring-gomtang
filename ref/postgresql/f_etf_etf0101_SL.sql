@@ -216,7 +216,7 @@ BEGIN
         , v_rules
     FROM (
 	    SELECT
-	        req::json->>'trdd' AS trdd
+	        regexp_replace(req::json->>'trdd', '[^0-9]', '', 'g') AS trdd
 	        , regexp_replace(req::json->>'mmnt_date', '[^0-9]', '', 'g') AS mmnt_date
 	        , req::json->>'mmnt_unit' AS mmnt_unit
 	        , req::json->'mmnt_scope' AS mmnt_scope
@@ -230,9 +230,9 @@ BEGIN
     query_text := REPLACE(query_text, 'v_trdd', CONCAT('''', v_trdd, ''''));
     query_text := REPLACE(query_text, 'v_mmnt_date', CONCAT('''', v_mmnt_date, ''''));
     --query_text := REPLACE(query_text, 'v_mmnt_date', CONCAT('''', '20200619', ''''));
-    query_text := REPLACE(query_text, 'v_mmnt_unit', v_mmnt_unit::varchar);
-    query_text := REPLACE(query_text, 'v_mmnt_scope', v_mmnt_scope::varchar);
-    query_text := REPLACE(query_text, 'v_mmnt_min', v_mmnt_min::varchar);
+    query_text := REPLACE(query_text, 'v_mmnt_unit', COALESCE(v_mmnt_unit, 1)::varchar);
+    query_text := REPLACE(query_text, 'v_mmnt_scope', COALESCE(v_mmnt_scope, 3)::varchar);
+    query_text := REPLACE(query_text, 'v_mmnt_min', COALESCE(v_mmnt_min, -1)::varchar);
     query_text := REPLACE(query_text, 'v_rules', v_rules);
     --query_text := REPLACE(query_text, 'v_rules', '');
     

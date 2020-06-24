@@ -35,7 +35,7 @@ WHERE 1 = 1
 	]]></if>
 </select>
 
-<select id="etf0101_SR" parameterMap="parameterMap" resultMap="resultMap">
+<select id="etf0102_SR" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
 SELECT
 	trdd
@@ -52,7 +52,7 @@ LIMIT 1
 SELECT
 	*
 FROM
-	f_etf_etf0101_TEST(#{req_json})
+	f_etf_etf0101_SL(#{req_json})
 ]]>
 </select>
 

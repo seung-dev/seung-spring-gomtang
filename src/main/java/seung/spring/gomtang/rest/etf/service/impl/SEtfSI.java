@@ -33,6 +33,7 @@ public class SEtfSI implements SEtfS {
 	public SResponse etf0000(SRequest sRequest) {
 		
 		String apiCode = "etf0000";
+		String error_message = "";
 		String requestCode = sRequest.getData().getString("request_code", "");
 		log.info("{}.{} ((START))", apiCode, requestCode);
 		
@@ -71,8 +72,12 @@ public class SEtfSI implements SEtfS {
 			
 		} catch (Exception e) {
 			log.error("{}.{}.exception", apiCode, requestCode, e);
-			sResponse.setError_message(ExceptionUtils.getStackTrace(e));
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
 		} finally {
+			sResponse.setError_message(error_message);
 			if(etf0000_SL == null) {
 				sResponse.putResult("total_count", "0");
 				sResponse.putResult("etf0000", new ArrayList<>());
@@ -91,6 +96,7 @@ public class SEtfSI implements SEtfS {
 	public SResponse etf0001(SRequest sRequest) {
 		
 		String apiCode = "etf0001";
+		String error_message = "";
 		String requestCode = sRequest.getData().getString("request_code", "");
 		log.info("{}.{} ((START))", apiCode, requestCode);
 		
@@ -116,8 +122,12 @@ public class SEtfSI implements SEtfS {
 			
 		} catch (Exception e) {
 			log.error("{}.{}.exception", apiCode, requestCode, e);
-			sResponse.setError_message(ExceptionUtils.getStackTrace(e));
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
 		} finally {
+			sResponse.setError_message(error_message);
 			if(etf0001_SL == null) {
 				sResponse.putResult("total_count", "0");
 				sResponse.putResult("etf0001", new ArrayList<>());
@@ -137,6 +147,7 @@ public class SEtfSI implements SEtfS {
 	public SResponse etf0101(SRequest sRequest) {
 		
 		String apiCode = "etf0101";
+		String error_message = "";
 		String requestCode = sRequest.getData().getString("request_code", "");
 		log.info("{}.{} ((START))", apiCode, requestCode);
 		
@@ -147,34 +158,35 @@ public class SEtfSI implements SEtfS {
 				.build()
 				;
 		
-		SLinkedHashMap etf0101_SR = null;
+		SLinkedHashMap etf0102_SR = null;
 		List<SLinkedHashMap> etf0101_SL = null;
 		try {
 			
 			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
 			
-			etf0101_SR = sMapperI.selectOne("etf0101_SR");
+			etf0102_SR = sMapperI.selectOne("etf0102_SR");
 			
-			log.info("AND " + new SqlQueryBuilderFactory()
-					.builder()
-					.build(sRequest.getData().getString("rules"))
-					.getQuery(true));
-			
-			
-			SLinkedHashMap query = new SLinkedHashMap()
-					.add("trdd", etf0101_SR.getString("trdd"))
-					.add("mmnt_date", sRequest.getData().isEmpty("mmnt_date") ? etf0101_SR.getString("trdd") : sRequest.getData().getString("mmnt_date"))
-					.add("mmnt_unit", sRequest.getData().getString("mmnt_unit", "D"))
-					.add("mmnt_scope", sRequest.getData().getInt("mmnt_scope", 3))
-					.add("mmnt_min", sRequest.getData().getDouble("mmnt_min", 1.0))
-					.add("rules", "AND " + new SqlQueryBuilderFactory()
+			String rules = "";
+			if(!"".equals(sRequest.getData().getString("rules", "").trim())) {
+				rules = String.format(
+						"AND %s"
+						, new SqlQueryBuilderFactory()
 							.builder()
 							.build(sRequest.getData().getString("rules"))
 							.getQuery(true)
-							)
-					;
+						)
+						;
+				log.info("{}.{}.rules {}", apiCode, requestCode, rules);
+			}
 			
-			log.info(query.toJsonString());
+			SLinkedHashMap query = new SLinkedHashMap()
+					.add("trdd", etf0102_SR.getString("trdd"))
+					.add("mmnt_date", sRequest.getData().isEmpty("mmnt_date") ? etf0102_SR.getString("trdd") : sRequest.getData().getString("mmnt_date"))
+					.add("mmnt_unit", sRequest.getData().getString("mmnt_unit", "D"))
+					.add("mmnt_scope", sRequest.getData().getInt("mmnt_scope", 3))
+					.add("mmnt_min", sRequest.getData().getDouble("mmnt_min", 1.0))
+					.add("rules", rules)
+					;
 			
 			query.put("req_json", query.toJsonString());
 			etf0101_SL = sMapperI.selectList(
@@ -186,14 +198,18 @@ public class SEtfSI implements SEtfS {
 			
 		} catch (Exception e) {
 			log.error("{}.{}.exception", apiCode, requestCode, e);
-			sResponse.setError_message(ExceptionUtils.getStackTrace(e));
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
 		} finally {
-			if(etf0101_SR == null) {
+			sResponse.setError_message(error_message);
+			if(etf0102_SR == null) {
 				sResponse.putResult("trdd", "");
 				sResponse.putResult("trdd_no", "");
 			} else {
-				sResponse.putResult("trdd", etf0101_SR.getString("trdd", ""));
-				sResponse.putResult("trdd_no", etf0101_SR.getString("trdd_no", ""));
+				sResponse.putResult("trdd", etf0102_SR.getString("trdd", ""));
+				sResponse.putResult("trdd_no", etf0102_SR.getString("trdd_no", ""));
 			}
 			if(etf0101_SL == null) {
 				sResponse.putResult("total_count", "0");
@@ -209,11 +225,53 @@ public class SEtfSI implements SEtfS {
 		return sResponse;
 	}
 	
+	@Override
+	public SResponse etf0102(SRequest sRequest) {
+		
+		String apiCode = "etf0102";
+		String error_message = "";
+		String requestCode = sRequest.getData().getString("request_code", "");
+		log.info("{}.{} ((START))", apiCode, requestCode);
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(requestCode)
+				.error_code(SCode.ERROR)
+				.data(sRequest.getData())
+				.build()
+				;
+		
+		String trdd = "";
+		try {
+			
+			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
+			
+			SLinkedHashMap etf0102_SR = sMapperI.selectOne("etf0102_SR");
+			trdd = etf0102_SR.getString("trdd", "");
+			
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.error("{}.{}.exception", apiCode, requestCode, e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+			sResponse.putResult("trdd", trdd);
+		}
+		
+		log.info("{}.{} ((END))", apiCode, requestCode);
+		sResponse.setResponse_time(String.valueOf(new Date().getTime()));
+		return sResponse;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public SResponse etf0111(SRequest sRequest) {
 		
 		String apiCode = "etf0111";
+		String error_message = "";
 		String requestCode = sRequest.getData().getString("request_code", "");
 		log.info("{}.{} ((START))", apiCode, requestCode);
 		
@@ -246,8 +304,12 @@ public class SEtfSI implements SEtfS {
 			
 		} catch (Exception e) {
 			log.info("{}.{}.exception", apiCode, requestCode, e);
-			sResponse.setError_message(ExceptionUtils.getStackTrace(e));
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
 		} finally {
+			sResponse.setError_message(error_message);
 			if(etf0111_SR == null) {
 				sResponse.putResult("total_count", "");
 			} else {
@@ -269,6 +331,7 @@ public class SEtfSI implements SEtfS {
 	public SResponse etf0112(SRequest sRequest) {
 		
 		String apiCode = "etf0112";
+		String error_message = "";
 		String requestCode = sRequest.getData().getString("request_code", "");
 		log.info("{}.{} ((START))", apiCode, requestCode);
 		
@@ -294,8 +357,12 @@ public class SEtfSI implements SEtfS {
 			
 		} catch (Exception e) {
 			log.info("{}.{}.exception", apiCode, requestCode, e);
-			sResponse.setError_message(ExceptionUtils.getStackTrace(e));
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
 		} finally {
+			sResponse.setError_message(error_message);
 			sResponse.putResult("etf0112", etf0112_SR == null ? new SLinkedHashMap() : etf0112_SR);
 		}
 		
@@ -308,6 +375,7 @@ public class SEtfSI implements SEtfS {
 	public SResponse etf0113(SRequest sRequest) {
 		
 		String apiCode = "etf0113";
+		String error_message = "";
 		String requestCode = sRequest.getData().getString("request_code", "");
 		log.info("{}.{} ((START))", apiCode, requestCode);
 		
@@ -333,8 +401,12 @@ public class SEtfSI implements SEtfS {
 			
 		} catch (Exception e) {
 			log.info("{}.{}.exception", apiCode, requestCode, e);
-			sResponse.setError_message(ExceptionUtils.getStackTrace(e));
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
 		} finally {
+			sResponse.setError_message(error_message);
 			if(etf0113_SL == null) {
 				sResponse.putResult("total_count", "0");
 				sResponse.putResult("etf0113", new ArrayList<>());
