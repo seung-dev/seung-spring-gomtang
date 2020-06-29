@@ -117,30 +117,6 @@ public class SEtfC {
 					, required = true
 					, example = "request_code_test"
 					) @RequestParam String request_code
-			, @ApiParam(
-					value = "date of momentum"
-					, type = "string"
-					, required = true
-					, example = "yyyyMMdd"
-					) @RequestParam String mmnt_date
-			, @ApiParam(
-					value = "momentum unit - D: day, W: week(5 days), M: month(20 days)"
-					, type = "string"
-					, required = true
-					, example = "D"
-					) @RequestParam String mmnt_unit
-			, @ApiParam(
-					value = "momentum scope"
-					, type = "string"
-					, required = true
-					, example = "3"
-					) @RequestParam String mmnt_scope
-			, @ApiParam(
-					value = "min momentum"
-					, type = "string"
-					, required = true
-					, example = "1"
-					) @RequestParam String mmnt_min
 			) throws Exception {
 		
 		log.debug("run");
@@ -182,6 +158,38 @@ public class SEtfC {
 		return "jsonView";
 	}
 	
+	@ApiOperation(response = SResponse.class, value = "ETF ITEM LIST", notes = "ETF")
+	@ApiResponses(value = {
+			@ApiResponse(
+					code = 200
+					, message = ""
+					, examples = @Example(value = {
+							@ExampleProperty(
+									mediaType = "application/json"
+									, value = ""
+									)})
+					)
+	})
+	@CrossOrigin("*")
+	@RequestMapping(value = {"/rest/etf/etf0103"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public String etf0103(
+			Model model
+			, @ApiIgnore SRequest sRequest
+			, @ApiParam(
+					value = "request code"
+					, type = "string"
+					, required = true
+					, example = "request_code_test"
+					) @RequestParam String request_code
+			) throws Exception {
+		
+		log.debug("run");
+		
+		model.addAttribute("no-wrap", sEtfS.etf0103(sRequest));
+		
+		return "jsonView";
+	}
+	
 	@ApiOperation(response = SResponse.class, value = "ETF HISTORY", notes = "ETF")
 	@ApiResponses(value = {
 			@ApiResponse(
@@ -205,36 +213,6 @@ public class SEtfC {
 					, required = true
 					, example = "request_code_test"
 					) @RequestParam String request_code
-			, @ApiParam(
-					value = "item_code"
-					, type = "string"
-					, required = true
-					, example = "069500"
-					) @RequestParam String item_code
-			, @ApiParam(
-					value = "start at"
-					, type = "string"
-					, required = true
-					, example = "20200605"
-					) @RequestParam String trdd_from
-			, @ApiParam(
-					value = "end at"
-					, type = "string"
-					, required = true
-					, example = "20200615"
-					) @RequestParam String trdd_to
-			, @ApiParam(
-					value = "page index"
-					, type = "string"
-					, required = true
-					, example = "1"
-					) @RequestParam String page_index
-			, @ApiParam(
-					value = "page size"
-					, type = "string"
-					, required = true
-					, example = "10"
-					) @RequestParam String page_size
 			) throws Exception {
 		
 		log.debug("run");

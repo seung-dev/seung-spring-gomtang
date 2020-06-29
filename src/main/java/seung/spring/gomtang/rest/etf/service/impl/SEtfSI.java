@@ -176,19 +176,21 @@ public class SEtfSI implements SEtfS {
 							.getQuery(true)
 						)
 						;
-				log.info("{}.{}.rules {}", apiCode, requestCode, rules);
 			}
 			
 			SLinkedHashMap query = new SLinkedHashMap()
-					.add("trdd", etf0102_SR.getString("trdd"))
+					.add("trdd", etf0102_SR.getString("trdd_to"))
 					.add("mmnt_date", sRequest.getData().isEmpty("mmnt_date") ? etf0102_SR.getString("trdd") : sRequest.getData().getString("mmnt_date"))
 					.add("mmnt_unit", sRequest.getData().getString("mmnt_unit", "D"))
 					.add("mmnt_scope", sRequest.getData().getInt("mmnt_scope", 3))
-					.add("mmnt_min", sRequest.getData().getDouble("mmnt_min", 1.0))
+					.add("mmnt_min_max", sRequest.getData().getString("mmnt_min_max", ""))
+					.add("mmnt_threshold", sRequest.getData().getDouble("mmnt_threshold", 1.0))
 					.add("rules", rules)
 					;
 			
 			query.put("req_json", query.toJsonString());
+			log.info("{}.{}.req_json {}", apiCode, requestCode, query.getString("req_json", ""));
+			
 			etf0101_SL = sMapperI.selectList(
 					"etf0101_SL"
 					, query
@@ -208,8 +210,8 @@ public class SEtfSI implements SEtfS {
 				sResponse.putResult("trdd", "");
 				sResponse.putResult("trdd_no", "");
 			} else {
-				sResponse.putResult("trdd", etf0102_SR.getString("trdd", ""));
-				sResponse.putResult("trdd_no", etf0102_SR.getString("trdd_no", ""));
+				sResponse.putResult("trdd", etf0102_SR.getString("trdd_to", ""));
+				sResponse.putResult("trdd_no", etf0102_SR.getString("trdd_no_max", ""));
 			}
 			if(etf0101_SL == null) {
 				sResponse.putResult("total_count", "0");
@@ -240,13 +242,12 @@ public class SEtfSI implements SEtfS {
 				.build()
 				;
 		
-		String trdd = "";
+		SLinkedHashMap etf0102_SR = null;
 		try {
 			
 			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
 			
-			SLinkedHashMap etf0102_SR = sMapperI.selectOne("etf0102_SR");
-			trdd = etf0102_SR.getString("trdd", "");
+			etf0102_SR = sMapperI.selectOne("etf0102_SR");
 			
 			sResponse.success();
 			
@@ -258,7 +259,53 @@ public class SEtfSI implements SEtfS {
 			}
 		} finally {
 			sResponse.setError_message(error_message);
-			sResponse.putResult("trdd", trdd);
+			sResponse.putResult("etf0102", etf0102_SR);
+		}
+		
+		log.info("{}.{} ((END))", apiCode, requestCode);
+		sResponse.setResponse_time(String.valueOf(new Date().getTime()));
+		return sResponse;
+	}
+	
+	@Override
+	public SResponse etf0103(SRequest sRequest) {
+		
+		String apiCode = "etf0103";
+		String error_message = "";
+		String requestCode = sRequest.getData().getString("request_code", "");
+		log.info("{}.{} ((START))", apiCode, requestCode);
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(requestCode)
+				.error_code(SCode.ERROR)
+				.data(sRequest.getData())
+				.build()
+				;
+		
+		List<SLinkedHashMap> etf0103_SL = null;
+		try {
+			
+			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
+			
+			etf0103_SL = sMapperI.selectList("etf0103_SL");
+			
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.error("{}.{}.exception", apiCode, requestCode, e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+			if(etf0103_SL.isEmpty()) {
+				sResponse.putResult("total_count", "0");
+				sResponse.putResult("etf0103", new ArrayList<>());
+			} else {
+				sResponse.putResult("total_count", "" + etf0103_SL.size());
+				sResponse.putResult("etf0103", etf0103_SL);
+			}
 		}
 		
 		log.info("{}.{} ((END))", apiCode, requestCode);

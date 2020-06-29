@@ -35,24 +35,30 @@ WHERE 1 = 1
 	]]></if>
 </select>
 
-<select id="etf0102_SR" parameterMap="parameterMap" resultMap="resultMap">
-<![CDATA[
-SELECT
-	trdd
-	, trdd_no
-FROM
-	t_etf_trdd
-ORDER BY trdd_no DESC
-LIMIT 1
-]]>
-</select>
-
 <select id="etf0101_SL" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
 SELECT
 	*
 FROM
 	f_etf_etf0101_SL(#{req_json})
+]]>
+</select>
+
+<select id="etf0102_SR" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	*
+FROM
+	v_etf_etf0102
+]]>
+</select>
+
+<select id="etf0103_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	*
+FROM
+	v_etf_etf0103
 ]]>
 </select>
 

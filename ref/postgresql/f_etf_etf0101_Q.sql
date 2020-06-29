@@ -1,63 +1,8 @@
-DROP FUNCTION IF EXISTS f_etf_etf0101_SL(text);
-CREATE OR REPLACE FUNCTION f_etf_etf0101_SL (
+DROP FUNCTION IF EXISTS f_etf_etf0101_Q(text);
+CREATE OR REPLACE FUNCTION f_etf_etf0101_Q (
 	req_json text
 )
-/*
 RETURNS TEXT
-*/
-RETURNS TABLE (
-	item_code character varying
-	, item_name character varying
-	, mmnt character varying
-	, date_count character varying
-	, etf_cnst character varying
-	, etf_stts character varying
-	, etf_type character varying
-	, etf_fm character varying
-	, etf_fv character varying
-	, etf_equity character varying
-	, etf_is character varying
-	, etf_cr character varying
-	, etf_yh character varying
-	, etf_yl character varying
-	, etf_mc character varying
-	, etf_mcr character varying
-	, etf_for character varying
-	, etf_sp character varying
-	, etf_250h character varying
-	, etf_250l character varying
-	, etf_op character varying
-	, etf_hp character varying
-	, etf_lp character varying
-	, etf_hhp character varying
-	, etf_llp character varying
-	, etf_bp character varying
-	, etf_ep character varying
-	, etf_eq character varying
-	, etf_d250h character varying
-	, etf_vs250h character varying
-	, etf_d250l character varying
-	, etf_vs250l character varying
-	, etf_pp character varying
-	, etf_pinc character varying
-	, etf_pcv character varying
-	, etf_fvu character varying
-	, etf_os character varying
-	, etf_osr character varying
-	, trdd character varying
-	, etf_cp character varying
-	, etf_inc character varying
-	, etf_pcp character varying
-	, etf_vol character varying
-	, etf_nav character varying
-	, etf_volaccu character varying
-	, etf_indexd character varying
-	, etf_etfd character varying
-	, etf_ter character varying
-	, etf_ti character varying
-	, etf_tiinc character varying
-	, date_updt character varying
-	)
 AS
 $$
 DECLARE
@@ -254,8 +199,7 @@ BEGIN
 		query_text := REPLACE(query_text, 'v_sort', 'ORDER BY calc.mmnt DESC');
 	END IF;
 	
-	--RETURN query_text;
-	RETURN QUERY EXECUTE query_text;
+	RETURN query_text;
 	
 END;
 $$

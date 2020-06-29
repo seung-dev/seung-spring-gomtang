@@ -4,7 +4,7 @@
 <mapper namespace="sql.dataSourceI.SKiwoomQ">
 
 <parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
-<resultMap	id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
+<resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
 
 <select id="kw10000_SR" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
@@ -213,15 +213,17 @@ WHERE 1 = 1
 <select id="tr40005_SL" resultMap="resultMap">
 <![CDATA[
 SELECT
-	tr10001.item_code
+	kw10000.item_code
 	, prtt.trdd
 	, prtt.trdd_no
 FROM
-	t_etf_tr10001 tr10001
+	t_etf_kw10000 kw10000
 	LEFT OUTER JOIN v_etf_tr40005_prtt prtt
 		ON 1 = 1
-		AND tr10001.item_code = prtt.item_code
+		AND kw10000.item_code = prtt.item_code
 		AND prtt.rnk = #{rnk}
+WHERE 1 = 1
+	AND kw10000.etf_stts NOT LIKE '%정지%'
 ]]>
 </select>
 

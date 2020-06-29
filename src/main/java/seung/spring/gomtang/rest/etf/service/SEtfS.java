@@ -13,6 +13,8 @@ public interface SEtfS {
 	
 	public SResponse etf0102(SRequest sRequest);
 	
+	public SResponse etf0103(SRequest sRequest);
+	
 	public SResponse etf0111(SRequest sRequest);
 	
 	public SResponse etf0112(SRequest sRequest);
