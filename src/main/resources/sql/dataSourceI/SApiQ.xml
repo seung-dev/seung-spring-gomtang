@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sql.dataSourceI.SApiQ">
+
+<parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
+<resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
+
+<select id="api_optn_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	*
+FROM
+	t_api_optn
+WHERE 1 = 1
+]]>
+	<if test="optn_set != null and optn_set != ''"><![CDATA[
+	AND optn_set = #{optn_set}
+	]]></if>
+</select>
+
+</mapper>

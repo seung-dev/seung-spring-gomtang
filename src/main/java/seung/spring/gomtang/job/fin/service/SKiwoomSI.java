@@ -29,6 +29,273 @@ public class SKiwoomSI {
 	private SMapperI sMapperI;
 	
 	@SuppressWarnings("unchecked")
+	public synchronized String sr33333(
+			String jobGroup
+			, String jobName
+			) {
+		
+		String errorCode = "E999";
+		String message = "";
+		String schdNo = "";
+		
+		SLinkedHashMap jobHistMap = new SLinkedHashMap()
+				.add("job_group", jobGroup)
+				.add("job_name", jobName)
+				.add("schd_set", jobName)
+				.add("schd_code", "sr33333")
+				.add("error_code", errorCode)
+				.add("message", message)
+				;
+		
+		String sr33333 = "";
+		try {
+			
+			schdNo = sMapperI.selectOne("schd_no").getString("schd_no", "");
+			jobHistMap.put("schd_no", schdNo);
+			jobHistMap.put("job_data", jobHistMap.toJsonString());
+			
+			log.info(
+					"{}.{}.{} ((START))"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					);
+			
+			sMapperI.insert("schd_prev", jobHistMap);
+			
+			HttpResponse<byte[]> httpResponse = Unirest
+					.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr33333.url", ""))
+					.connectTimeout(1000 * 3)
+					.socketTimeout(1000 * 60 * 10)
+					.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+					.asBytes()
+					;
+			
+			sr33333 = new String(httpResponse.getBody(), "UTF-8");
+			
+			message = String.format(
+					"sr33333=%s"
+					, sr33333
+					);
+			
+			if("1111".equals(sr33333)) {
+				errorCode = "0000";
+			}
+			
+		} catch (Exception e) {
+			log.error(
+					"{}.{}.{}.exception {}"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					, jobHistMap.getString("exception", "" + e)
+					, e
+					);
+			message = ExceptionUtils.getStackTrace(e);
+			if(message == null || "".equals(message)) {
+				message = "" + e;
+			}
+		} finally {
+			jobHistMap.put("error_code", errorCode);
+			jobHistMap.put("message", message);
+			log.info(
+					"{}.{}.{}.error_code {}"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					, jobHistMap.getString("error_code", "")
+					);
+			sMapperI.insert("schd_post", jobHistMap);
+			log.info(
+					"{}.{}.{} ((END))"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					);
+		}
+		
+		return errorCode;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public synchronized String sr66666(
+			String jobGroup
+			, String jobName
+			) {
+		
+		String errorCode = "E999";
+		String message = "";
+		String schdNo = "";
+		
+		SLinkedHashMap jobHistMap = new SLinkedHashMap()
+				.add("job_group", jobGroup)
+				.add("job_name", jobName)
+				.add("schd_set", jobName)
+				.add("schd_code", "sr66666")
+				.add("error_code", errorCode)
+				.add("message", message)
+				;
+		
+		String sr66666 = "";
+		try {
+			
+			schdNo = sMapperI.selectOne("schd_no").getString("schd_no", "");
+			jobHistMap.put("schd_no", schdNo);
+			jobHistMap.put("job_data", jobHistMap.toJsonString());
+			
+			log.info(
+					"{}.{}.{} ((START))"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					);
+			
+			sMapperI.insert("schd_prev", jobHistMap);
+			
+			HttpResponse<byte[]> httpResponse = Unirest
+					.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr66666.url", ""))
+					.connectTimeout(1000 * 3)
+					.socketTimeout(1000 * 60 * 10)
+					.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+					.asBytes()
+					;
+			
+			sr66666 = new String(httpResponse.getBody(), "UTF-8");
+			
+			message = String.format(
+					"sr66666=%s"
+					, sr66666
+					);
+			
+			if("1111".equals(sr66666)) {
+				errorCode = "0000";
+			}
+			
+		} catch (Exception e) {
+			log.error(
+					"{}.{}.{}.exception {}"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					, jobHistMap.getString("exception", "" + e)
+					, e
+					);
+			message = ExceptionUtils.getStackTrace(e);
+			if(message == null || "".equals(message)) {
+				message = "" + e;
+			}
+		} finally {
+			jobHistMap.put("error_code", errorCode);
+			jobHistMap.put("message", message);
+			log.info(
+					"{}.{}.{}.error_code {}"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					, jobHistMap.getString("error_code", "")
+					);
+			sMapperI.insert("schd_post", jobHistMap);
+			log.info(
+					"{}.{}.{} ((END))"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					);
+		}
+		
+		return errorCode;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public synchronized String sr99999(
+			String jobGroup
+			, String jobName
+			) {
+		
+		String errorCode = "E999";
+		String message = "";
+		String schdNo = "";
+		
+		SLinkedHashMap jobHistMap = new SLinkedHashMap()
+				.add("job_group", jobGroup)
+				.add("job_name", jobName)
+				.add("schd_set", jobName)
+				.add("schd_code", "sr99999")
+				.add("error_code", errorCode)
+				.add("message", message)
+				;
+		
+		String sr99999 = "";
+		try {
+			
+			schdNo = sMapperI.selectOne("schd_no").getString("schd_no", "");
+			jobHistMap.put("schd_no", schdNo);
+			jobHistMap.put("job_data", jobHistMap.toJsonString());
+			
+			log.info(
+					"{}.{}.{} ((START))"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					);
+			
+			sMapperI.insert("schd_prev", jobHistMap);
+			
+			HttpResponse<byte[]> httpResponse = Unirest
+					.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr99999.url", ""))
+					.connectTimeout(1000 * 3)
+					.socketTimeout(1000 * 60 * 10)
+					.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+					.asBytes()
+					;
+			
+			sr99999 = new String(httpResponse.getBody(), "UTF-8");
+			
+			message = String.format(
+					"sr99999=%s"
+					, sr99999
+					);
+			
+			if("1111".equals(sr99999)) {
+				errorCode = "0000";
+			}
+			
+		} catch (Exception e) {
+			log.error(
+					"{}.{}.{}.exception {}"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					, jobHistMap.getString("exception", "" + e)
+					, e
+					);
+			message = ExceptionUtils.getStackTrace(e);
+			if(message == null || "".equals(message)) {
+				message = "" + e;
+			}
+		} finally {
+			jobHistMap.put("error_code", errorCode);
+			jobHistMap.put("message", message);
+			log.info(
+					"{}.{}.{}.error_code {}"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					, jobHistMap.getString("error_code", "")
+					);
+			sMapperI.insert("schd_post", jobHistMap);
+			log.info(
+					"{}.{}.{} ((END))"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					);
+		}
+		
+		return errorCode;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public synchronized String kw10000(
 			String jobGroup
 			, String jobName
@@ -63,100 +330,142 @@ public class SKiwoomSI {
 			
 			sMapperI.insert("schd_prev", jobHistMap);
 			
-			SLinkedHashMap data = new SLinkedHashMap();
-			data.put("market_type", "3");
+			sMapperI.update("kw10000_prgr_UL");
 			
-			HttpResponse<byte[]> httpResponse = Unirest
-					.post(sProperties.getJob().getProperty("seung.job.kiwoom.kw10000.url", ""))
-					.connectTimeout(1000 * 3)
-					.socketTimeout(1000 * 30)
-					.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
-					.header("Content-Type", "application/json")
-					.body(new SLinkedHashMap().add("market_type", "3").toJsonString())
-					.asBytes()
-					;
-			
-			if(HttpStatus.OK.value() != httpResponse.getStatus()) {
-				message = String.format(
-						"%s.%s.%s.status %d"
-						, jobHistMap.getString("schd_set", "")
-						, jobHistMap.getString("schd_code", "")
-						, schdNo
-						, httpResponse.getStatus()
-						);
-				log.error(message);
-				throw new SGomtangException(message);
-			}
-			
-			SLinkedHashMap response = new SLinkedHashMap(new String(httpResponse.getBody(), "UTF-8"));
-			
-			List<SLinkedHashMap> comm = response.getListSLinkedHashMap("comm");
-			if(comm.isEmpty()) {
-				message = String.format(
-						"%s.%s.%s.comm empty"
-						, jobHistMap.getString("schd_set", "")
-						, jobHistMap.getString("schd_code", "")
-						, schdNo
-						);
-				log.error(message);
-				throw new SGomtangException(message);
-			}
-			if(!SCode.SUCCESS.equals(comm.get(0).getString("error_code", ""))) {
-				message = String.format(
-						"%s.%s.%s.error_code %s"
-						, jobHistMap.getString("schd_set", "")
-						, jobHistMap.getString("schd_code", "")
-						, schdNo
-						, comm.get(0).getString("error_code", "")
-						);
-				log.error(message);
-				throw new SGomtangException(message);
-			}
-			
-			List<SLinkedHashMap> etf = response.getSLinkedHashMap("result").getListSLinkedHashMap("etf");
-			
+			String market_type = "";
+			List<SLinkedHashMap> preItems = null;
+			HttpResponse<byte[]> httpResponse = null;
+			SLinkedHashMap response = null;
+			List<SLinkedHashMap> comm = null;
+			List<SLinkedHashMap> result = null;
 			int loopTry = 0;
+			boolean isIgnore = false;
+			boolean isUpdate = false;
 			int kw10000_IR = 0;
 			int kw10000_UR = 0;
-			int kw10000_DO_NOTHING = 0;
 			int kw10000_IGNORE = 0;
-			SLinkedHashMap kw10000_SR = null;
-			for(SLinkedHashMap item : etf) {
+			for(SLinkedHashMap market : sMapperI.selectList("api_optn_SL", new SLinkedHashMap().add("optn_set", "kw10000.market_type"))) {
 				
-				if(loopTry++ % 100 == 0) {
-					log.info(
-							"{}.{}.{}.try {}"
+				market_type = market.getString("optn_code");
+				log.info(
+						"{}.{}.{}.{}={}"
+						, jobHistMap.getString("schd_set", "")
+						, jobHistMap.getString("schd_code", "")
+						, schdNo
+						, "market_type"
+						, market_type
+						);
+				preItems = sMapperI.selectList("kw10000_SL", new SLinkedHashMap().add("mrkt_type", market_type));
+				log.info(
+						"{}.{}.{}.{}={}"
+						, jobHistMap.getString("schd_set", "")
+						, jobHistMap.getString("schd_code", "")
+						, schdNo
+						, "preItems"
+						, preItems.size()
+						);
+				
+				httpResponse = Unirest
+						.post(sProperties.getJob().getProperty("seung.job.kiwoom.kw10000.url", ""))
+						.connectTimeout(1000 * 3)
+						.socketTimeout(1000 * 30)
+						.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+						.header("Content-Type", "application/json")
+						.body(new SLinkedHashMap().add("market_type", market_type).toJsonString())
+						.asBytes()
+						;
+				
+				if(HttpStatus.OK.value() != httpResponse.getStatus()) {
+					message = String.format(
+							"%s.%s.%s.status %d"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
-							, jobHistMap.getString("schd_no", "")
-							, loopTry
+							, schdNo
+							, httpResponse.getStatus()
 							);
+					log.error(message);
+					throw new SGomtangException(message);
 				}
 				
-				query = new SLinkedHashMap();
-				query.put("item_code", item.getString("item_code", ""));
-				query.put("item_name", item.getString("item_name", ""));
-				query.put("etf_cnst", item.getString("cnst", ""));
-				query.put("etf_stts", item.getString("stts", ""));
-				query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
-				kw10000_SR = sMapperI.selectOne("kw10000_SR", query);
-				if(kw10000_SR == null) {
-					kw10000_IR += sMapperI.insert("kw10000_IR", query);
-				} else if(query.getString("hash", "").equals(kw10000_SR.getString("hash", "1"))) {
-					kw10000_DO_NOTHING++;
-				} else if(!query.getString("hash", "").equals(kw10000_SR.getString("hash", "1"))) {
-					kw10000_UR += sMapperI.insert("kw10000_UR", query);
-				} else {
-					kw10000_IGNORE++;
+				response = new SLinkedHashMap(new String(httpResponse.getBody(), "UTF-8"));
+				
+				comm = response.getListSLinkedHashMap("comm");
+				if(comm.isEmpty()) {
+					message = String.format(
+							"%s.%s.%s.comm empty"
+							, jobHistMap.getString("schd_set", "")
+							, jobHistMap.getString("schd_code", "")
+							, schdNo
+							);
+					log.error(message);
+					throw new SGomtangException(message);
 				}
 				
-			}// end of etf
+				if(!SCode.SUCCESS.equals(comm.get(0).getString("error_code", ""))) {
+					message = String.format(
+							"%s.%s.%s.error_code %s"
+							, jobHistMap.getString("schd_set", "")
+							, jobHistMap.getString("schd_code", "")
+							, schdNo
+							, comm.get(0).getString("error_code", "")
+							);
+					log.error(message);
+					throw new SGomtangException(message);
+				}
+				
+				result = response.getSLinkedHashMap("result").getListSLinkedHashMap(market.getString("optn_name_en").toLowerCase());
+				
+				for(SLinkedHashMap item : result) {
+					
+					if(loopTry++ % 100 == 0) {
+						log.info(
+								"{}.{}.{}.try {}"
+								, jobHistMap.getString("schd_set", "")
+								, jobHistMap.getString("schd_code", "")
+								, jobHistMap.getString("schd_no", "")
+								, loopTry
+								);
+					}
+					
+					query = new SLinkedHashMap();
+					query.put("item_code", item.getString("item_code", ""));
+					query.put("mrkt_type", market_type);
+					query.put("on_prgr", "1");
+					query.put("item_name", item.getString("item_name", ""));
+					query.put("item_cnst", item.getString("cnst", ""));
+					query.put("item_stts", item.getString("stts", ""));
+					query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
+					
+					isIgnore = false;
+					isUpdate = false;
+					for(SLinkedHashMap preItem : preItems) {
+						if(preItem.getString("item_code").equals(query.getString("item_code", ""))) {
+							if(preItem.getString("hash").equals(query.getString("hash", ""))) {
+								isIgnore = true;
+							} else {
+								isUpdate = true;
+							}
+							break;
+						}
+					}
+					
+					if(isUpdate) {
+						kw10000_UR += sMapperI.insert("kw10000_UR", query);
+					} else if(isIgnore) {
+						sMapperI.update("kw10000_prgr_UR", query);
+						kw10000_IGNORE++;
+					} else {
+						kw10000_IR += sMapperI.insert("kw10000_IR", query);
+					}
+					
+				}// end of etf
+				
+			}// end of market
 			
 			message = String.format(
-					"kw10000_IR=%d, kw10000_UR=%d, kw10000_DO_NOTHING=%d, kw10000_IGNORE=%d"
+					"kw10000_IR=%d, kw10000_UR=%d, kw10000_IGNORE=%d"
 					, kw10000_IR
 					, kw10000_UR
-					, kw10000_DO_NOTHING
 					, kw10000_IGNORE
 					);
 			errorCode = "0000";
@@ -250,7 +559,7 @@ public class SKiwoomSI {
 			int tr10001_DO_NOTHING = 0;
 			int tr10001_IGNORE = 0;
 			SLinkedHashMap tr10001_SR = null;
-			for(SLinkedHashMap kw10000_SR : sMapperI.selectList("kw10000_SL")) {
+			for(SLinkedHashMap kw10000_SR : sMapperI.selectList("kw10000_SL", new SLinkedHashMap().add("mrkt_type", "3").add("on_prgr", "1"))) {
 				
 				if(loopTry++ % 100 == 0) {
 					log.info(

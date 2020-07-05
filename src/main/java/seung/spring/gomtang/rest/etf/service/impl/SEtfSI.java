@@ -1,5 +1,6 @@
 package seung.spring.gomtang.rest.etf.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
@@ -461,6 +463,69 @@ public class SEtfSI implements SEtfS {
 				sResponse.putResult("total_count", "" + etf0113_SL.size());
 				sResponse.putResult("etf0113", etf0113_SL);
 			}
+		}
+		
+		log.info("{}.{} ((END))", apiCode, requestCode);
+		sResponse.setResponse_time(String.valueOf(new Date().getTime()));
+		return sResponse;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public SResponse etf9001(SRequest sRequest) {
+		
+		String apiCode = "etf9001";
+		String error_message = "";
+		String requestCode = sRequest.getData().getString("request_code", "");
+		log.info("{}.{} ((START))", apiCode, requestCode);
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(requestCode)
+				.error_code(SCode.ERROR)
+				.data(sRequest.getData())
+				.build()
+				;
+		
+		SLinkedHashMap data = null;
+		List<SLinkedHashMap> schema = null;
+		SLinkedHashMap query = null;
+		try {
+			
+			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
+			
+			schema = sMapperI.selectList("etf9001_A");
+			
+			for(int year = 2002; year < 2021; year++) {
+				
+				query = new SLinkedHashMap();
+				query.put("year", year);
+				
+				for(SLinkedHashMap item : sMapperI.selectList("etf9001_B", query)) {
+					
+					data = new SLinkedHashMap();
+					data.put("year", year);
+					data.put("item_code", item.getString("item_code"));
+					query.put("item_code", item.getString("item_code"));
+					data.put("schema", schema);
+					data.put("tr40005", sMapperI.selectList("etf9001_C", query));
+					
+					FileUtils.write(new File(String.format("e:/temps/items/%s/%s.json", year, item.getString("item_code"))), data.toJsonString(true), "UTF-8");
+					
+				}// end of item
+				
+			}// end of year
+			
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.error("{}.{}.exception", apiCode, requestCode, e);
+			log.error("{}.{}.query", apiCode, requestCode, query.toJsonString(true));
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
 		}
 		
 		log.info("{}.{} ((END))", apiCode, requestCode);

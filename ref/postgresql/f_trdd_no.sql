@@ -7,7 +7,7 @@ RETURNS TABLE (
 AS
 $$
 DECLARE
-	base_date varchar(8) := '20200605';
+	base_date varchar(8) := '20021014';
 	prev_count int := 0;
 	post_count int := 0;
 BEGIN
@@ -30,7 +30,7 @@ BEGIN
 				FROM
 					t_etf_tr40005
 				WHERE 1 = 1
-					AND trdd > base_date
+					AND trdd >= base_date
 			) tr40005
 		) ord
 		LEFT OUTER JOIN t_etf_trdd trd
@@ -48,7 +48,7 @@ BEGIN
 		)
 	SELECT
 		ord.trdd
-		, ord.trdd_no * -1 AS trdd_no
+		, ord.trdd_no * -1 + 1 AS trdd_no
 	FROM (
 		SELECT
 			ROW_NUMBER() OVER(ORDER BY trdd DESC) AS trdd_no

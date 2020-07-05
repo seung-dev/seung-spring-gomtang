@@ -102,4 +102,56 @@ WHERE 1 = 1
 ]]>
 </select>
 
+<select id="etf9001_A" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	*
+FROM
+	v_table_schema
+WHERE 1 = 1
+	AND table_name IN ('t_etf_trdd', 't_etf_tr40005')
+]]>
+</select>
+
+<select id="etf9001_B" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	DISTINCT
+	item_code
+FROM
+	t_etf_trdd tet
+	, t_etf_tr40005 tr40005
+WHERE 1 = 1
+	AND tet.trdd = tr40005.trdd
+	AND tet.trdd LIKE CONCAT(#{year}, '%')
+]]>
+</select>
+
+<select id="etf9001_C" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	tr40005.item_code
+	, tr40005.trdd
+	, tet.trdd_no::varchar
+	, tr40005.etf_cp::varchar
+	, tr40005.etf_inc::varchar
+	, tr40005.etf_pcp::varchar
+	, tr40005.etf_vol::varchar
+	, tr40005.etf_nav::varchar
+	, tr40005.etf_volaccu::varchar
+	, tr40005.etf_indexd::varchar
+	, tr40005.etf_etfd::varchar
+	, tr40005.etf_ter::varchar
+	, tr40005.etf_ti::varchar
+	, tr40005.etf_tiinc::varchar
+FROM
+	t_etf_trdd tet
+	, t_etf_tr40005 tr40005
+WHERE 1 = 1
+	AND tet.trdd = tr40005.trdd
+	AND tet.trdd LIKE CONCAT(#{year}, '%')
+	AND tr40005.item_code = #{item_code}
+]]>
+</select>
+
 </mapper>

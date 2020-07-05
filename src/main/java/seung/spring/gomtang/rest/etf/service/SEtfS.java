@@ -20,4 +20,6 @@ public interface SEtfS {
 	public SResponse etf0112(SRequest sRequest);
 	
 	public SResponse etf0113(SRequest sRequest);
+	
+	public SResponse etf9001(SRequest sRequest);
 }

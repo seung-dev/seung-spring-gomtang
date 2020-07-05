@@ -207,6 +207,7 @@ public class SNaverSI {
 				.add("message", message)
 				;
 		
+		String itemCode = "";
 		SLinkedHashMap cuLog = null;
 		SLinkedHashMap query = null;
 		try {
@@ -239,7 +240,7 @@ public class SNaverSI {
 			int n0103_DO_NOTHING = 0;
 			int n0103_IGNORE = 0;
 			boolean doInsert = false;
-			for(SLinkedHashMap n0101 : sMapperI.selectList("n0101_SL")) {
+			for(SLinkedHashMap kw10000_SR : sMapperI.selectList("kw10000_SL", new SLinkedHashMap().add("mrkt_type", "3").add("on_prgr", "1"))) {
 				
 				if(loopTry++ % 100 == 0) {
 					log.info(
@@ -251,12 +252,14 @@ public class SNaverSI {
 							);
 				}
 				
+				itemCode = kw10000_SR.getString("item_code");
+				
 				httpResponse = Unirest
 						.post(sProperties.getJob().getProperty("seung.job.naver.n0102.url", ""))
 						.connectTimeout(1000 * 3)
 						.socketTimeout(1000 * 10)
 						.field("request_code", schdNo)
-						.field("item_code", n0101.getString("item_code"))
+						.field("item_code", itemCode)
 						.asBytes()
 						;
 				
@@ -288,7 +291,7 @@ public class SNaverSI {
 				
 				n0102 = response.getSLinkedHashMap("result").getSLinkedHashMap("n0102");
 				query = new SLinkedHashMap();
-				query.put("item_code", n0101.getString("item_code", ""));
+				query.put("item_code", kw10000_SR.getString("item_code", ""));
 				query.put("shar_oust", n0102.getString("shar_oust", ""));
 				query.put("indx_name", n0102.getString("indx_name", ""));
 				query.put("date_set", n0102.getString("date_set", ""));
@@ -318,7 +321,7 @@ public class SNaverSI {
 					
 					cuLog = cu;
 					query = new SLinkedHashMap();
-					query.put("item_code", n0101.getString("item_code", ""));
+					query.put("item_code", kw10000_SR.getString("item_code", ""));
 					query.put("item_name_cu", cu.getString("item_name_kr", ""));
 					query.put("asst_wght", cu.isEmpty("asst_wght") ? 0 : cu.getDouble("asst_wght"));
 					query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
@@ -376,6 +379,13 @@ public class SNaverSI {
 					, schdNo
 					, jobHistMap.getString("exception", "" + e)
 					, e
+					);
+			log.error(
+					"{}.{}.{}.item_code={}"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					, itemCode
 					);
 			if(cuLog != null) {
 				log.error(

@@ -22,7 +22,7 @@ public class SJobEtfB extends QuartzJobBean implements InterruptableJob {
 	
 	@Override
 	public void interrupt() throws UnableToInterruptJobException {
-		log.error("SJobDart was interrupted.");
+		log.error("SJobEtfB was interrupted.");
 	}
 	
 	@Override

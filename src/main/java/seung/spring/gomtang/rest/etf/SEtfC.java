@@ -298,4 +298,47 @@ public class SEtfC {
 		return "jsonView";
 	}
 	
+	@ApiOperation(response = SResponse.class, value = "ETF API SCHEMA", notes = "ETF")
+	@ApiResponses(value = {
+			@ApiResponse(
+					code = 200
+					, message = ""
+					, examples = @Example(value = {
+							@ExampleProperty(
+									mediaType = "application/json"
+									, value = ""
+									)})
+					)
+	})
+	@RequestMapping(value = {"/rest/etf/etf9001"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public String etf9001(
+			Model model
+			, @ApiIgnore SRequest sRequest
+			, @ApiParam(
+					value = "request code"
+					, type = "string"
+					, required = true
+					, example = "request_code_test"
+					) @RequestParam String request_code
+			, @ApiParam(
+					value = "recent trading date"
+					, type = "string"
+					, required = true
+					, example = "20200601"
+					) @RequestParam String trdd_last
+			, @ApiParam(
+					value = "run directory"
+					, type = "string"
+					, required = true
+					, example = "a"
+					) @RequestParam String dir_run
+			) throws Exception {
+		
+		log.debug("run");
+		
+		model.addAttribute("no-wrap", sEtfS.etf9001(sRequest));
+		
+		return "jsonView";
+	}
+	
 }

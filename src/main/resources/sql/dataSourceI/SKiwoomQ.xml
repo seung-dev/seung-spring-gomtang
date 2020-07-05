@@ -6,64 +6,82 @@
 <parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
 <resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
 
-<select id="kw10000_SR" parameterMap="parameterMap" resultMap="resultMap">
-<![CDATA[
-SELECT
-	item_code
-	, hash
-FROM
-	t_etf_kw10000
-WHERE 1 = 1
-	AND item_code = #{item_code}
-]]>
-</select>
-
-<insert id="kw10000_IR" parameterMap="parameterMap">
-<![CDATA[
-INSERT INTO t_etf_kw10000 (
-	item_code
-	, hash
-	, date_inst
-	, date_updt
-	, item_name
-	, etf_cnst
-	, etf_stts
-	)
-VALUES (
-	#{item_code}
-	, #{hash}
-	, NOW()
-	, NOW()
-	, #{item_name}
-	, #{etf_cnst}
-	, #{etf_stts}
-	)
-]]>
-</insert>
-
-<update id="kw10000_UR" parameterMap="parameterMap">
-<![CDATA[
-UPDATE t_etf_kw10000
-SET
-	hash = #{hash}
-	, date_updt = NOW()
-	, item_name = #{item_name}
-	, etf_cnst = #{etf_cnst}
-	, etf_stts = #{etf_stts}
-WHERE 1 = 1
-	AND item_code = #{item_code}
-]]>
-</update>
-
 <select id="kw10000_SL" resultMap="resultMap">
 <![CDATA[
 SELECT
 	item_code
 	, hash
 FROM
-	t_etf_kw10000
+	t_kw_kw10000
+WHERE 1 = 1
 ]]>
+	<if test="mrkt_type != null and mrkt_type != ''"><![CDATA[
+	AND mrkt_type = #{mrkt_type}
+	]]></if>
+	<if test="on_prgr != null and on_prgr != ''"><![CDATA[
+	AND on_prgr = #{on_prgr}
+	]]></if>
 </select>
+
+<update id="kw10000_prgr_UL">
+<![CDATA[
+UPDATE t_kw_kw10000
+SET
+	on_prgr = '0'
+]]>
+</update>
+
+<update id="kw10000_prgr_UR">
+<![CDATA[
+UPDATE t_kw_kw10000
+SET
+	on_prgr = '1'
+WHERE 1 = 1
+	AND item_code = #{item_code}
+]]>
+</update>
+
+<update id="kw10000_UR" parameterMap="parameterMap">
+<![CDATA[
+UPDATE t_kw_kw10000
+SET
+	on_prgr = #{on_prgr}
+	, date_updt = NOW()
+	, hash = #{hash}
+	, item_name = #{item_name}
+	, item_cnst = #{item_cnst}
+	, item_stts = #{item_stts}
+WHERE 1 = 1
+	AND item_code = #{item_code}
+]]>
+</update>
+
+<insert id="kw10000_IR" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_kw_kw10000 (
+	item_code
+	, mrkt_type
+	, on_prgr
+	, date_inst
+	, date_updt
+	, hash
+	, item_name
+	, item_cnst
+	, item_stts
+	)
+VALUES (
+	#{item_code}
+	, #{mrkt_type}
+	, #{on_prgr}
+	, NOW()
+	, NOW()
+	, #{hash}
+	, #{item_name}
+	, #{item_cnst}
+	, #{item_stts}
+	)
+]]>
+</insert>
 
 <select id="tr10001_SR" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[

@@ -15,14 +15,14 @@ import seung.spring.gomtang.job.fin.service.SKiwoomSI;
 
 @Slf4j
 @Component
-public class SJobEtfA extends QuartzJobBean implements InterruptableJob {
+public class SJobEtfC extends QuartzJobBean implements InterruptableJob {
 
 	@Resource(name = "sKiwoomS")
 	private SKiwoomSI sKiwoomS;
 	
 	@Override
 	public void interrupt() throws UnableToInterruptJobException {
-		log.error("SJobEtfA was interrupted.");
+		log.error("SJobEtfC was interrupted.");
 	}
 	
 	@Override
@@ -33,11 +33,13 @@ public class SJobEtfA extends QuartzJobBean implements InterruptableJob {
 		int timesMax = 3;
 		int timesTry = -1;
 		
-		// kw10000
+		// sr99999
+		String sr99999 = "";
 		timesTry = 0;
 		try {
 			while(timesTry++ < timesMax) {
-				if("0000".equals(sKiwoomS.kw10000(jobDataMap.getString("job_group"), jobDataMap.getString("job_name")))) {
+				sr99999 = sKiwoomS.sr99999(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
+				if("0000".equals(sr99999)) {
 					break;
 				}
 				Thread.sleep(1000 * 60 * 10);
@@ -45,13 +47,16 @@ public class SJobEtfA extends QuartzJobBean implements InterruptableJob {
 		} catch (InterruptedException e) {
 			log.error("Failed to do job {}.{}.", jobDataMap.getString("job_group"), jobDataMap.getString("job_name"), e);
 		}
-		// kw10000
+		if(!"0000".equals(sr99999)) {
+			return;
+		}
+		// sr99999
 		
-		// tr10001
+		// sr66666
 		timesTry = 0;
 		try {
 			while(timesTry++ < timesMax) {
-				if("0000".equals(sKiwoomS.tr10001(jobDataMap.getString("job_group"), jobDataMap.getString("job_name")))) {
+				if("0000".equals(sKiwoomS.sr66666(jobDataMap.getString("job_group"), jobDataMap.getString("job_name")))) {
 					break;
 				}
 				Thread.sleep(1000 * 60 * 10);
@@ -59,21 +64,7 @@ public class SJobEtfA extends QuartzJobBean implements InterruptableJob {
 		} catch (InterruptedException e) {
 			log.error("Failed to do job {}.{}.", jobDataMap.getString("job_group"), jobDataMap.getString("job_name"), e);
 		}
-		// tr10001
-		
-		// tr40005
-		timesTry = 0;
-		try {
-			while(timesTry++ < timesMax) {
-				if("0000".equals(sKiwoomS.tr40005(jobDataMap.getString("job_group"), jobDataMap.getString("job_name")))) {
-					break;
-				}
-				Thread.sleep(1000 * 60 * 10);
-			}
-		} catch (InterruptedException e) {
-			log.error("Failed to do job {}.{}.", jobDataMap.getString("job_group"), jobDataMap.getString("job_name"), e);
-		}
-		// tr40005
+		// sr66666
 		
 	}
 	
