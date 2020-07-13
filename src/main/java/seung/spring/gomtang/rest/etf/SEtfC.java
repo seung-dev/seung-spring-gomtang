@@ -320,18 +320,6 @@ public class SEtfC {
 					, required = true
 					, example = "request_code_test"
 					) @RequestParam String request_code
-			, @ApiParam(
-					value = "recent trading date"
-					, type = "string"
-					, required = true
-					, example = "20200601"
-					) @RequestParam String trdd_last
-			, @ApiParam(
-					value = "run directory"
-					, type = "string"
-					, required = true
-					, example = "a"
-					) @RequestParam String dir_run
 			) throws Exception {
 		
 		log.debug("run");

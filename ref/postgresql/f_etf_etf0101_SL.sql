@@ -56,6 +56,7 @@ RETURNS TABLE (
 	, etf_ter character varying
 	, etf_ti character varying
 	, etf_tiinc character varying
+	, expn_rate character varying
 	, date_updt character varying
 	)
 AS
@@ -125,6 +126,7 @@ BEGIN
 		, '      , tr40005.etf_ter::varchar'
 		, '      , tr40005.etf_ti::varchar'
 		, '      , tr40005.etf_tiinc::varchar'
+		, '      , n0102.expn_rate::varchar'
 		, '      , EXTRACT(EPOCH FROM tr40005.date_updt)::varchar AS date_updt'
 		);
 	query_text := CONCAT(
@@ -181,12 +183,14 @@ BEGIN
 		, '          AND tr10001.item_code = calc.item_code'
 		, '      , t_etf_kw10000 kw10000'
 		, '      , t_etf_tr40005 tr40005'
+		, '      , t_etf_n0102 n0102'
 		);
 	query_text := CONCAT(
 		query_text
 		, '  WHERE 1 = 1'
 		, '      AND tr10001.item_code = kw10000.item_code'
 		, '      AND tr10001.item_code = tr40005.item_code'
+		, '      AND tr10001.item_code = n0102.item_code'
 		, '      AND tr40005.trdd = v_trdd'
 		, '      v_rules'
 		--, '      AND calc.mmnt >= v_mmnt_threshold'

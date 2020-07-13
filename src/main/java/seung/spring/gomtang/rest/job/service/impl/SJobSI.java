@@ -25,6 +25,114 @@ public class SJobSI implements SJobS {
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	public SResponse sr33333(SRequest sRequest) {
+		
+		String apiCode = "sr33333";
+		String error_message = "";
+		String requestCode = sRequest.getData().getString("request_code", "");
+		log.info("{}.{} ((START))", apiCode, requestCode);
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(requestCode)
+				.error_code(SCode.ERROR)
+				.data(sRequest.getData())
+				.build()
+				;
+		
+		try {
+			
+			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
+			
+			sResponse.getResult().put("sr33333", sKiwoomS.sr33333("rest", "kiwoom"));
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.error("{}.{}.exception", apiCode, requestCode, e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+		}
+		
+		return sResponse;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public SResponse sr66666(SRequest sRequest) {
+		
+		String apiCode = "sr66666";
+		String error_message = "";
+		String requestCode = sRequest.getData().getString("request_code", "");
+		log.info("{}.{} ((START))", apiCode, requestCode);
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(requestCode)
+				.error_code(SCode.ERROR)
+				.data(sRequest.getData())
+				.build()
+				;
+		
+		try {
+			
+			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
+			
+			sResponse.getResult().put("sr66666", sKiwoomS.sr66666("rest", "kiwoom"));
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.error("{}.{}.exception", apiCode, requestCode, e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+		}
+		
+		return sResponse;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public SResponse sr99999(SRequest sRequest) {
+		
+		String apiCode = "sr99999";
+		String error_message = "";
+		String requestCode = sRequest.getData().getString("request_code", "");
+		log.info("{}.{} ((START))", apiCode, requestCode);
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(requestCode)
+				.error_code(SCode.ERROR)
+				.data(sRequest.getData())
+				.build()
+				;
+		
+		try {
+			
+			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
+			
+			sResponse.getResult().put("sr99999", sKiwoomS.sr99999("rest", "kiwoom"));
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.error("{}.{}.exception", apiCode, requestCode, e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+		}
+		
+		return sResponse;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	public SResponse kw10000(SRequest sRequest) {
 		
 		String apiCode = "kw10000";
@@ -44,6 +152,78 @@ public class SJobSI implements SJobS {
 			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
 			
 			sResponse.getResult().put("kw10000", sKiwoomS.kw10000("rest", "kiwoom"));
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.error("{}.{}.exception", apiCode, requestCode, e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+		}
+		
+		return sResponse;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public SResponse tr10001(SRequest sRequest) {
+		
+		String apiCode = "tr10001";
+		String error_message = "";
+		String requestCode = sRequest.getData().getString("request_code", "");
+		log.info("{}.{} ((START))", apiCode, requestCode);
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(requestCode)
+				.error_code(SCode.ERROR)
+				.data(sRequest.getData())
+				.build()
+				;
+		
+		try {
+			
+			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
+			
+			sResponse.getResult().put("tr10001", sKiwoomS.tr10001("rest", "kiwoom"));
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.error("{}.{}.exception", apiCode, requestCode, e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+		}
+		
+		return sResponse;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public SResponse tr40005(SRequest sRequest) {
+		
+		String apiCode = "tr40005";
+		String error_message = "";
+		String requestCode = sRequest.getData().getString("request_code", "");
+		log.info("{}.{} ((START))", apiCode, requestCode);
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(requestCode)
+				.error_code(SCode.ERROR)
+				.data(sRequest.getData())
+				.build()
+				;
+		
+		try {
+			
+			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
+			
+			sResponse.getResult().put("tr40005", sKiwoomS.tr40005("rest", "kiwoom"));
 			sResponse.success();
 			
 		} catch (Exception e) {

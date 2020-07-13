@@ -104,53 +104,59 @@ WHERE 1 = 1
 
 <select id="etf9001_A" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
-SELECT
-	*
-FROM
-	v_table_schema
-WHERE 1 = 1
-	AND table_name IN ('t_etf_trdd', 't_etf_tr40005')
+INSERT INTO t_kw_tr10081 (
+	item_code
+	, trdd
+	, hash
+	, date_inst
+	, date_updt
+	, etf_cp
+	, etf_vol
+	, etf_lp
+	, etf_hp
+	, etf_op
+	)
+VALUES (
+	#{item_code}
+	, #{trdd}
+	, #{hash}
+	, NOW()
+	, NOW()
+	, #{etf_cp}
+	, #{etf_vol}
+	, #{etf_lp}
+	, #{etf_hp}
+	, #{etf_op}
+	)
 ]]>
 </select>
 
 <select id="etf9001_B" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
 SELECT
-	DISTINCT
-	item_code
+	tr10081.hash
 FROM
-	t_etf_trdd tet
-	, t_etf_tr40005 tr40005
+	t_kw_tr10081 tr10081
 WHERE 1 = 1
-	AND tet.trdd = tr40005.trdd
-	AND tet.trdd LIKE CONCAT(#{year}, '%')
+	AND tr10081.item_code = #{item_code}
+	AND tr10081.trdd = #{trdd}
 ]]>
 </select>
 
 <select id="etf9001_C" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
-SELECT
-	tr40005.item_code
-	, tr40005.trdd
-	, tet.trdd_no::varchar
-	, tr40005.etf_cp::varchar
-	, tr40005.etf_inc::varchar
-	, tr40005.etf_pcp::varchar
-	, tr40005.etf_vol::varchar
-	, tr40005.etf_nav::varchar
-	, tr40005.etf_volaccu::varchar
-	, tr40005.etf_indexd::varchar
-	, tr40005.etf_etfd::varchar
-	, tr40005.etf_ter::varchar
-	, tr40005.etf_ti::varchar
-	, tr40005.etf_tiinc::varchar
-FROM
-	t_etf_trdd tet
-	, t_etf_tr40005 tr40005
+UPDATE t_kw_tr10081
+SET
+	date_updt = NOW()
+	, hash = #{hash}
+	, etf_cp = #{etf_cp}
+	, etf_vol = #{etf_vol}
+	, etf_lp = #{etf_lp}
+	, etf_hp = #{etf_hp}
+	, etf_op = #{etf_op}
 WHERE 1 = 1
-	AND tet.trdd = tr40005.trdd
-	AND tet.trdd LIKE CONCAT(#{year}, '%')
-	AND tr40005.item_code = #{item_code}
+	AND item_code = #{item_code}
+	AND trdd = #{trdd}
 ]]>
 </select>
 

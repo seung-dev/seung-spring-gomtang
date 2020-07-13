@@ -29,6 +29,99 @@ public class SJobC {
 	@Resource(name = "sJobS")
 	private SJobS sJobS;
 	
+	@ApiOperation(response = SResponse.class, value = "JOB EXECUTE - KIWOOM sr33333", notes = "ETF")
+	@ApiResponses(value = {
+			@ApiResponse(
+					code = 200
+					, message = ""
+					, examples = @Example(value = {
+							@ExampleProperty(
+									mediaType = "application/json"
+									, value = ""
+									)})
+					)
+	})
+	@RequestMapping(value = {"/rest/job/sr33333"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public String sr33333(
+			Model model
+			, @ApiIgnore SRequest sRequest
+			, @ApiParam(
+					value = "request code"
+					, type = "string"
+					, required = true
+					, example = "request_code_test"
+					) @RequestParam String request_code
+			) throws Exception {
+		
+		log.debug("run");
+		
+		model.addAttribute("no-wrap", sJobS.sr33333(sRequest));
+		
+		return "jsonView";
+	}
+	
+	@ApiOperation(response = SResponse.class, value = "JOB EXECUTE - KIWOOM sr66666", notes = "ETF")
+	@ApiResponses(value = {
+			@ApiResponse(
+					code = 200
+					, message = ""
+					, examples = @Example(value = {
+							@ExampleProperty(
+									mediaType = "application/json"
+									, value = ""
+									)})
+					)
+	})
+	@RequestMapping(value = {"/rest/job/sr66666"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public String sr66666(
+			Model model
+			, @ApiIgnore SRequest sRequest
+			, @ApiParam(
+					value = "request code"
+					, type = "string"
+					, required = true
+					, example = "request_code_test"
+					) @RequestParam String request_code
+			) throws Exception {
+		
+		log.debug("run");
+		
+		model.addAttribute("no-wrap", sJobS.sr66666(sRequest));
+		
+		return "jsonView";
+	}
+	
+	@ApiOperation(response = SResponse.class, value = "JOB EXECUTE - KIWOOM sr99999", notes = "ETF")
+	@ApiResponses(value = {
+			@ApiResponse(
+					code = 200
+					, message = ""
+					, examples = @Example(value = {
+							@ExampleProperty(
+									mediaType = "application/json"
+									, value = ""
+									)})
+					)
+	})
+	@RequestMapping(value = {"/rest/job/sr99999"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public String sr99999(
+			Model model
+			, @ApiIgnore SRequest sRequest
+			, @ApiParam(
+					value = "request code"
+					, type = "string"
+					, required = true
+					, example = "request_code_test"
+					) @RequestParam String request_code
+			) throws Exception {
+		
+		log.debug("run");
+		
+		model.addAttribute("no-wrap", sJobS.sr99999(sRequest));
+		
+		return "jsonView";
+	}
+	
 	@ApiOperation(response = SResponse.class, value = "JOB EXECUTE - KIWOOM kw10000", notes = "ETF")
 	@ApiResponses(value = {
 			@ApiResponse(
@@ -60,7 +153,69 @@ public class SJobC {
 		return "jsonView";
 	}
 	
-	@ApiOperation(response = SResponse.class, value = "JOB EXECUTE - NAVER n0102", notes = "ETF")
+	@ApiOperation(response = SResponse.class, value = "JOB EXECUTE - KIWOOM tr10001", notes = "ETF")
+	@ApiResponses(value = {
+			@ApiResponse(
+					code = 200
+					, message = ""
+					, examples = @Example(value = {
+							@ExampleProperty(
+									mediaType = "application/json"
+									, value = ""
+									)})
+					)
+	})
+	@RequestMapping(value = {"/rest/job/tr10001"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public String tr10001(
+			Model model
+			, @ApiIgnore SRequest sRequest
+			, @ApiParam(
+					value = "request code"
+					, type = "string"
+					, required = true
+					, example = "request_code_test"
+					) @RequestParam String request_code
+			) throws Exception {
+		
+		log.debug("run");
+		
+		model.addAttribute("no-wrap", sJobS.tr10001(sRequest));
+		
+		return "jsonView";
+	}
+	
+	@ApiOperation(response = SResponse.class, value = "JOB EXECUTE - KIWOOM tr40005", notes = "ETF")
+	@ApiResponses(value = {
+			@ApiResponse(
+					code = 200
+					, message = ""
+					, examples = @Example(value = {
+							@ExampleProperty(
+									mediaType = "application/json"
+									, value = ""
+									)})
+					)
+	})
+	@RequestMapping(value = {"/rest/job/tr40005"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public String tr40005(
+			Model model
+			, @ApiIgnore SRequest sRequest
+			, @ApiParam(
+					value = "request code"
+					, type = "string"
+					, required = true
+					, example = "request_code_test"
+					) @RequestParam String request_code
+			) throws Exception {
+		
+		log.debug("run");
+		
+		model.addAttribute("no-wrap", sJobS.tr40005(sRequest));
+		
+		return "jsonView";
+	}
+	
+	@ApiOperation(response = SResponse.class, value = "JOB EXECUTE - NAVER n0101", notes = "ETF")
 	@ApiResponses(value = {
 			@ApiResponse(
 					code = 200

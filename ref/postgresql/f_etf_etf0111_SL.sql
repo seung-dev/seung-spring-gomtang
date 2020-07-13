@@ -57,12 +57,12 @@ BEGIN
 		, etf0111.trdd
 		, etf0111.trdd_no::varchar
 		, etf0111.item_code
-		, etf0111.etf_cp::varchar
+		, ABS(etf0111.etf_cp)::varchar
 		, etf0111.etf_inc::varchar
 		, etf0111.etf_pcp::varchar
-		, etf0111.etf_vol::varchar
-		, etf0111.etf_nav::varchar
-		, etf0111.etf_volaccu::varchar
+		, ABS(etf0111.etf_vol)::varchar
+		, ABS(etf0111.etf_nav)::varchar
+		, ABS(etf0111.etf_volaccu)::varchar
 		, etf0111.etf_indexd::varchar
 		, etf0111.etf_etfd::varchar
 		, etf0111.etf_ter::varchar

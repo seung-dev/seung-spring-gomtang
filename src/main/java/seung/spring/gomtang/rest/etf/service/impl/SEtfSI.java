@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itfsw.query.builder.SqlQueryBuilderFactory;
 
 import lombok.extern.slf4j.Slf4j;
+import seung.java.kimchi.SConvert;
 import seung.java.kimchi.util.SCode;
 import seung.java.kimchi.util.SLinkedHashMap;
 import seung.spring.boot.conf.datasource.SMapperI;
@@ -486,34 +487,64 @@ public class SEtfSI implements SEtfS {
 				.build()
 				;
 		
-		SLinkedHashMap data = null;
-		List<SLinkedHashMap> schema = null;
+		String itemCode = "";
 		SLinkedHashMap query = null;
 		try {
 			
 			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
 			
-			schema = sMapperI.selectList("etf9001_A");
-			
-			for(int year = 2002; year < 2021; year++) {
+			SLinkedHashMap item = null;
+			File fileRun = null;
+			File fileDone = null;
+			SLinkedHashMap comm = null;
+			SLinkedHashMap data = null;
+			SLinkedHashMap etf9001_B = null;
+			for(File itemFile : new File("E:/temps/tr10081").listFiles()) {
 				
-				query = new SLinkedHashMap();
-				query.put("year", year);
+				if(!itemFile.exists()) {
+					continue;
+				}
 				
-				for(SLinkedHashMap item : sMapperI.selectList("etf9001_B", query)) {
-					
-					data = new SLinkedHashMap();
-					data.put("year", year);
-					data.put("item_code", item.getString("item_code"));
-					query.put("item_code", item.getString("item_code"));
-					data.put("schema", schema);
-					data.put("tr40005", sMapperI.selectList("etf9001_C", query));
-					
-					FileUtils.write(new File(String.format("e:/temps/items/%s/%s.json", year, item.getString("item_code"))), data.toJsonString(true), "UTF-8");
-					
-				}// end of item
+				fileRun = new File("E:/temps/tr10081/run/" + itemFile.getName());
+				fileDone = new File("E:/temps/tr10081/done/" + itemFile.getName());
 				
-			}// end of year
+				FileUtils.moveFile(itemFile, fileRun);
+				
+				item = new SLinkedHashMap(FileUtils.readFileToString(fileRun, "UTF-8"));
+				
+				comm = item.getListSLinkedHashMap("comm").get(0);
+				if(!"0000".equals(comm.getString("error_code"))) {
+					continue;
+				}
+				
+				data = item.getListSLinkedHashMap("data").get(0);
+				itemCode = data.getString("item_code");
+				
+				for(SLinkedHashMap dailyData : item.getSLinkedHashMap("result").getListSLinkedHashMap("tr10081")) {
+					
+					query = new SLinkedHashMap();
+					query.put("item_code", itemCode);
+					query.put("trdd", dailyData.getString("date"));
+					query.put("etf_cp", dailyData.getDouble("cp"));
+					query.put("etf_vol", dailyData.getBigInteger("vol"));
+					query.put("etf_lp", dailyData.getDouble("lp"));
+					query.put("etf_hp", dailyData.getDouble("hp"));
+					query.put("etf_op", dailyData.getDouble("op"));
+					query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
+					
+					etf9001_B = sMapperI.selectOne("etf9001_B", query);
+					
+					if(etf9001_B == null) {
+						sMapperI.insert("etf9001_A", query);
+					} else if(!query.getString("hash").equals(etf9001_B.getString("hash"))) {
+						sMapperI.update("etf9001_C", query);
+					}
+					
+				}// end of daily
+				
+				FileUtils.moveFile(fileRun, fileDone);
+				
+			}// end of dir
 			
 			sResponse.success();
 			
