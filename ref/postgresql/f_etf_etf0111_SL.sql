@@ -18,6 +18,9 @@ RETURNS TABLE (
 	, etf_ter character varying
 	, etf_ti character varying
 	, etf_tiinc character varying
+	, etf_lp character varying
+	, etf_hp character varying
+	, etf_op character varying
 	, date_updt character varying
 	)
 AS
@@ -68,6 +71,9 @@ BEGIN
 		, etf0111.etf_ter::varchar
 		, etf0111.etf_ti::varchar
 		, etf0111.etf_tiinc::varchar
+		, COALESCE(etf0111.etf_lp::varchar, '')
+		, COALESCE(etf0111.etf_hp::varchar, '')
+		, COALESCE(etf0111.etf_op::varchar, '')
 		, EXTRACT(EPOCH FROM etf0111.date_updt)::varchar AS date_updt
 	FROM (
 		SELECT
@@ -86,10 +92,17 @@ BEGIN
 			, tr40005.etf_ter
 			, tr40005.etf_ti
 			, tr40005.etf_tiinc
+			, tr10081.etf_lp
+			, tr10081.etf_hp
+			, tr10081.etf_op
 			, tr40005.date_updt
 		FROM
 			t_etf_trdd trd
 			, t_etf_tr40005 tr40005
+			LEFT OUTER JOIN t_kw_tr10081 tr10081
+				ON 1 = 1
+				AND tr40005.item_code = tr10081.item_code
+				AND tr40005.trdd = tr10081.trdd
 		WHERE 1 = 1
 			AND trd.trdd = tr40005.trdd
 			AND tr40005.item_code = req_item_code

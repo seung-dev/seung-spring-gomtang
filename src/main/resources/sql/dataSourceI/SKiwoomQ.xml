@@ -6,20 +6,25 @@
 <parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
 <resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
 
-<select id="kw10000_SL" resultMap="resultMap">
+<select id="kw10000_SL" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
 SELECT
-	item_code
-	, hash
+	kw10000.item_code
+	, kw10000.hash
+	, COALESCE(prtt.trdd, '') AS trdd
 FROM
-	t_kw_kw10000
+	t_kw_kw10000 kw10000
+	LEFT OUTER JOIN v_etf_tr40005_prtt prtt
+		ON 1 = 1
+		AND kw10000.item_code = prtt.item_code
+		AND prtt.rnk = 3
 WHERE 1 = 1
 ]]>
 	<if test="mrkt_type != null and mrkt_type != ''"><![CDATA[
-	AND mrkt_type = #{mrkt_type}
+	AND kw10000.mrkt_type = #{mrkt_type}
 	]]></if>
 	<if test="on_prgr != null and on_prgr != ''"><![CDATA[
-	AND on_prgr = #{on_prgr}
+	AND kw10000.on_prgr = #{on_prgr}
 	]]></if>
 </select>
 
@@ -82,6 +87,26 @@ VALUES (
 	)
 ]]>
 </insert>
+
+<select id="tr10001_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	kw10000.item_code
+	, COALESCE(tr10001.hash, '') AS hash
+FROM
+	t_kw_kw10000 kw10000
+	LEFT OUTER JOIN t_etf_tr10001 tr10001
+		ON 1 = 1
+		AND kw10000.item_code = tr10001.item_code
+WHERE 1 = 1
+]]>
+	<if test="mrkt_type != null and mrkt_type != ''"><![CDATA[
+	AND kw10000.mrkt_type = #{mrkt_type}
+	]]></if>
+	<if test="on_prgr != null and on_prgr != ''"><![CDATA[
+	AND kw10000.on_prgr = #{on_prgr}
+	]]></if>
+</select>
 
 <select id="tr10001_SR" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[

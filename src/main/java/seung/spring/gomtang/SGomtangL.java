@@ -30,7 +30,7 @@ public class SGomtangL {
 		log.info(SString.toJson(sProperties, true));
 		
 		// job init
-		sJobI.initJob();
+//		sJobI.initJob();
 		
 	}
 	
