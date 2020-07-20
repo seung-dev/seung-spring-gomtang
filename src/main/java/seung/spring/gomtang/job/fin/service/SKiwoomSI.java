@@ -94,7 +94,7 @@ public class SKiwoomSI {
 			
 		} catch (Exception e) {
 			log.error(
-					"{}.{}.{}.exception {}"
+					"{}.{}.{}.exception={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -109,7 +109,7 @@ public class SKiwoomSI {
 			jobHistMap.put("error_code", errorCode);
 			jobHistMap.put("message", message);
 			log.info(
-					"{}.{}.{}.error_code {}"
+					"{}.{}.{}.error_code={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -192,7 +192,7 @@ public class SKiwoomSI {
 			
 		} catch (Exception e) {
 			log.error(
-					"{}.{}.{}.exception {}"
+					"{}.{}.{}.exception={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -207,7 +207,7 @@ public class SKiwoomSI {
 			jobHistMap.put("error_code", errorCode);
 			jobHistMap.put("message", message);
 			log.info(
-					"{}.{}.{}.error_code {}"
+					"{}.{}.{}.error_code={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -290,7 +290,7 @@ public class SKiwoomSI {
 			
 		} catch (Exception e) {
 			log.error(
-					"{}.{}.{}.exception {}"
+					"{}.{}.{}.exception={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -305,7 +305,7 @@ public class SKiwoomSI {
 			jobHistMap.put("error_code", errorCode);
 			jobHistMap.put("message", message);
 			log.info(
-					"{}.{}.{}.error_code {}"
+					"{}.{}.{}.error_code={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -388,7 +388,7 @@ public class SKiwoomSI {
 			
 		} catch (Exception e) {
 			log.error(
-					"{}.{}.{}.exception {}"
+					"{}.{}.{}.exception={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -403,7 +403,7 @@ public class SKiwoomSI {
 			jobHistMap.put("error_code", errorCode);
 			jobHistMap.put("message", message);
 			log.info(
-					"{}.{}.{}.error_code {}"
+					"{}.{}.{}.error_code={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -456,7 +456,7 @@ public class SKiwoomSI {
 			
 			sMapperI.insert("schd_prev", jobHistMap);
 			
-			sMapperI.update("kw10000_prgr_UL");
+			sMapperI.update("kw10000_UL");
 			
 			String market_type = "";
 			List<SLinkedHashMap> preItems = null;
@@ -465,11 +465,9 @@ public class SKiwoomSI {
 			List<SLinkedHashMap> comm = null;
 			List<SLinkedHashMap> result = null;
 			int loopTry = 0;
-			boolean isIgnore = false;
 			boolean isUpdate = false;
 			int kw10000_IR = 0;
 			int kw10000_UR = 0;
-			int kw10000_IGNORE = 0;
 			for(SLinkedHashMap market : sMapperI.selectList("api_optn_SL", new SLinkedHashMap().add("optn_set", "kw10000.market_type"))) {
 				
 				market_type = market.getString("optn_code");
@@ -503,7 +501,7 @@ public class SKiwoomSI {
 				
 				if(HttpStatus.OK.value() != httpResponse.getStatus()) {
 					message = String.format(
-							"%s.%s.%s.status %d"
+							"%s.%s.%s.status=%d"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -518,7 +516,7 @@ public class SKiwoomSI {
 				comm = response.getListSLinkedHashMap("comm");
 				if(comm.isEmpty()) {
 					message = String.format(
-							"%s.%s.%s.comm empty"
+							"%s.%s.%s.comm=empty"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -529,7 +527,7 @@ public class SKiwoomSI {
 				
 				if(!SCode.SUCCESS.equals(comm.get(0).getString("error_code", ""))) {
 					message = String.format(
-							"%s.%s.%s.error_code %s"
+							"%s.%s.%s.error_code=%s"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -545,7 +543,7 @@ public class SKiwoomSI {
 					
 					if(loopTry++ % 100 == 0) {
 						log.info(
-								"{}.{}.{}.try {}"
+								"{}.{}.{}.try={}"
 								, jobHistMap.getString("schd_set", "")
 								, jobHistMap.getString("schd_code", "")
 								, jobHistMap.getString("schd_no", "")
@@ -562,24 +560,16 @@ public class SKiwoomSI {
 					query.put("item_stts", item.getString("stts", ""));
 					query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
 					
-					isIgnore = false;
 					isUpdate = false;
 					for(SLinkedHashMap preItem : preItems) {
 						if(preItem.getString("item_code").equals(query.getString("item_code", ""))) {
-							if(preItem.getString("hash").equals(query.getString("hash", ""))) {
-								isIgnore = true;
-							} else {
-								isUpdate = true;
-							}
+							isUpdate = true;
 							break;
 						}
 					}
 					
 					if(isUpdate) {
-						kw10000_UR += sMapperI.insert("kw10000_UR", query);
-					} else if(isIgnore) {
-						sMapperI.update("kw10000_prgr_UR", query);
-						kw10000_IGNORE++;
+						kw10000_UR += sMapperI.update("kw10000_UR", query);
 					} else {
 						kw10000_IR += sMapperI.insert("kw10000_IR", query);
 					}
@@ -589,16 +579,15 @@ public class SKiwoomSI {
 			}// end of market
 			
 			message = String.format(
-					"kw10000_IR=%d, kw10000_UR=%d, kw10000_IGNORE=%d"
+					"kw10000_IR=%d, kw10000_UR=%d"
 					, kw10000_IR
 					, kw10000_UR
-					, kw10000_IGNORE
 					);
 			errorCode = "0000";
 			
 		} catch (Exception e) {
 			log.error(
-					"{}.{}.{}.exception {}"
+					"{}.{}.{}.exception={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -607,7 +596,7 @@ public class SKiwoomSI {
 					);
 			if(query != null) {
 				log.error(
-						"{}.{}.{}.query {}"
+						"{}.{}.{}.query={}"
 						, jobHistMap.getString("schd_set", "")
 						, jobHistMap.getString("schd_code", "")
 						, schdNo
@@ -619,7 +608,7 @@ public class SKiwoomSI {
 			jobHistMap.put("error_code", errorCode);
 			jobHistMap.put("message", message);
 			log.info(
-					"{}.{}.{}.error_code {}"
+					"{}.{}.{}.error_code={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -688,7 +677,7 @@ public class SKiwoomSI {
 				
 				if(loopTry++ % 100 == 0) {
 					log.info(
-							"{}.{}.{}.try {}"
+							"{}.{}.{}.try={}"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, jobHistMap.getString("schd_no", "")
@@ -708,7 +697,7 @@ public class SKiwoomSI {
 				
 				if(HttpStatus.OK.value() != httpResponse.getStatus()) {
 					message = String.format(
-							"%s.%s.%s.status %d"
+							"%s.%s.%s.status=%d"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -723,7 +712,7 @@ public class SKiwoomSI {
 				comm = response.getListSLinkedHashMap("comm");
 				if(comm.isEmpty()) {
 					message = String.format(
-							"%s.%s.%s.comm empty"
+							"%s.%s.%s.comm=empty"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -733,7 +722,7 @@ public class SKiwoomSI {
 				}
 				if(!SCode.SUCCESS.equals(comm.get(0).getString("error_code", ""))) {
 					message = String.format(
-							"%s.%s.%s.error_code %s"
+							"%s.%s.%s.error_code=%s"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -748,7 +737,7 @@ public class SKiwoomSI {
 				data = response.getListSLinkedHashMap("data");
 				if(data.isEmpty()) {
 					message = String.format(
-							"%s.%s.%s.data empty"
+							"%s.%s.%s.data=empty"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -824,7 +813,7 @@ public class SKiwoomSI {
 			
 		} catch (Exception e) {
 			log.error(
-					"{}.{}.{}.exception {}"
+					"{}.{}.{}.exception={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -832,7 +821,7 @@ public class SKiwoomSI {
 					, e
 					);
 			log.error(
-					"{}.{}.{}.item_code {}"
+					"{}.{}.{}.item_code={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -840,7 +829,7 @@ public class SKiwoomSI {
 					);
 			if(query != null) {
 				log.error(
-						"{}.{}.{}.query {}"
+						"{}.{}.{}.query={}"
 						, jobHistMap.getString("schd_set", "")
 						, jobHistMap.getString("schd_code", "")
 						, schdNo
@@ -852,7 +841,7 @@ public class SKiwoomSI {
 			jobHistMap.put("error_code", errorCode);
 			jobHistMap.put("message", message);
 			log.info(
-					"{}.{}.{}.error_code {}"
+					"{}.{}.{}.error_code={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -908,23 +897,28 @@ public class SKiwoomSI {
 			
 			String itemCode = "";
 			int loopTry = 0;
+			int timesMax = 3;
+			int timesTry = 0;
 			HttpResponse<byte[]> httpResponse = null;
 			SLinkedHashMap response = null;
 			List<SLinkedHashMap> comm = null;
 			List<SLinkedHashMap> tr10081 = null;
+			int limit = 3;
+			List<SLinkedHashMap> tr10081_SL = null;
+			boolean isInsert = false;
+			boolean isUpdate = false;
+			boolean isContinue = false;
+			boolean isBreak = false;
 			int tr10081_IR = 0;
 			int tr10081_UR = 0;
 			int tr10081_DO_NOTHING = 0;
 			int tr10081_IGNORE = 0;
-			SLinkedHashMap tr10081_SR = null;
-			int prev_IR = 0;
-			int post_IR = 0;
 			for(SLinkedHashMap kw10000_SR : sMapperI.selectList("kw10000_SL", new SLinkedHashMap().add("mrkt_type", "3").add("on_prgr", "1"))) {
 				
 				itemCode = kw10000_SR.getString("item_code");
 				
 				log.info(
-						"{}.{}.{}.item_code {}"
+						"{}.{}.{}.item_code={}"
 						, jobHistMap.getString("schd_set", "")
 						, jobHistMap.getString("schd_code", "")
 						, schdNo
@@ -933,7 +927,7 @@ public class SKiwoomSI {
 				
 				if(loopTry++ % 100 == 0) {
 					log.info(
-							"{}.{}.{}.try {}"
+							"{}.{}.{}.try={}"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -941,24 +935,54 @@ public class SKiwoomSI {
 							);
 				}
 				
-				httpResponse = Unirest
-						.post(sProperties.getJob().getProperty("seung.job.kiwoom.tr10081.url", ""))
-						.connectTimeout(1000 * 3)
-						.socketTimeout(1000 * 30)
-						.header("Content-Type", "application/json")
-						.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
-						.body(new SLinkedHashMap()
-								.add("date", SDate.getDateString("yyyyMMdd"))
-								.add("repeat_600", "1")
-								.add("item_code", itemCode)
-								.toJsonString()
-								)
-						.asBytes()
-						;
+				timesTry = 0;
+				while(timesTry++ < timesMax) {
+					
+					try {
+						
+						httpResponse = Unirest
+								.post(sProperties.getJob().getProperty("seung.job.kiwoom.tr10081.url", ""))
+								.connectTimeout(1000 * 3)
+								.socketTimeout(1000 * 30)
+								.header("Content-Type", "application/json")
+								.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+								.body(new SLinkedHashMap()
+										.add("date", SDate.getDateString("yyyyMMdd"))
+										.add("repeat_600", "1")
+										.add("item_code", itemCode)
+										.toJsonString()
+										)
+								.asBytes()
+								;
+						
+						break;
+						
+					} catch (Exception e) {
+						
+						Unirest
+							.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr99999.url", ""))
+							.connectTimeout(1000 * 3)
+							.socketTimeout(1000 * 60 * 10)
+							.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+							.asBytes()
+							;
+						
+						Thread.sleep(1000);
+						
+						Unirest
+							.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr66666.url", ""))
+							.connectTimeout(1000 * 3)
+							.socketTimeout(1000 * 60 * 10)
+							.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+							.asBytes()
+							;
+					}
+					
+				}
 				
 				if(HttpStatus.OK.value() != httpResponse.getStatus()) {
 					message = String.format(
-							"%s.%s.%s.response_code %d"
+							"%s.%s.%s.response_code=%d"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -973,7 +997,7 @@ public class SKiwoomSI {
 				comm = response.getListSLinkedHashMap("comm");
 				if(comm.isEmpty()) {
 					message = String.format(
-							"%s.%s.%s.comm empty"
+							"%s.%s.%s.comm=empty"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -983,7 +1007,7 @@ public class SKiwoomSI {
 				}
 				if(!SCode.SUCCESS.equals(comm.get(0).getString("error_code", ""))) {
 					message = String.format(
-							"%s.%s.%s.error_code %s"
+							"%s.%s.%s.error_code=%s"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -994,9 +1018,10 @@ public class SKiwoomSI {
 				}
 				
 				tr10081 = response.getSLinkedHashMap("result").getListSLinkedHashMap("tr10081");
+				
 				if(tr10081.isEmpty()) {
 					message = String.format(
-							"%s.%s.%s.tr10081 empty"
+							"%s.%s.%s.tr10081=empty"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -1005,6 +1030,8 @@ public class SKiwoomSI {
 					throw new SGomtangException(message);
 				}
 				
+				kw10000_SR.put("limit", limit);
+				tr10081_SL = sMapperI.selectList("tr10081_SL", kw10000_SR);
 				for(SLinkedHashMap item : tr10081) {
 					
 					query = new SLinkedHashMap();
@@ -1017,18 +1044,63 @@ public class SKiwoomSI {
 					query.put("etf_op", item.getDouble("op"));
 					query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
 					
-					tr10081_SR = sMapperI.selectOne("tr10081_SR", query);
-					if(tr10081_SR == null) {
-						tr10081_IR += sMapperI.insert("tr10081_IR", query);
-					} else if(query.getString("hash", "").equals(tr10081_SR.getString("hash", "1"))) {
-						tr10081_DO_NOTHING++;
-					} else if(!query.getString("hash", "").equals(tr10081_SR.getString("hash", "1"))) {
-						tr10081_UR += sMapperI.insert("tr10081_UR", query);
-					} else {
-						tr10081_IGNORE++;
+					isInsert = true;
+					isUpdate = false;
+					isContinue = false;
+					isBreak = false;
+					for(SLinkedHashMap tr10081_SR : tr10081_SL) {
+						if(tr10081_SR.getString("trdd").equals(query.getString("trdd"))) {
+							if(tr10081_SR.getString("hash").equals(query.getString("hash"))) {
+								isContinue = true;
+							} else {
+								isUpdate = true;
+							}
+							if(tr10081_SR.getInt("rn") == limit) {
+								isBreak = true;
+							}
+							isInsert = false;
+							break;
+						}
 					}
 					
-					if(kw10000_SR.getString("trdd", "20200101").equals(item.getString("date", ""))) {
+					if(isInsert) {
+						tr10081_IR += sMapperI.insert("tr10081_IR", query);
+						log.debug(
+								"{}.{}.{}.{}.IR={}"
+								, jobHistMap.getString("schd_set", "")
+								, jobHistMap.getString("schd_code", "")
+								, schdNo
+								, itemCode
+								, query.getString("trdd")
+								);
+					} else if(isContinue) {
+						log.debug(
+								"{}.{}.{}.{}.IGNORE={}"
+								, jobHistMap.getString("schd_set", "")
+								, jobHistMap.getString("schd_code", "")
+								, schdNo
+								, itemCode
+								, query.getString("trdd")
+								);
+						tr10081_IGNORE++;
+						if(isBreak) {
+							break;
+						} else {
+							continue;
+						}
+					} else if(isUpdate) {
+						log.debug(
+								"{}.{}.{}.{}.UR={}"
+								, jobHistMap.getString("schd_set", "")
+								, jobHistMap.getString("schd_code", "")
+								, schdNo
+								, itemCode
+								, query.getString("trdd")
+								);
+						tr10081_UR += sMapperI.insert("tr10081_UR", query);
+					}
+					
+					if(isBreak) {
 						break;
 					}
 					
@@ -1038,25 +1110,20 @@ public class SKiwoomSI {
 				
 			}// end of tr10081_SL
 			
-			SLinkedHashMap trddNo = sMapperI.selectOne("trdd_no_IL");
-			prev_IR = trddNo.getInt("prev");
-			post_IR = trddNo.getInt("post");
-			
 			message = String.format(
-					"tr10081_IR=%d, tr10081_UR=%d, tr10081_DO_NOTHING=%d, tr10081_IGNORE=%d, prev_IR=%d, post_IR=%d"
+					"tr10081_IR=%d, tr10081_UR=%d, tr10081_DO_NOTHING=%d, tr10081_IGNORE=%d"
 					, tr10081_IR
 					, tr10081_UR
 					, tr10081_DO_NOTHING
 					, tr10081_IGNORE
-					, prev_IR
-					, post_IR
 					)
 					;
+			
 			errorCode = "0000";
 			
 		} catch (Exception e) {
 			log.error(
-					"{}.{}.{}.exception {}"
+					"{}.{}.{}.exception={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -1065,7 +1132,7 @@ public class SKiwoomSI {
 					);
 			if(query != null) {
 				log.error(
-						"{}.{}.{}.query {}"
+						"{}.{}.{}.query={}"
 						, jobHistMap.getString("schd_set", "")
 						, jobHistMap.getString("schd_code", "")
 						, schdNo
@@ -1077,7 +1144,7 @@ public class SKiwoomSI {
 			jobHistMap.put("error_code", errorCode);
 			jobHistMap.put("message", message);
 			log.info(
-					"{}.{}.{}.error_code {}"
+					"{}.{}.{}.error_code={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -1131,30 +1198,39 @@ public class SKiwoomSI {
 			
 			sMapperI.insert("schd_prev", jobHistMap);
 			
+			String itemCode = "";
 			int loopTry = 0;
+			int timesMax = 3;
+			int timesTry = 0;
 			HttpResponse<byte[]> httpResponse = null;
 			SLinkedHashMap response = null;
 			List<SLinkedHashMap> comm = null;
 			List<SLinkedHashMap> tr40005 = null;
+			int limit = 3;
+			List<SLinkedHashMap> tr40005_SL = null;
+			boolean isInsert = false;
+			boolean isUpdate = false;
+			boolean isContinue = false;
+			boolean isBreak = false;
 			int tr40005_IR = 0;
 			int tr40005_UR = 0;
 			int tr40005_DO_NOTHING = 0;
 			int tr40005_IGNORE = 0;
-			SLinkedHashMap tr40005_SR = null;
-			int prev_IR = 0;
-			int post_IR = 0;
-			for(SLinkedHashMap tr40005_rnk : sMapperI.selectList("tr40005_SL", jobHistMap)) {
+			for(SLinkedHashMap kw10000_SR : sMapperI.selectList("kw10000_SL", new SLinkedHashMap().add("mrkt_type", "3").add("on_prgr", "1"))) {
+				
+				itemCode = kw10000_SR.getString("item_code");
 				
 				log.info(
-						"{}.{}.{}.item_code {}"
+						"{}.{}.{}.item_code={}"
 						, jobHistMap.getString("schd_set", "")
 						, jobHistMap.getString("schd_code", "")
 						, schdNo
-						, tr40005_rnk.getString("item_code")
+						, itemCode
 						);
+				
 				if(loopTry++ % 100 == 0) {
 					log.info(
-							"{}.{}.{}.try {}"
+							"{}.{}.{}.try={}"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -1162,23 +1238,53 @@ public class SKiwoomSI {
 							);
 				}
 				
-				httpResponse = Unirest
-						.post(sProperties.getJob().getProperty("seung.job.kiwoom.tr40005.url", ""))
+				timesTry = 0;
+				while(timesTry++ < timesMax) {
+					
+					try {
+						
+						httpResponse = Unirest
+								.post(sProperties.getJob().getProperty("seung.job.kiwoom.tr40005.url", ""))
+								.connectTimeout(1000 * 3)
+								.socketTimeout(1000 * 30)
+								.header("Content-Type", "application/json")
+								.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+								.body(new SLinkedHashMap()
+										.add("repeat_30", "1")
+										.add("item_code", itemCode)
+										.toJsonString()
+										)
+								.asBytes()
+								;
+						
+						break;
+						
+					} catch (Exception e) {
+						
+						Unirest
+						.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr99999.url", ""))
 						.connectTimeout(1000 * 3)
-						.socketTimeout(1000 * 30)
-						.header("Content-Type", "application/json")
+						.socketTimeout(1000 * 60 * 10)
 						.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
-						.body(new SLinkedHashMap()
-								.add("repeat_30", "1")
-								.add("item_code", tr40005_rnk.getString("item_code"))
-								.toJsonString()
-								)
 						.asBytes()
 						;
+						
+						Thread.sleep(1000);
+						
+						Unirest
+						.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr66666.url", ""))
+						.connectTimeout(1000 * 3)
+						.socketTimeout(1000 * 60 * 10)
+						.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+						.asBytes()
+						;
+					}
+					
+				}
 				
 				if(HttpStatus.OK.value() != httpResponse.getStatus()) {
 					message = String.format(
-							"%s.%s.%s.response_code %d"
+							"%s.%s.%s.response_code=%d"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -1193,7 +1299,7 @@ public class SKiwoomSI {
 				comm = response.getListSLinkedHashMap("comm");
 				if(comm.isEmpty()) {
 					message = String.format(
-							"%s.%s.%s.comm empty"
+							"%s.%s.%s.comm=empty"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -1203,7 +1309,7 @@ public class SKiwoomSI {
 				}
 				if(!SCode.SUCCESS.equals(comm.get(0).getString("error_code", ""))) {
 					message = String.format(
-							"%s.%s.%s.error_code %s"
+							"%s.%s.%s.error_code=%s"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -1214,9 +1320,10 @@ public class SKiwoomSI {
 				}
 				
 				tr40005 = response.getSLinkedHashMap("result").getListSLinkedHashMap("tr40005");
+				
 				if(tr40005.isEmpty()) {
 					message = String.format(
-							"%s.%s.%s.tr40005 empty"
+							"%s.%s.%s.tr40005=empty"
 							, jobHistMap.getString("schd_set", "")
 							, jobHistMap.getString("schd_code", "")
 							, schdNo
@@ -1225,11 +1332,13 @@ public class SKiwoomSI {
 					throw new SGomtangException(message);
 				}
 				
+				kw10000_SR.put("limit", limit);
+				tr40005_SL = sMapperI.selectList("tr40005_SL", kw10000_SR);
 				for(SLinkedHashMap item : tr40005) {
 					
 					query = new SLinkedHashMap();
+					query.put("item_code", itemCode);
 					query.put("trdd", item.getString("date"));
-					query.put("item_code", tr40005_rnk.getString("item_code"));
 					query.put("etf_cp", item.getDouble("cp"));
 					query.put("etf_inc", item.getDouble("inc"));
 					query.put("etf_pcp", item.getDouble("pcp"));
@@ -1243,18 +1352,63 @@ public class SKiwoomSI {
 					query.put("etf_tiinc", item.getDouble("tiinc"));
 					query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
 					
-					tr40005_SR = sMapperI.selectOne("tr40005_SR", query);
-					if(tr40005_SR == null) {
-						tr40005_IR += sMapperI.insert("tr40005_IR", query);
-					} else if(query.getString("hash", "").equals(tr40005_SR.getString("hash", "1"))) {
-						tr40005_DO_NOTHING++;
-					} else if(!query.getString("hash", "").equals(tr40005_SR.getString("hash", "1"))) {
-						tr40005_UR += sMapperI.insert("tr40005_UR", query);
-					} else {
-						tr40005_IGNORE++;
+					isInsert = true;
+					isUpdate = false;
+					isContinue = false;
+					isBreak = false;
+					for(SLinkedHashMap tr40005_SR : tr40005_SL) {
+						if(tr40005_SR.getString("trdd").equals(query.getString("trdd"))) {
+							if(tr40005_SR.getString("hash").equals(query.getString("hash"))) {
+								isContinue = true;
+							} else {
+								isUpdate = true;
+							}
+							if(tr40005_SR.getInt("rn") == limit) {
+								isBreak = true;
+							}
+							isInsert = false;
+							break;
+						}
 					}
 					
-					if(tr40005_rnk.getString("trdd", "20200101").equals(item.getString("date", ""))) {
+					if(isInsert) {
+						tr40005_IR += sMapperI.insert("tr40005_IR", query);
+						log.debug(
+								"{}.{}.{}.{}.IR={}"
+								, jobHistMap.getString("schd_set", "")
+								, jobHistMap.getString("schd_code", "")
+								, schdNo
+								, itemCode
+								, query.getString("trdd")
+								);
+					} else if(isContinue) {
+						log.debug(
+								"{}.{}.{}.{}.IGNORE={}"
+								, jobHistMap.getString("schd_set", "")
+								, jobHistMap.getString("schd_code", "")
+								, schdNo
+								, itemCode
+								, query.getString("trdd")
+								);
+						tr40005_IGNORE++;
+						if(isBreak) {
+							break;
+						} else {
+							continue;
+						}
+					} else if(isUpdate) {
+						log.debug(
+								"{}.{}.{}.{}.UR={}"
+								, jobHistMap.getString("schd_set", "")
+								, jobHistMap.getString("schd_code", "")
+								, schdNo
+								, itemCode
+								, query.getString("trdd")
+								);
+						tr40005_UR += sMapperI.insert("tr40005_UR", query);
+					}
+					
+					if(isBreak) {
 						break;
 					}
 					
@@ -1264,25 +1418,20 @@ public class SKiwoomSI {
 				
 			}// end of tr40005_SL
 			
-			SLinkedHashMap trddNo = sMapperI.selectOne("trdd_no_IL");
-			prev_IR = trddNo.getInt("prev");
-			post_IR = trddNo.getInt("post");
-			
 			message = String.format(
-					"tr40005_IR=%d, tr40005_UR=%d, tr40005_DO_NOTHING=%d, tr40005_IGNORE=%d, prev_IR=%d, post_IR=%d"
+					"tr40005_IR=%d, tr40005_UR=%d, tr40005_DO_NOTHING=%d, tr40005_IGNORE=%d"
 					, tr40005_IR
 					, tr40005_UR
 					, tr40005_DO_NOTHING
 					, tr40005_IGNORE
-					, prev_IR
-					, post_IR
 					)
 					;
+			
 			errorCode = "0000";
 			
 		} catch (Exception e) {
 			log.error(
-					"{}.{}.{}.exception {}"
+					"{}.{}.{}.exception={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo
@@ -1291,7 +1440,7 @@ public class SKiwoomSI {
 					);
 			if(query != null) {
 				log.error(
-						"{}.{}.{}.query {}"
+						"{}.{}.{}.query={}"
 						, jobHistMap.getString("schd_set", "")
 						, jobHistMap.getString("schd_code", "")
 						, schdNo
@@ -1303,7 +1452,7 @@ public class SKiwoomSI {
 			jobHistMap.put("error_code", errorCode);
 			jobHistMap.put("message", message);
 			log.info(
-					"{}.{}.{}.error_code {}"
+					"{}.{}.{}.error_code={}"
 					, jobHistMap.getString("schd_set", "")
 					, jobHistMap.getString("schd_code", "")
 					, schdNo

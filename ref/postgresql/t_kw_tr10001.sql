@@ -5,7 +5,6 @@ CREATE TABLE t_kw_tr10001 (
 	, date_inst timestamp DEFAULT NOW()
 	, date_updt timestamp DEFAULT NOW()
 	, item_name varchar(128) NOT NULL
-	, etf_type varchar(1)
 	, etf_fm varchar(2)
 	, etf_fv decimal(10, 2)
 	, etf_equity decimal(10, 2)
@@ -48,7 +47,6 @@ COMMENT ON COLUMN t_kw_tr10001.hash IS 'data hash';
 COMMENT ON COLUMN t_kw_tr10001.date_inst IS '등록일시';
 COMMENT ON COLUMN t_kw_tr10001.date_updt IS '수정일시';
 COMMENT ON COLUMN t_kw_tr10001.item_name IS '종목명';
-COMMENT ON COLUMN t_kw_tr10001.etf_type IS '분류 - 네이버 기준';
 COMMENT ON COLUMN t_kw_tr10001.etf_fm IS '결산월';
 COMMENT ON COLUMN t_kw_tr10001.etf_fv IS '액면가';
 COMMENT ON COLUMN t_kw_tr10001.etf_equity IS '자본금';

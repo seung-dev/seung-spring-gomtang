@@ -11,13 +11,8 @@
 SELECT
 	kw10000.item_code
 	, kw10000.hash
-	, COALESCE(prtt.trdd, '') AS trdd
 FROM
 	t_kw_kw10000 kw10000
-	LEFT OUTER JOIN v_etf_tr40005_prtt prtt
-		ON 1 = 1
-		AND kw10000.item_code = prtt.item_code
-		AND prtt.rnk = 3
 WHERE 1 = 1
 ]]>
 	<if test="mrkt_type != null and mrkt_type != ''"><![CDATA[
@@ -28,7 +23,7 @@ WHERE 1 = 1
 	]]></if>
 </select>
 
-<update id="kw10000_prgr_UL">
+<update id="kw10000_UL">
 <![CDATA[
 UPDATE t_kw_kw10000
 SET
@@ -36,21 +31,11 @@ SET
 ]]>
 </update>
 
-<update id="kw10000_prgr_UR">
-<![CDATA[
-UPDATE t_kw_kw10000
-SET
-	on_prgr = '1'
-WHERE 1 = 1
-	AND item_code = #{item_code}
-]]>
-</update>
-
 <update id="kw10000_UR" parameterMap="parameterMap">
 <![CDATA[
 UPDATE t_kw_kw10000
 SET
-	on_prgr = #{on_prgr}
+	on_prgr = '1'
 	, date_updt = NOW()
 	, hash = #{hash}
 	, item_name = #{item_name}
@@ -95,7 +80,7 @@ SELECT
 	, COALESCE(tr10001.hash, '') AS hash
 FROM
 	t_kw_kw10000 kw10000
-	LEFT OUTER JOIN t_etf_tr10001 tr10001
+	LEFT OUTER JOIN t_kw_tr10001 tr10001
 		ON 1 = 1
 		AND kw10000.item_code = tr10001.item_code
 WHERE 1 = 1
@@ -114,7 +99,7 @@ SELECT
 	item_code
 	, hash
 FROM
-	t_etf_tr10001
+	t_kw_tr10001
 WHERE 1 = 1
 	AND item_code = #{item_code}
 ]]>
@@ -122,13 +107,12 @@ WHERE 1 = 1
 
 <insert id="tr10001_IR" parameterMap="parameterMap">
 <![CDATA[
-INSERT INTO t_etf_tr10001 (
+INSERT INTO t_kw_tr10001 (
 	item_code
 	, hash
 	, date_inst
 	, date_updt
 	, item_name
-	, etf_type
 	, etf_fm
 	, etf_fv
 	, etf_equity
@@ -169,7 +153,6 @@ VALUES (
 	, NOW()
 	, NOW()
 	, #{item_name}
-	, COALESCE((SELECT etf_type FROM t_etf_n0101 WHERE item_code = #{item_code}), '')
 	, #{etf_fm}
 	, #{etf_fv}
 	, #{etf_equity}
@@ -209,12 +192,11 @@ VALUES (
 
 <update id="tr10001_UR" parameterMap="parameterMap">
 <![CDATA[
-UPDATE t_etf_tr10001
+UPDATE t_kw_tr10001
 SET
 	hash = #{hash}
 	, date_updt = NOW()
 	, item_name = #{item_name}
-	, etf_type = COALESCE((SELECT etf_type FROM t_etf_n0101 WHERE item_code = #{item_code}), '')
 	, etf_fm = #{etf_fm}
 	, etf_fv = #{etf_fv}
 	, etf_equity = #{etf_equity}
@@ -253,39 +235,85 @@ WHERE 1 = 1
 ]]>
 </update>
 
-<select id="tr40005_SL" resultMap="resultMap">
+<select id="tr10081_SL" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
 SELECT
-	kw10000.item_code
-	, prtt.trdd
-	, prtt.trdd_no
+	ROW_NUMBER() OVER(ORDER BY trdd DESC) AS rn
+	, item_code
+	, trdd
+	, hash
 FROM
-	t_etf_kw10000 kw10000
-	LEFT OUTER JOIN v_etf_tr40005_prtt prtt
-		ON 1 = 1
-		AND kw10000.item_code = prtt.item_code
-		AND prtt.rnk = #{rnk}
+	t_kw_tr10081
 WHERE 1 = 1
-	AND kw10000.etf_stts NOT LIKE '%정지%'
+	AND item_code = #{item_code}
+LIMIT #{limit}
 ]]>
 </select>
 
-<select id="tr40005_SR" parameterMap="parameterMap" resultMap="resultMap">
+<insert id="tr10081_IR" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_kw_tr10081 (
+	item_code
+	, trdd
+	, hash
+	, date_inst
+	, date_updt
+	, etf_cp
+	, etf_vol
+	, etf_lp
+	, etf_hp
+	, etf_op
+	)
+VALUES (
+	#{item_code}
+	, #{trdd}
+	, #{hash}
+	, NOW()
+	, NOW()
+	, #{etf_cp}
+	, #{etf_vol}
+	, #{etf_lp}
+	, #{etf_hp}
+	, #{etf_op}
+	)
+]]>
+</insert>
+
+<update id="tr10081_UR" parameterMap="parameterMap">
+<![CDATA[
+UPDATE t_kw_tr10081
+SET
+	date_updt = NOW()
+	, hash = #{hash}
+	, etf_cp = #{etf_cp}
+	, etf_vol = #{etf_vol}
+	, etf_lp = #{etf_lp}
+	, etf_hp = #{etf_hp}
+	, etf_op = #{etf_op}
+WHERE 1 = 1
+	AND item_code = #{item_code}
+	AND trdd = #{trdd}
+]]>
+</update>
+
+<select id="tr40005_SL" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
 SELECT
-	item_code
+	ROW_NUMBER() OVER(ORDER BY trdd DESC) AS rn
+	, item_code
+	, trdd
 	, hash
 FROM
-	t_etf_tr40005
+	t_kw_tr40005
 WHERE 1 = 1
-	AND trdd = #{trdd}
 	AND item_code = #{item_code}
+LIMIT #{limit}
 ]]>
 </select>
 
 <insert id="tr40005_IR" parameterMap="parameterMap">
 <![CDATA[
-INSERT INTO t_etf_tr40005 (
+INSERT INTO t_kw_tr40005 (
 	trdd
 	, item_code
 	, hash
@@ -326,7 +354,7 @@ VALUES (
 
 <update id="tr40005_UR" parameterMap="parameterMap">
 <![CDATA[
-UPDATE t_etf_tr40005
+UPDATE t_kw_tr40005
 SET
 	hash = #{hash}
 	, etf_cp = #{etf_cp}

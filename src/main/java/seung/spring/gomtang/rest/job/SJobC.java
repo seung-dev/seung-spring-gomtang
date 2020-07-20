@@ -184,6 +184,37 @@ public class SJobC {
 		return "jsonView";
 	}
 	
+	@ApiOperation(response = SResponse.class, value = "JOB EXECUTE - KIWOOM tr10001", notes = "ETF")
+	@ApiResponses(value = {
+			@ApiResponse(
+					code = 200
+					, message = ""
+					, examples = @Example(value = {
+							@ExampleProperty(
+									mediaType = "application/json"
+									, value = ""
+									)})
+					)
+	})
+	@RequestMapping(value = {"/rest/job/tr10081"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public String tr10081(
+			Model model
+			, @ApiIgnore SRequest sRequest
+			, @ApiParam(
+					value = "request code"
+					, type = "string"
+					, required = true
+					, example = "request_code_test"
+					) @RequestParam String request_code
+			) throws Exception {
+		
+		log.debug("run");
+		
+		model.addAttribute("no-wrap", sJobS.tr10081(sRequest));
+		
+		return "jsonView";
+	}
+	
 	@ApiOperation(response = SResponse.class, value = "JOB EXECUTE - KIWOOM tr40005", notes = "ETF")
 	@ApiResponses(value = {
 			@ApiResponse(

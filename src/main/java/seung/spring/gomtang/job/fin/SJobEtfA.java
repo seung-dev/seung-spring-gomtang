@@ -34,19 +34,17 @@ public class SJobEtfA extends QuartzJobBean implements InterruptableJob {
 		int timesTry = -1;
 		
 		String kw00000 = "";
-		String sr99999 = "";
 		String sr66666 = "";
 		
 		// kw10000
 		kw00000 = "";
-		sr99999 = "";
 		sr66666 = "";
 		timesTry = 0;
 		try {
 			while(timesTry++ < timesMax) {
 				kw00000 = sKiwoomS.kw00000(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
 				if(!"0000".equals(kw00000)) {
-					sr99999 = sKiwoomS.sr99999(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
+					sKiwoomS.sr99999(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
 					sr66666 = sKiwoomS.sr66666(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
 					if(!"0000".equals(sr66666)) {
 						continue;
@@ -64,14 +62,13 @@ public class SJobEtfA extends QuartzJobBean implements InterruptableJob {
 		
 		// tr10001
 		kw00000 = "";
-		sr99999 = "";
 		sr66666 = "";
 		timesTry = 0;
 		try {
 			while(timesTry++ < timesMax) {
 				kw00000 = sKiwoomS.kw00000(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
 				if(!"0000".equals(kw00000)) {
-					sr99999 = sKiwoomS.sr99999(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
+					sKiwoomS.sr99999(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
 					sr66666 = sKiwoomS.sr66666(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
 					if(!"0000".equals(sr66666)) {
 						continue;
@@ -89,14 +86,13 @@ public class SJobEtfA extends QuartzJobBean implements InterruptableJob {
 		
 		// tr10081
 		kw00000 = "";
-		sr99999 = "";
 		sr66666 = "";
 		timesTry = 0;
 		try {
 			while(timesTry++ < timesMax) {
 				kw00000 = sKiwoomS.kw00000(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
 				if(!"0000".equals(kw00000)) {
-					sr99999 = sKiwoomS.sr99999(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
+					sKiwoomS.sr99999(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
 					sr66666 = sKiwoomS.sr66666(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
 					if(!"0000".equals(sr66666)) {
 						continue;
@@ -114,14 +110,13 @@ public class SJobEtfA extends QuartzJobBean implements InterruptableJob {
 		
 		// tr40005
 		kw00000 = "";
-		sr99999 = "";
 		sr66666 = "";
 		timesTry = 0;
 		try {
 			while(timesTry++ < timesMax) {
 				kw00000 = sKiwoomS.kw00000(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
 				if(!"0000".equals(kw00000)) {
-					sr99999 = sKiwoomS.sr99999(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
+					sKiwoomS.sr99999(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
 					sr66666 = sKiwoomS.sr66666(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
 					if(!"0000".equals(sr66666)) {
 						continue;

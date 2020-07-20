@@ -15,6 +15,8 @@ public interface SJobS {
 	
 	SResponse tr10001(SRequest sRequest);
 	
+	SResponse tr10081(SRequest sRequest);
+	
 	SResponse tr40005(SRequest sRequest);
 	
 	SResponse n0101(SRequest sRequest);

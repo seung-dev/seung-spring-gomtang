@@ -564,4 +564,97 @@ public class SEtfSI implements SEtfS {
 		return sResponse;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public SResponse etf9002(SRequest sRequest) {
+		
+		String apiCode = "etf9001";
+		String error_message = "";
+		String requestCode = sRequest.getData().getString("request_code", "");
+		log.info("{}.{} ((START))", apiCode, requestCode);
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(requestCode)
+				.error_code(SCode.ERROR)
+				.data(sRequest.getData())
+				.build()
+				;
+		
+		String itemCode = "";
+		SLinkedHashMap query = null;
+		try {
+			
+			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
+			
+			SLinkedHashMap item = null;
+			File fileRun = null;
+			File fileDone = null;
+			SLinkedHashMap comm = null;
+			SLinkedHashMap data = null;
+			SLinkedHashMap etf9001_B = null;
+			for(File itemFile : new File("E:/temps/tr10081").listFiles()) {
+				
+				if(!itemFile.exists()) {
+					continue;
+				}
+				
+				fileRun = new File("E:/temps/tr10081/run/" + itemFile.getName());
+				fileDone = new File("E:/temps/tr10081/done/" + itemFile.getName());
+				
+				FileUtils.moveFile(itemFile, fileRun);
+				
+				item = new SLinkedHashMap(FileUtils.readFileToString(fileRun, "UTF-8"));
+				
+				comm = item.getListSLinkedHashMap("comm").get(0);
+				if(!"0000".equals(comm.getString("error_code"))) {
+					continue;
+				}
+				
+				data = item.getListSLinkedHashMap("data").get(0);
+				itemCode = data.getString("item_code");
+				
+				for(SLinkedHashMap dailyData : item.getSLinkedHashMap("result").getListSLinkedHashMap("tr10081")) {
+					
+					query = new SLinkedHashMap();
+					query.put("item_code", itemCode);
+					query.put("trdd", dailyData.getString("date"));
+					query.put("etf_cp", dailyData.getDouble("cp"));
+					query.put("etf_vol", dailyData.getBigInteger("vol"));
+					query.put("etf_lp", dailyData.getDouble("lp"));
+					query.put("etf_hp", dailyData.getDouble("hp"));
+					query.put("etf_op", dailyData.getDouble("op"));
+					query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
+					
+					etf9001_B = sMapperI.selectOne("etf9001_B", query);
+					
+					if(etf9001_B == null) {
+						sMapperI.insert("etf9001_A", query);
+					} else if(!query.getString("hash").equals(etf9001_B.getString("hash"))) {
+						sMapperI.update("etf9001_C", query);
+					}
+					
+				}// end of daily
+				
+				FileUtils.moveFile(fileRun, fileDone);
+				
+			}// end of dir
+			
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.error("{}.{}.exception", apiCode, requestCode, e);
+			log.error("{}.{}.query", apiCode, requestCode, query.toJsonString(true));
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+		}
+		
+		log.info("{}.{} ((END))", apiCode, requestCode);
+		sResponse.setResponse_time(String.valueOf(new Date().getTime()));
+		return sResponse;
+	}
+	
 }

@@ -205,6 +205,42 @@ public class SJobSI implements SJobS {
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	public SResponse tr10081(SRequest sRequest) {
+		
+		String apiCode = "tr10081";
+		String error_message = "";
+		String requestCode = sRequest.getData().getString("request_code", "");
+		log.info("{}.{} ((START))", apiCode, requestCode);
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(requestCode)
+				.error_code(SCode.ERROR)
+				.data(sRequest.getData())
+				.build()
+				;
+		
+		try {
+			
+			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
+			
+			sResponse.getResult().put("tr10081", sKiwoomS.tr10081("rest", "kiwoom"));
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.error("{}.{}.exception", apiCode, requestCode, e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+		}
+		
+		return sResponse;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	public SResponse tr40005(SRequest sRequest) {
 		
 		String apiCode = "tr40005";

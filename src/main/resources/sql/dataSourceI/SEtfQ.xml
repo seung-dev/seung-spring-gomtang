@@ -102,7 +102,7 @@ WHERE 1 = 1
 ]]>
 </select>
 
-<select id="etf9001_A" parameterMap="parameterMap" resultMap="resultMap">
+<insert id="etf9001_A" parameterMap="parameterMap">
 <![CDATA[
 INSERT INTO t_kw_tr10081 (
 	item_code
@@ -129,7 +129,7 @@ VALUES (
 	, #{etf_op}
 	)
 ]]>
-</select>
+</insert>
 
 <select id="etf9001_B" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
