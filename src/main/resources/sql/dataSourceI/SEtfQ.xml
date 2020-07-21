@@ -160,4 +160,41 @@ WHERE 1 = 1
 ]]>
 </select>
 
+<select id="etf9002_A" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	item_code
+FROM
+	t_kw_kw10000 kw10000
+WHERE 1 = 1
+	AND mrkt_type = '3'
+	AND on_prgr = '1'
+ORDER BY item_code
+]]>
+</select>
+
+<select id="etf9002_B" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	trdd
+FROM
+	t_etf_trdd
+ORDER BY trdd DESC
+]]>
+</select>
+
+<select id="etf9002_C" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	item_code
+	, trdd
+	, etf_cp
+FROM
+	t_kw_tr10081
+WHERE 1 = 1
+	AND trdd = #{trdd}
+ORDER BY item_code
+]]>
+</select>
+
 </mapper>

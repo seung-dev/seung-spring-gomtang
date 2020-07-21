@@ -329,4 +329,17 @@ public class SEtfC {
 		return "jsonView";
 	}
 	
+	@RequestMapping(value = {"/rest/etf/etf9002"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public String etf9002(
+			Model model
+			, @ApiIgnore SRequest sRequest
+			) throws Exception {
+		
+		log.debug("run");
+		
+		model.addAttribute("no-wrap", sEtfS.etf9002(sRequest));
+		
+		return "jsonView";
+	}
+	
 }

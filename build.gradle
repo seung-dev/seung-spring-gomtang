@@ -66,6 +66,9 @@ dependencies {
 	//runtimeOnly('mysql:mysql-connector-java')
 	runtimeOnly('org.postgresql:postgresql')
 	
+	// commons
+	implementation('org.apache.commons:commons-csv:1.8')
+	
 	// seung
 	implementation(project(path: ':seung-java-kimchi', configuration: 'default'))
 	

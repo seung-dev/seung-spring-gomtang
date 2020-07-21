@@ -28,7 +28,7 @@ BEGIN
 				SELECT
 					DISTINCT trdd
 				FROM
-					t_etf_tr40005
+					t_kw_tr40005
 				WHERE 1 = 1
 					AND trdd >= base_date
 			) tr40005
@@ -58,7 +58,7 @@ BEGIN
 				SELECT
 					DISTINCT trdd
 				FROM
-					t_etf_tr40005
+					t_kw_tr40005
 				WHERE 1 = 1
 					AND trdd < base_date
 			) tr40005

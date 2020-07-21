@@ -1,6 +1,9 @@
 package seung.spring.gomtang.rest.etf.service.impl;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +11,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.QuoteMode;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
@@ -564,11 +570,10 @@ public class SEtfSI implements SEtfS {
 		return sResponse;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public SResponse etf9002(SRequest sRequest) {
 		
-		String apiCode = "etf9001";
+		String apiCode = "etf9002";
 		String error_message = "";
 		String requestCode = sRequest.getData().getString("request_code", "");
 		log.info("{}.{} ((START))", apiCode, requestCode);
@@ -580,64 +585,56 @@ public class SEtfSI implements SEtfS {
 				.build()
 				;
 		
-		String itemCode = "";
 		SLinkedHashMap query = null;
 		try {
 			
 			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
 			
-			SLinkedHashMap item = null;
-			File fileRun = null;
-			File fileDone = null;
-			SLinkedHashMap comm = null;
-			SLinkedHashMap data = null;
-			SLinkedHashMap etf9001_B = null;
-			for(File itemFile : new File("E:/temps/tr10081").listFiles()) {
+			String uri = "e:/temps/etf_cp_20200721.csv";
+			
+			List<String> headers = new ArrayList<>();
+			headers.add("date");
+			for(SLinkedHashMap etf9002_A : sMapperI.selectList("etf9002_A")) {
+				headers.add(etf9002_A.getString("item_code"));
+			}
+			String[] header = headers.toArray(new String[headers.size()]);
+			
+			int times = 0;
+			try(
+					BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(uri));
+					CSVPrinter csvPrinter = new CSVPrinter(bufferedWriter, CSVFormat.DEFAULT.withHeader(header));
+					) {
 				
-				if(!itemFile.exists()) {
-					continue;
-				}
-				
-				fileRun = new File("E:/temps/tr10081/run/" + itemFile.getName());
-				fileDone = new File("E:/temps/tr10081/done/" + itemFile.getName());
-				
-				FileUtils.moveFile(itemFile, fileRun);
-				
-				item = new SLinkedHashMap(FileUtils.readFileToString(fileRun, "UTF-8"));
-				
-				comm = item.getListSLinkedHashMap("comm").get(0);
-				if(!"0000".equals(comm.getString("error_code"))) {
-					continue;
-				}
-				
-				data = item.getListSLinkedHashMap("data").get(0);
-				itemCode = data.getString("item_code");
-				
-				for(SLinkedHashMap dailyData : item.getSLinkedHashMap("result").getListSLinkedHashMap("tr10081")) {
+				String trdd = "";
+				SLinkedHashMap record = null;
+				List<String> records = null;
+				for(SLinkedHashMap etf9002_B : sMapperI.selectList("etf9002_B")) {
 					
-					query = new SLinkedHashMap();
-					query.put("item_code", itemCode);
-					query.put("trdd", dailyData.getString("date"));
-					query.put("etf_cp", dailyData.getDouble("cp"));
-					query.put("etf_vol", dailyData.getBigInteger("vol"));
-					query.put("etf_lp", dailyData.getDouble("lp"));
-					query.put("etf_hp", dailyData.getDouble("hp"));
-					query.put("etf_op", dailyData.getDouble("op"));
-					query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
-					
-					etf9001_B = sMapperI.selectOne("etf9001_B", query);
-					
-					if(etf9001_B == null) {
-						sMapperI.insert("etf9001_A", query);
-					} else if(!query.getString("hash").equals(etf9001_B.getString("hash"))) {
-						sMapperI.update("etf9001_C", query);
+					if(++times % 100 == 1) {
+						log.info("times={}", times);
 					}
 					
-				}// end of daily
+					trdd = etf9002_B.getString("trdd");
+					
+					record = new SLinkedHashMap();
+					records = new ArrayList<>();
+					for(SLinkedHashMap etf9002_C : sMapperI.selectList("etf9002_C", etf9002_B)) {
+						record.put(etf9002_C.getString("item_code"), etf9002_C.getString("etf_cp", ""));
+					}
+					
+					for(String itemCode : header) {
+						if(records.isEmpty()) {
+							records.add(trdd);
+						} else {
+							records.add(record.getString(itemCode, ""));
+						}
+					}
+					
+					csvPrinter.printRecord(records.toArray(new String[headers.size()]));
+					
+				}
 				
-				FileUtils.moveFile(fileRun, fileDone);
-				
-			}// end of dir
+			}
 			
 			sResponse.success();
 			

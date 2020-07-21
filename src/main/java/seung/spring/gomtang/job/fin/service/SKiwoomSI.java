@@ -1216,6 +1216,8 @@ public class SKiwoomSI {
 			int tr40005_UR = 0;
 			int tr40005_DO_NOTHING = 0;
 			int tr40005_IGNORE = 0;
+			int prev_IR = 0;
+			int post_IR = 0;
 			for(SLinkedHashMap kw10000_SR : sMapperI.selectList("kw10000_SL", new SLinkedHashMap().add("mrkt_type", "3").add("on_prgr", "1"))) {
 				
 				itemCode = kw10000_SR.getString("item_code");
@@ -1418,12 +1420,18 @@ public class SKiwoomSI {
 				
 			}// end of tr40005_SL
 			
+			SLinkedHashMap trddNo = sMapperI.selectOne("trdd_no_IL");
+			prev_IR = trddNo.getInt("prev");
+			post_IR = trddNo.getInt("post");
+			
 			message = String.format(
-					"tr40005_IR=%d, tr40005_UR=%d, tr40005_DO_NOTHING=%d, tr40005_IGNORE=%d"
+					"tr40005_IR=%d, tr40005_UR=%d, tr40005_DO_NOTHING=%d, tr40005_IGNORE=%d, prev_IR=%d, post_IR=%d"
 					, tr40005_IR
 					, tr40005_UR
 					, tr40005_DO_NOTHING
 					, tr40005_IGNORE
+					, prev_IR
+					, post_IR
 					)
 					;
 			
