@@ -41,6 +41,7 @@ public class SJobEtfA extends QuartzJobBean implements InterruptableJob {
 		sr66666 = "";
 		timesTry = 0;
 		try {
+			sKiwoomS.kw10000(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
 			while(timesTry++ < timesMax) {
 				kw00000 = sKiwoomS.kw00000(jobDataMap.getString("job_group"), jobDataMap.getString("job_name"));
 				if(!"0000".equals(kw00000)) {

@@ -40,7 +40,7 @@ WHERE 1 = 1
 SELECT
 	*
 FROM
-	f_etf_etf0101_SL(#{req_json})
+	f_etf_etf0101(#{req_json})
 ]]>
 </select>
 
@@ -190,7 +190,7 @@ SELECT
 	, trdd
 	, etf_cp
 FROM
-	t_kw_tr10081
+	t_kw_tr40005
 WHERE 1 = 1
 	AND trdd = #{trdd}
 ORDER BY item_code

@@ -7,7 +7,7 @@ SELECT
 	, n0101.etf_type
 	, n0102.date_list
 FROM
-	t_etf_kw10000 kw10000
+	t_kw_kw10000 kw10000
 	, t_etf_n0101 n0101
 	, t_etf_n0102 n0102
 WHERE 1 = 1

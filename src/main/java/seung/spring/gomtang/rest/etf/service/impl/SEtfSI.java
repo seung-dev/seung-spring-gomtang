@@ -13,7 +13,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.csv.QuoteMode;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
@@ -187,15 +186,17 @@ public class SEtfSI implements SEtfS {
 						;
 			}
 			
-			SLinkedHashMap query = new SLinkedHashMap()
+			SLinkedHashMap query = new SLinkedHashMap(sRequest.getData())
 					.add("trdd", etf0102_SR.getString("trdd_to"))
-					.add("mmnt_date", sRequest.getData().isEmpty("mmnt_date") ? etf0102_SR.getString("trdd") : sRequest.getData().getString("mmnt_date"))
-					.add("mmnt_unit", sRequest.getData().getString("mmnt_unit", "D"))
-					.add("mmnt_scope", sRequest.getData().getInt("mmnt_scope", 3))
-					.add("mmnt_min_max", sRequest.getData().getString("mmnt_min_max", ""))
-					.add("mmnt_threshold", sRequest.getData().getDouble("mmnt_threshold", 1.0))
 					.add("rules", rules)
+//					.add("mmnt_date", sRequest.getData().isEmpty("mmnt_date") ? etf0102_SR.getString("trdd") : sRequest.getData().getString("mmnt_date"))
+//					.add("mmnt_unit", sRequest.getData().getString("mmnt_unit", "D"))
+//					.add("mmnt_scope", sRequest.getData().getInt("mmnt_scope", 3))
+//					.add("mmnt_min_max", sRequest.getData().getString("mmnt_min_max", ""))
+//					.add("mmnt_threshold", sRequest.getData().getDouble("mmnt_threshold", 1.0))
 					;
+			
+			log.info(query.toJsonString(true));
 			
 			query.put("req_json", query.toJsonString());
 			log.info("{}.{}.req_json {}", apiCode, requestCode, query.getString("req_json", ""));
@@ -590,7 +591,7 @@ public class SEtfSI implements SEtfS {
 			
 			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
 			
-			String uri = "e:/temps/etf_cp_20200721.csv";
+			String uri = "e:/temps/etf_cp_20200728.csv";
 			
 			List<String> headers = new ArrayList<>();
 			headers.add("date");

@@ -26,9 +26,9 @@ RETURNS TABLE (
 AS
 $$
 DECLARE
-	req_item_code t_etf_tr40005.item_code%TYPE;
-	req_trdd_from t_etf_tr40005.trdd%TYPE;
-	req_trdd_to t_etf_tr40005.trdd%TYPE;
+	req_item_code t_kw_tr40005.item_code%TYPE;
+	req_trdd_from t_kw_tr40005.trdd%TYPE;
+	req_trdd_to t_kw_tr40005.trdd%TYPE;
 	req_page_index int;
 	req_page_size int;
 	row_from int;
@@ -98,7 +98,7 @@ BEGIN
 			, tr40005.date_updt
 		FROM
 			t_etf_trdd trd
-			, t_etf_tr40005 tr40005
+			, t_kw_tr40005 tr40005
 			LEFT OUTER JOIN t_kw_tr10081 tr10081
 				ON 1 = 1
 				AND tr40005.item_code = tr10081.item_code
