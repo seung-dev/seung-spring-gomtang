@@ -13,5 +13,6 @@ FROM
 WHERE 1 = 1
 	AND kw10000.item_code = n0101.item_code
 	AND kw10000.item_code = n0102.item_code
+	AND kw10000.mrkt_type = '3'
 ORDER BY kw10000.item_code
 ;

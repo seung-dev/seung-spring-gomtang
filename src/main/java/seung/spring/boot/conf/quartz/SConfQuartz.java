@@ -12,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import seung.spring.boot.conf.SProperties;
 import seung.spring.boot.conf.quartz.support.SJobFactory;
 
-@Slf4j
 @Configuration
+@Slf4j
 public class SConfQuartz {
 
 	@Bean

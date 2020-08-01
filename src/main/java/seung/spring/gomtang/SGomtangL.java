@@ -12,8 +12,8 @@ import seung.java.kimchi.util.SKimchiException;
 import seung.spring.boot.conf.SProperties;
 import seung.spring.gomtang.job.SJobI;
 
-@Slf4j
 @Component
+@Slf4j
 public class SGomtangL {
 
 	@Resource(name="sProperties")

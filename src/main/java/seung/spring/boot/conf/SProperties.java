@@ -7,38 +7,33 @@ import java.util.Properties;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder(builderMethodName = "hiddenBuilder")
+@Builder
 @Getter
 //@Setter
 public class SProperties {
 
-	private Properties environment;
+	@Builder.Default
+	private Properties environment = new Properties();
 	
-	private Properties swagger;
+	@Builder.Default
+	private Properties swagger = new Properties();
 	
-	private List<Properties> datasource;
+	@Builder.Default
+	private List<Properties> datasource = new ArrayList<>();
 	
-	private Properties jpa;
+	@Builder.Default
+	private Properties jpa = new Properties();
 	
-	private Properties jpaVendor;
+	@Builder.Default
+	private Properties jpaVendor = new Properties();
 	
-	private Properties quartz;
+	@Builder.Default
+	private Properties quartz = new Properties();
 	
-	private Properties job;
+	@Builder.Default
+	private Properties job = new Properties();
 	
-	private Properties seung;
-	
-	public static SPropertiesBuilder builder() {
-		return hiddenBuilder()
-				.environment(new Properties())
-				.swagger(new Properties())
-				.datasource(new ArrayList<>())
-				.jpa(new Properties())
-				.jpaVendor(new Properties())
-				.quartz(new Properties())
-				.job(new Properties())
-				.seung(new Properties())
-				;
-	}
+	@Builder.Default
+	private Properties seung = new Properties();
 	
 }

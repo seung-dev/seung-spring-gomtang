@@ -173,12 +173,12 @@ BEGIN
         , '  SELECT'  
         , '      items.item_code'  
         , '      , items.item_name'  
-        , '      , calc_mmnt.mmnt::varchar'  
-        , '      , calc_mmnt.mmnt_size::varchar'  
-        , '      , calc_avg_12m.size_12m::varchar'  
-        , '      , calc_avg_12m.mmnt_12m::varchar'  
-        , '      , calc_avg_12m.mmnt_score_12m::varchar'  
-        , '      , calc_avg_12m.std_dev_12m::varchar'  
+        , '      , COALESCE(calc_mmnt.mmnt, -1)::varchar'  
+        , '      , COALESCE(calc_mmnt.mmnt_size, 0)::varchar'  
+        , '      , COALESCE(calc_avg_12m.size_12m, 0)::varchar'  
+        , '      , COALESCE(calc_avg_12m.mmnt_12m, -1)::varchar'  
+        , '      , COALESCE(calc_avg_12m.mmnt_score_12m, -1)::varchar'  
+        , '      , COALESCE(calc_avg_12m.std_dev_12m, -1)::varchar'  
         , '      , items.item_stts::varchar'  
         , '      , items.item_cnst::varchar'  
         , '      , items.etf_type'  
@@ -406,7 +406,7 @@ BEGIN
         --, '      AND tr40005.etf_ter >= v_etf_ter_from'  
         --, '      AND tr40005.etf_ter <= v_etf_ter_to'  
         --, '      AND COALESCE(calc_mmnt.mmnt, -1) >= v_mmnt_threshold'  
-        , '      v_threshold'  
+        --, '      v_threshold'  
         --, '  ORDER BY COALESCE(calc_mmnt.mmnt, -1) DESC'  
         , '  v_sort'  
         , '  ;'  
@@ -425,7 +425,7 @@ BEGIN
     query_text := REPLACE(query_text, 'v_mmnt_scope', COALESCE(v_mmnt_scope, 12)::varchar);
     query_text := REPLACE(query_text, 'v_mmnt_min_max', v_mmnt_min_max);
     --query_text := REPLACE(query_text, 'v_mmnt_threshold', COALESCE(v_mmnt_threshold, 1)::varchar);
-    query_text := REPLACE(query_text, 'v_threshold', v_threshold);
+    --query_text := REPLACE(query_text, 'v_threshold', v_threshold);
     query_text := REPLACE(query_text, 'v_sort', v_sort);
     --query_text := REPLACE(query_text, 'v_rules, v_rules);
     

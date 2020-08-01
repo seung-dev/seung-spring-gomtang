@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 import lombok.extern.slf4j.Slf4j;
 import seung.java.kimchi.util.SLinkedHashMap;
 
-@Slf4j
 @Repository(value = "sMapperI")
+@Slf4j
 public class SMapperI {
 
 	@Resource(name = "sqlSessionTemplateI")

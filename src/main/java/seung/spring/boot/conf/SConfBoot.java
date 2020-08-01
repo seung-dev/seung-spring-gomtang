@@ -18,12 +18,11 @@ import org.springframework.core.env.Environment;
 import lombok.extern.slf4j.Slf4j;
 
 @PropertySources({
-	@PropertySource(value = "classpath:s-swagger.properties")
+	@PropertySource(value = "classpath:s-security.properties")
 	, @PropertySource(value = "classpath:s-datasource.properties")
 	, @PropertySource(value = "classpath:s-jpa.properties")
 	, @PropertySource(value = "classpath:s-quartz.properties")
 	, @PropertySource(value = "classpath:s-job.properties")
-	, @PropertySource(value = "classpath:s-security.properties")
 })
 @ComponentScan(value = {"seung.spring"})
 @Slf4j

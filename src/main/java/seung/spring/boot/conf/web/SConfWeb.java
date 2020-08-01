@@ -32,12 +32,12 @@ public class SConfWeb extends WebMvcConfigurationSupport {
 		
 		log.info("run");
 		
-		registry.addRedirectViewController("/swagger/v2/api-docs", "/v2/api-docs");
-		registry.addRedirectViewController("/swagger/swagger-resources/configuration/ui", "/swagger-resources/configuration/ui");
-		registry.addRedirectViewController("/swagger/swagger-resources/configuration/security", "/swagger-resources/configuration/security");
-		registry.addRedirectViewController("/swagger/swagger-resources", "/swagger-resources");
-		registry.addRedirectViewController("/swagger", "/swagger/swagger-ui.html");
-		registry.addRedirectViewController("/swagger/", "/swagger/swagger-ui.html");
+//		registry.addRedirectViewController("/swagger/v2/api-docs", "/v2/api-docs");
+//		registry.addRedirectViewController("/swagger/swagger-resources/configuration/ui", "/swagger-resources/configuration/ui");
+//		registry.addRedirectViewController("/swagger/swagger-resources/configuration/security", "/swagger-resources/configuration/security");
+//		registry.addRedirectViewController("/swagger/swagger-resources", "/swagger-resources");
+//		registry.addRedirectViewController("/swagger", "/swagger/swagger-ui.html");
+//		registry.addRedirectViewController("/swagger/", "/swagger/swagger-ui.html");
 		
 	}
 	
@@ -50,8 +50,8 @@ public class SConfWeb extends WebMvcConfigurationSupport {
 		log.info("addResourceHandler={}", "/res/**");
 		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 		log.info("addResourceHandler={}", "/webjars/**");
-		registry.addResourceHandler("/swagger/**").addResourceLocations("classpath:/META-INF/resources/");
-		log.info("addResourceHandler={}", "swagger-ui.html");
+//		registry.addResourceHandler("/swagger/**").addResourceLocations("classpath:/META-INF/resources/");
+//		log.info("addResourceHandler={}", "swagger-ui.html");
 		
 	}// end of addResourceHandlers
 	
@@ -71,21 +71,5 @@ public class SConfWeb extends WebMvcConfigurationSupport {
 		log.info("addNotWrappedModelKeys={}", "no-wrap");
 		return sMappingJackson2JsonView;
 	}// end of addSMappingJackson2JsonView
-//	
-//	@Bean
-//	public WebMvcConfigurer webMvcConfigurer() {
-//		return new WebMvcConfigurer() {
-//			@Override
-//			public void addCorsMappings(CorsRegistry registry) {
-//				registry
-//					.addMapping("/rest/**")
-//					.allowedMethods(HttpMethod.POST.name())
-//					.allowedOrigins("*")
-//					.allowCredentials(true)
-//					.maxAge(10)
-//					;
-//			}
-//		};
-//	}
 	
 }

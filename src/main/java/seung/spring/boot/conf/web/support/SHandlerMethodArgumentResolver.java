@@ -33,11 +33,13 @@ public class SHandlerMethodArgumentResolver implements HandlerMethodArgumentReso
 		
 		log.debug("run");
 		
-		SRequest.SRequestBuilder sRequestBuilder = SRequest.builder();
+		SRequest sRequest = SRequest.builder()
+				.build()
+				;
 		
 		Object element = null;
 		String key = null;
-		String[] value = null;
+//		String[] value = null;
 		
 		HttpServletRequest httpServletRequest = (HttpServletRequest) nativeWebRequest.getNativeRequest();
 		
@@ -59,11 +61,11 @@ public class SHandlerMethodArgumentResolver implements HandlerMethodArgumentReso
 		if (remote_addr ==null || remote_addr.length() == 0 || "unknown".equalsIgnoreCase(remote_addr)) {
 			remote_addr = httpServletRequest.getRemoteAddr();
 		}
-		sRequestBuilder.putNetwork(key, remote_addr);
+		sRequest.putNetwork(key, remote_addr);
 		key = "request_uri";
-		sRequestBuilder.putNetwork(key, httpServletRequest.getRequestURI());
+		sRequest.putNetwork(key, httpServletRequest.getRequestURI());
 		key = "referer";
-		sRequestBuilder.putNetwork(key, httpServletRequest.getHeader("referer") == null ? "" : new URI(httpServletRequest.getHeader("referer")).getPath());
+		sRequest.putNetwork(key, httpServletRequest.getHeader("referer") == null ? "" : new URI(httpServletRequest.getHeader("referer")).getPath());
 		
 		// parameters
 		if(methodParameter.getParameterType().equals(SRequest.class)) {
@@ -75,52 +77,13 @@ public class SHandlerMethodArgumentResolver implements HandlerMethodArgumentReso
 				element = enumerations.nextElement();
 				key = element == null ? "" : (String) element;
 				
-				sRequestBuilder.putHeader(key, httpServletRequest.getHeader(key));
+				sRequest.putHeader(key, httpServletRequest.getHeader(key));
 				
 			}// end of header
 			
-			// data
-			enumerations  = httpServletRequest.getParameterNames();
-			while(enumerations.hasMoreElements()) {
-				
-				element = enumerations.nextElement();
-				key = element == null ? "" : (String) element;
-				value = httpServletRequest.getParameterValues(key);
-				
-				sRequestBuilder.putData(key, 1 == value.length ? value[0] : value);
-				
-			}// end of data
-			
-//			// fowarding attributes
-//			enumerations = httpServletRequest.getAttributeNames();
-//			while(enumerations.hasMoreElements()) {
-//				
-//				key = (String) enumerations.nextElement();
-//				
-//				if(key.startsWith("_fw")) {
-//					sRequestMap.putData(key, vals.length > 1 ? vals : vals[0]);
-//					sRequestMap.putQuery(key.replaceAll("forward_", ""), httpServletRequest.getAttribute(key));
-//					log.debug(String.format("[ATTRIBUTE] %s: %s", key, sRequestMap.getQuery().getString(key)));
-//				}
-//				
-//			}
-			
 		}
 		
-//		// parameters - json
-//		if("XMLHttpRequest".equals(httpServletRequest.getHeader("X-Requested-With"))) {
-//			String json = IOUtils.toString(httpServletRequest.getInputStream(), "UTF-8");
-//			logger.debug(String.format("[JSON] %s", json));
-//			if(json != null && json.length() > 0) {
-//				try {
-//					sRequestMap.putQuery(new ObjectMapper().readValue(json, Map.class));
-//				} catch (Exception e) {
-//					sRequestMap.putQuery("error", "" + e);
-//				}
-//			}
-//		}
-		
-		return sRequestBuilder.build();
+		return sRequest;
 		
 	}// end of resolveArgument
 	

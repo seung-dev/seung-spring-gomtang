@@ -38,8 +38,8 @@ import seung.spring.boot.conf.SProperties;
 )
 @EntityScan(basePackages = {"seung.spring"})
 @EnableTransactionManagement
-@Slf4j
 @Configuration
+@Slf4j
 public class SConfDatasourceI {
 
 	@Primary
