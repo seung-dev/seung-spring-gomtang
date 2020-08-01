@@ -27,12 +27,14 @@ public class SController {
 		
 		log.debug("run");
 		
+		sRequest.setRequest(sReflect);
+		
 		return SResponse.builder()
 				.request_code(sReflect.getRequest_code())
 				.error_code(SCode.SUCCESS)
 				.request_time(sRequest.getRequest_time())
 				.response_time(new Date().getTime())
-				.request(sReflect)
+				.request(sRequest)
 				.build()
 				;
 	}

@@ -1,9 +1,10 @@
+DROP VIEW v_etf_etf0112;
 CREATE OR REPLACE VIEW v_etf_etf0112
 AS
 SELECT
 	n0102.item_code
 	, n0101.etf_type
-	, EXTRACT(EPOCH FROM n0102.date_updt)::varchar AS date_updt
+	, n0102.date_updt
 	, n0102.shar_oust
 	, n0102.indx_name
 	, n0102.date_set

@@ -2,6 +2,7 @@ package seung.spring.gomtang.rest.etf.util;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -32,14 +33,14 @@ public class Etf0101 {
 	private String mmnt_unit;
 	
 	@Min(value = 1)
-	@NotEmpty
+	@NotNull
 	private int mmnt_scope;
 	
 	@Size(min =3, max = 3)
 	@NotEmpty
 	private String mmnt_min_max;
 	
-	@NotEmpty
+	@NotNull
 	private float mmnt_threshold;
 	
 	public String toJsonString() {

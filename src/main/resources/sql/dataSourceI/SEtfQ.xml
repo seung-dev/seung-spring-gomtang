@@ -40,7 +40,7 @@ WHERE 1 = 1
 SELECT
 	*
 FROM
-	f_etf_etf0101(#{req_json})
+	f_etf_etf0101_sl(#{req_json})
 ]]>
 </select>
 

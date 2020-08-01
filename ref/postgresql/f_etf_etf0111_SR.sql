@@ -8,9 +8,9 @@ RETURNS TABLE (
 AS
 $$
 DECLARE
-	req_item_code t_etf_tr40005.item_code%TYPE;
-	req_trdd_from t_etf_tr40005.trdd%TYPE;
-	req_trdd_to t_etf_tr40005.trdd%TYPE;
+	req_item_code t_kw_tr40005.item_code%TYPE;
+	req_trdd_from t_kw_tr40005.trdd%TYPE;
+	req_trdd_to t_kw_tr40005.trdd%TYPE;
 BEGIN
 
 	SELECT
@@ -30,7 +30,7 @@ BEGIN
 		COUNT(*)::varchar AS total_count
 	FROM
 		t_etf_trdd trd
-		, t_etf_tr40005 tr40005
+		, t_kw_tr40005 tr40005
 	WHERE 1 = 1
 		AND trd.trdd = tr40005.trdd
 		AND tr40005.item_code = req_item_code

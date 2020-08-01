@@ -6,7 +6,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
-import seung.java.kimchi.util.SCode;
 import seung.spring.boot.conf.web.util.SReflect;
 import seung.spring.boot.conf.web.util.SRequest;
 import seung.spring.boot.conf.web.util.SResponse;
@@ -24,7 +23,6 @@ public class SJobSI implements SJobS {
 	@Resource(name = "sNaverS")
 	private SNaverSI sNaverS;
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public SResponse sr33333(SRequest sRequest, SReflect sReflect) {
 		
@@ -60,7 +58,6 @@ public class SJobSI implements SJobS {
 		return sResponse;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public SResponse sr66666(SRequest sRequest, SReflect sReflect) {
 		
@@ -96,7 +93,6 @@ public class SJobSI implements SJobS {
 		return sResponse;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public SResponse sr99999(SRequest sRequest, SReflect sReflect) {
 		
@@ -132,7 +128,6 @@ public class SJobSI implements SJobS {
 		return sResponse;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public SResponse kw10000(SRequest sRequest, SReflect sReflect) {
 		
@@ -168,7 +163,6 @@ public class SJobSI implements SJobS {
 		return sResponse;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public SResponse tr10001(SRequest sRequest, SReflect sReflect) {
 		
@@ -204,7 +198,6 @@ public class SJobSI implements SJobS {
 		return sResponse;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public SResponse tr10081(SRequest sRequest, SReflect sReflect) {
 		
@@ -240,7 +233,6 @@ public class SJobSI implements SJobS {
 		return sResponse;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public SResponse tr40005(SRequest sRequest, SReflect sReflect) {
 		
@@ -276,7 +268,6 @@ public class SJobSI implements SJobS {
 		return sResponse;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public SResponse n0101(SRequest sRequest, SReflect sReflect) {
 		
@@ -312,7 +303,6 @@ public class SJobSI implements SJobS {
 		return sResponse;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public SResponse n0102(SRequest sRequest, SReflect sReflect) {
 		

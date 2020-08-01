@@ -31,9 +31,9 @@ public class SResponse {
 	@Builder.Default
 	private String error_message = "";
 	
-	private double request_time;
+	private long request_time;
 	
-	private double response_time;
+	private long response_time;
 	
 	private Object request;
 	

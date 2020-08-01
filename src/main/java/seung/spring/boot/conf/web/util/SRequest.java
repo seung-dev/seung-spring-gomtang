@@ -20,13 +20,18 @@ import seung.java.kimchi.util.SLinkedHashMap;
 public class SRequest {
 
 	@Builder.Default
-	private double request_time = new Date().getTime();
+	private long request_time = new Date().getTime();
 	
-	private SLinkedHashMap network;
+	@Builder.Default
+	private SLinkedHashMap network = new SLinkedHashMap();
 	
-	private SLinkedHashMap header;
+	@Builder.Default
+	private SLinkedHashMap header = new SLinkedHashMap();
 	
-	private SLinkedHashMap session;
+	@Builder.Default
+	private SLinkedHashMap session = new SLinkedHashMap();
+	
+	private Object request;
 	
 	@SuppressWarnings("unchecked")
 	public SRequest putNetwork(String key, String value) {

@@ -324,7 +324,7 @@ public class SEtfSI implements SEtfS {
 			log.info("({}) request={}", sResponse.getRequest_code(), etf0111.toJsonString());
 			
 			query = new SLinkedHashMap();
-			query.put("req_json", query.toJsonString());
+			query.put("req_json", etf0111.toJsonString());
 			
 			etf0111_SR = sMapperI.selectOne("etf0111_SR", query);
 			if(etf0111_SR != null) {

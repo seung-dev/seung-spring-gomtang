@@ -3,25 +3,25 @@ CREATE OR REPLACE FUNCTION f_etf_etf0111_SL (
 	req_json text
 )
 RETURNS TABLE (
-	row_num character varying
+	row_num bigint
 	, trdd character varying
-	, trdd_no character varying
+	, trdd_no int
 	, item_code character varying
-	, etf_cp character varying
-	, etf_inc character varying
-	, etf_pcp character varying
-	, etf_vol character varying
-	, etf_nav character varying
-	, etf_volaccu character varying
-	, etf_indexd character varying
-	, etf_etfd character varying
-	, etf_ter character varying
-	, etf_ti character varying
-	, etf_tiinc character varying
-	, etf_lp character varying
-	, etf_hp character varying
-	, etf_op character varying
-	, date_updt character varying
+	, etf_cp numeric
+	, etf_inc numeric
+	, etf_pcp numeric
+	, etf_vol bigint
+	, etf_nav numeric
+	, etf_volaccu bigint
+	, etf_indexd numeric
+	, etf_etfd numeric
+	, etf_ter numeric
+	, etf_ti numeric
+	, etf_tiinc numeric
+	, etf_lp numeric
+	, etf_hp numeric
+	, etf_op numeric
+	, date_updt timestamp
 	)
 AS
 $$
@@ -56,25 +56,25 @@ BEGIN
 	
 	RETURN QUERY
 	SELECT
-		etf0111.row_num::varchar
+		etf0111.row_num
 		, etf0111.trdd
-		, etf0111.trdd_no::varchar
+		, etf0111.trdd_no
 		, etf0111.item_code
-		, ABS(etf0111.etf_cp)::varchar
-		, etf0111.etf_inc::varchar
-		, etf0111.etf_pcp::varchar
-		, ABS(etf0111.etf_vol)::varchar
-		, ABS(etf0111.etf_nav)::varchar
-		, ABS(etf0111.etf_volaccu)::varchar
-		, etf0111.etf_indexd::varchar
-		, etf0111.etf_etfd::varchar
-		, etf0111.etf_ter::varchar
-		, etf0111.etf_ti::varchar
-		, etf0111.etf_tiinc::varchar
-		, COALESCE(etf0111.etf_lp::varchar, '')
-		, COALESCE(etf0111.etf_hp::varchar, '')
-		, COALESCE(etf0111.etf_op::varchar, '')
-		, EXTRACT(EPOCH FROM etf0111.date_updt)::varchar AS date_updt
+		, ABS(etf0111.etf_cp)
+		, etf0111.etf_inc
+		, etf0111.etf_pcp
+		, ABS(etf0111.etf_vol)
+		, ABS(etf0111.etf_nav)
+		, ABS(etf0111.etf_volaccu)
+		, etf0111.etf_indexd
+		, etf0111.etf_etfd
+		, etf0111.etf_ter
+		, etf0111.etf_ti
+		, etf0111.etf_tiinc
+		, etf0111.etf_lp
+		, etf0111.etf_hp
+		, etf0111.etf_op
+		, etf0111.date_updt
 	FROM (
 		SELECT
 			ROW_NUMBER() OVER(ORDER BY trd.trdd DESC) AS row_num

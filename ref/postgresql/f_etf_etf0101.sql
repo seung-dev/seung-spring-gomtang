@@ -249,7 +249,7 @@ BEGIN
         , '              AND kw10000.item_code = n0102.item_code'  
         , '      WHERE 1 = 1'  
         , '          AND kw10000.mrkt_type = ''3'''  
-        , '          AND kw10000.on_prgr = ''1'''  
+        --, '          AND kw10000.on_prgr = ''1'''  
         , '      ) items'  
         );
     
