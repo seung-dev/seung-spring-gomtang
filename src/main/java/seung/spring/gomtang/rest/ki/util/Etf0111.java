@@ -1,4 +1,4 @@
-package seung.spring.gomtang.rest.etf.util;
+package seung.spring.gomtang.rest.ki.util;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -40,7 +40,7 @@ public class Etf0111 {
 	@NotNull
 	private int page_index;
 	
-	@Max(value = 1000)
+	@Max(value = 10000)
 	@NotNull
 	private int page_size;
 	

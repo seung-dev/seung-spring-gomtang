@@ -24,4 +24,6 @@ public interface SJobS {
 	
 	SResponse n0102(SRequest sRequest, SReflect sReflect);
 	
+	SResponse n0104(SRequest sRequest, SReflect sReflect);
+	
 }

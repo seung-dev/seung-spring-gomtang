@@ -7,10 +7,6 @@ RETURNS TABLE (
     , item_name character varying
     , mmnt numeric
     , mmnt_size bigint
-    , size_12m bigint
-    , mmnt_12m numeric
-    , mmnt_score_12m numeric
-    , std_dev_12m numeric
     , etf_stts character varying
     , etf_cnst character varying
     , etf_type character varying
@@ -58,6 +54,38 @@ RETURNS TABLE (
     , etf_ter numeric
     , etf_ti numeric
     , etf_tiinc numeric
+    , d20_vol_size int
+    , d20_vol numeric
+    , d20_volaccu_size int
+    , d20_volaccu numeric
+    , d5_mmnt_size int
+    , d5_mmnt numeric
+    , d5_mmnt_score numeric
+    , d5_std_dev numeric
+    , d10_mmnt_size int
+    , d10_mmnt numeric
+    , d10_mmnt_score numeric
+    , d10_std_dev numeric
+    , d20_mmnt_size int
+    , d20_mmnt numeric
+    , d20_mmnt_score numeric
+    , d20_std_dev numeric
+    , d60_mmnt_size int
+    , d60_mmnt numeric
+    , d60_mmnt_score numeric
+    , d60_std_dev numeric
+    , m3_mmnt_size int
+    , m3_mmnt numeric
+    , m3_mmnt_score numeric
+    , m3_std_dev numeric
+    , m6_mmnt_size int
+    , m6_mmnt numeric
+    , m6_mmnt_score numeric
+    , m6_std_dev numeric
+    , m12_mmnt_size int
+    , m12_mmnt numeric
+    , m12_mmnt_score numeric
+    , m12_std_dev numeric
     , date_updt timestamp
     )
 AS
@@ -172,10 +200,6 @@ BEGIN
         , '      , items.item_name'  
         , '      , COALESCE(calc_mmnt.mmnt, -1)'  
         , '      , COALESCE(calc_mmnt.mmnt_size, 0)'  
-        , '      , COALESCE(calc_avg_12m.size_12m, 0)'  
-        , '      , COALESCE(calc_avg_12m.mmnt_12m, -1)'  
-        , '      , COALESCE(calc_avg_12m.mmnt_score_12m, -1)'  
-        , '      , COALESCE(calc_avg_12m.std_dev_12m, -1)'  
         , '      , items.item_stts'  
         , '      , items.item_cnst'  
         , '      , items.etf_type'  
@@ -223,6 +247,38 @@ BEGIN
         , '      , tr40005.etf_ter'  
         , '      , tr40005.etf_ti'  
         , '      , tr40005.etf_tiinc'  
+        , '      , COALESCE(calc.d20_vol_size, 0)'  
+        , '      , COALESCE(calc.d20_vol, -1)'  
+        , '      , COALESCE(calc.d20_volaccu_size, 0)'  
+        , '      , COALESCE(calc.d20_volaccu, -1)'  
+        , '      , COALESCE(calc.d5_mmnt_size, 0)'  
+        , '      , COALESCE(calc.d5_mmnt, -1)'  
+        , '      , COALESCE(calc.d5_mmnt_score, -1)'  
+        , '      , COALESCE(calc.d5_std_dev, -1)'  
+        , '      , COALESCE(calc.d10_mmnt_size, 0)'  
+        , '      , COALESCE(calc.d10_mmnt, -1)'  
+        , '      , COALESCE(calc.d10_mmnt_score, -1)'  
+        , '      , COALESCE(calc.d10_std_dev, -1)'  
+        , '      , COALESCE(calc.d20_mmnt_size, 0)'  
+        , '      , COALESCE(calc.d20_mmnt, -1)'  
+        , '      , COALESCE(calc.d20_mmnt_score, -1)'  
+        , '      , COALESCE(calc.d20_std_dev, -1)'  
+        , '      , COALESCE(calc.d60_mmnt_size, 0)'  
+        , '      , COALESCE(calc.d60_mmnt, -1)'  
+        , '      , COALESCE(calc.d60_mmnt_score, -1)'  
+        , '      , COALESCE(calc.d60_std_dev, -1)'  
+        , '      , COALESCE(calc.m3_mmnt_size, 0)'  
+        , '      , COALESCE(calc.m3_mmnt, -1)'  
+        , '      , COALESCE(calc.m3_mmnt_score, -1)'  
+        , '      , COALESCE(calc.m3_std_dev, -1)'  
+        , '      , COALESCE(calc.m6_mmnt_size, 0)'  
+        , '      , COALESCE(calc.m6_mmnt, -1)'  
+        , '      , COALESCE(calc.m6_mmnt_score, -1)'  
+        , '      , COALESCE(calc.m6_std_dev, -1)'  
+        , '      , COALESCE(calc.m12_mmnt_size, 0)'  
+        , '      , COALESCE(calc.m12_mmnt, -1)'  
+        , '      , COALESCE(calc.m12_mmnt_score, -1)'  
+        , '      , COALESCE(calc.m12_std_dev, -1)'  
         , '      , tr40005.date_updt'  
         );
     
@@ -304,88 +360,10 @@ BEGIN
     
     query_text := CONCAT(
         query_text
-        , '      LEFT OUTER JOIN ('  
-        , '          SELECT'  
-        , '              avg_12m.item_code'  
-        , '              , avg_12m.size_12m'  
-        , '              , CASE'  
-        , '                  WHEN avg_12m.size_12m <> 12 THEN -1'  
-        , '                  ELSE avg_12m.mmnt_12m'  
-        , '                  END AS mmnt_12m'  
-        , '              , CASE'  
-        , '                  WHEN avg_12m.size_12m <> 12 THEN -1'  
-        , '                  ELSE avg_12m.mmnt_score_12m'  
-        , '                  END AS mmnt_score_12m'  
-        , '              , CASE'  
-        , '                  WHEN avg_12m.size_12m <> 12 THEN -1'  
-        , '                  ELSE avg_12m.std_dev_12m'  
-        , '                  END AS std_dev_12m'  
-        , '          FROM ('  
-        , '              SELECT'  
-        , '                  grp.item_code'  
-        , '                  , COUNT(*) AS size_12m'  
-        , '                  , AVG(grp.mmnt) AS mmnt_12m'  
-        , '                  , AVG(grp.mmnt_score) AS mmnt_score_12m'  
-        , '                  , STDDEV_POP(grp.diff) AS std_dev_12m'  
-        , '              FROM ('  
-        , '                  SELECT'  
-        , '                      suf.item_code'  
-        , '                      , (ABS(suf.etf_cp) - ABS(pre.etf_cp)) / pre.etf_cp AS diff'  
-        , '                      , ABS(std.etf_cp / pre.etf_cp) AS mmnt'  
-        , '                      , CASE'  
-        , '                          WHEN ABS(std.etf_cp / pre.etf_cp) > 1 THEN 1'  
-        , '                          ELSE 0'  
-        , '                          END AS mmnt_score'  
-        , '                  FROM'  
-        , '                      ('  
-        , '                          SELECT'  
-        , '                              trd.trdd_no'  
-        , '                              , trd.trdd'  
-        , '                              , tr40005.item_code'  
-        , '                              , tr40005.etf_cp'  
-        , '                          FROM'  
-        , '                              t_etf_trdd trd'  
-        , '                              , t_kw_tr40005 tr40005'  
-        , '                          WHERE 1 = 1'  
-        , '                              AND trd.trdd = tr40005.trdd'  
-        , '                              AND trd.trdd = v_std_trdd'  
-        , '                      ) std'  
-        , '                      , ('  
-        , '                          SELECT'  
-        , '                              trd.trdd_no'  
-        , '                              , trd.trdd'  
-        , '                              , tr40005.item_code'  
-        , '                              , tr40005.etf_cp'  
-        , '                          FROM'  
-        , '                              t_etf_trdd trd'  
-        , '                              , t_kw_tr40005 tr40005'  
-        , '                          WHERE 1 = 1'  
-        , '                              AND trd.trdd = tr40005.trdd'  
-        , '                      ) suf'  
-        , '                      , ('  
-        , '                          SELECT'  
-        , '                              trd.trdd_no'  
-        , '                              , trd.trdd'  
-        , '                              , tr40005.item_code'  
-        , '                              , tr40005.etf_cp'  
-        , '                          FROM'  
-        , '                              t_etf_trdd trd'  
-        , '                              , t_kw_tr40005 tr40005'  
-        , '                          WHERE 1 = 1'  
-        , '                              AND trd.trdd = tr40005.trdd'  
-        , '                      ) pre'  
-        , '                  WHERE 1 = 1'  
-        , '                      AND std.item_code = suf.item_code'  
-        , '                      AND std.item_code = pre.item_code'  
-        , '                      AND suf.trdd_no = pre.trdd_no + 20'  
-        , '                      AND (std.trdd_no - suf.trdd_no) < 20 * 12'  
-        , '                      AND (std.trdd_no - suf.trdd_no) % 20 = 0'  
-        , '                  ) grp'  
-        , '              GROUP BY grp.item_code'  
-        , '              ) avg_12m'  
-        , '          ) calc_avg_12m'  
+        , '      LEFT OUTER JOIN t_etf_calc calc'  
         , '          ON 1 = 1'  
-        , '          AND items.item_code = calc_avg_12m.item_code'  
+        , '          AND items.item_code = calc.item_code'
+        , '          AND calc.trdd = v_std_trdd'    
         );
     
     query_text := CONCAT(

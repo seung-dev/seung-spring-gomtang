@@ -1,70 +1,67 @@
-DROP FUNCTION IF EXISTS f_etf_etf0101(text);
-CREATE OR REPLACE FUNCTION f_etf_etf0101 (
+DROP FUNCTION IF EXISTS f_etf_etf0101_SL(text);
+CREATE OR REPLACE FUNCTION f_etf_etf0101_SL (
     req_json text
 )
-/*
-RETURNS TEXT
-*/
 RETURNS TABLE (
     item_code character varying
     , item_name character varying
-    , mmnt character varying
-    , mmnt_size character varying
-    , size_12m character varying
-    , mmnt_12m character varying
-    , mmnt_score_12m character varying
-    , std_dev_12m character varying
+    , mmnt numeric
+    , mmnt_size bigint
+    , size_12m bigint
+    , mmnt_12m numeric
+    , mmnt_score_12m numeric
+    , std_dev_12m numeric
     , etf_stts character varying
     , etf_cnst character varying
     , etf_type character varying
     , expn_rate character varying
     , etf_fm character varying
-    , etf_fv character varying
-    , etf_equity character varying
-    , etf_is character varying
-    , etf_cr character varying
-    , etf_yh character varying
-    , etf_yl character varying
-    , etf_mc character varying
+    , etf_fv numeric
+    , etf_equity numeric
+    , etf_is bigint
+    , etf_cr numeric
+    , etf_yh numeric
+    , etf_yl numeric
+    , etf_mc numeric
     , etf_mcr character varying
-    , etf_for character varying
-    , etf_sp character varying
-    , etf_250h character varying
-    , etf_250l character varying
-    , etf_op character varying
-    , etf_hp character varying
-    , etf_lp character varying
-    , etf_hhp character varying
-    , etf_llp character varying
-    , etf_bp character varying
-    , etf_ep character varying
-    , etf_eq character varying
+    , etf_for numeric
+    , etf_sp numeric
+    , etf_250h numeric
+    , etf_250l numeric
+    , etf_op numeric
+    , etf_hp numeric
+    , etf_lp numeric
+    , etf_hhp numeric
+    , etf_llp numeric
+    , etf_bp numeric
+    , etf_ep numeric
+    , etf_eq numeric
     , etf_d250h character varying
-    , etf_vs250h character varying
+    , etf_vs250h numeric
     , etf_d250l character varying
-    , etf_vs250l character varying
-    , etf_pp character varying
-    , etf_pinc character varying
-    , etf_pcv character varying
+    , etf_vs250l numeric
+    , etf_pp numeric
+    , etf_pinc numeric
+    , etf_pcv numeric
     , etf_fvu character varying
     , etf_os character varying
     , etf_osr character varying
     , trdd character varying
-    , etf_cp character varying
-    , etf_inc character varying
-    , etf_pcp character varying
-    , etf_vol character varying
-    , etf_nav character varying
-    , etf_volaccu character varying
-    , etf_indexd character varying
-    , etf_etfd character varying
-    , etf_ter character varying
-    , etf_ti character varying
-    , etf_tiinc character varying
-    , date_updt character varying
+    , etf_cp numeric
+    , etf_inc numeric
+    , etf_pcp numeric
+    , etf_vol bigint
+    , etf_nav numeric
+    , etf_volaccu bigint
+    , etf_indexd numeric
+    , etf_etfd numeric
+    , etf_ter numeric
+    , etf_ti numeric
+    , etf_tiinc numeric
+    , date_updt timestamp
     )
 AS
-$$
+$function$
 DECLARE
     query_text TEXT := '';
     v_std_trdd_no int;
@@ -173,60 +170,60 @@ BEGIN
         , '  SELECT'  
         , '      items.item_code'  
         , '      , items.item_name'  
-        , '      , COALESCE(calc_mmnt.mmnt, -1)::varchar'  
-        , '      , COALESCE(calc_mmnt.mmnt_size, 0)::varchar'  
-        , '      , COALESCE(calc_avg_12m.size_12m, 0)::varchar'  
-        , '      , COALESCE(calc_avg_12m.mmnt_12m, -1)::varchar'  
-        , '      , COALESCE(calc_avg_12m.mmnt_score_12m, -1)::varchar'  
-        , '      , COALESCE(calc_avg_12m.std_dev_12m, -1)::varchar'  
-        , '      , items.item_stts::varchar'  
-        , '      , items.item_cnst::varchar'  
+        , '      , COALESCE(calc_mmnt.mmnt, -1)'  
+        , '      , COALESCE(calc_mmnt.mmnt_size, 0)'  
+        , '      , COALESCE(calc_avg_12m.size_12m, 0)'  
+        , '      , COALESCE(calc_avg_12m.mmnt_12m, -1)'  
+        , '      , COALESCE(calc_avg_12m.mmnt_score_12m, -1)'  
+        , '      , COALESCE(calc_avg_12m.std_dev_12m, -1)'  
+        , '      , items.item_stts'  
+        , '      , items.item_cnst'  
         , '      , items.etf_type'  
         , '      , items.expn_rate'  
-        , '      , tr10001.etf_fm::varchar'  
-        , '      , tr10001.etf_fv::varchar'  
-        , '      , tr10001.etf_equity::varchar'  
-        , '      , tr10001.etf_is::varchar'  
-        , '      , tr10001.etf_cr::varchar'  
-        , '      , tr10001.etf_yh::varchar'  
-        , '      , tr10001.etf_yl::varchar'  
-        , '      , tr10001.etf_mc::varchar'  
-        , '      , tr10001.etf_mcr::varchar'  
-        , '      , tr10001.etf_for::varchar'  
-        , '      , tr10001.etf_sp::varchar'  
-        , '      , tr10001.etf_250h::varchar'  
-        , '      , tr10001.etf_250l::varchar'  
-        , '      , tr10001.etf_op::varchar'  
-        , '      , tr10001.etf_hp::varchar'  
-        , '      , tr10001.etf_lp::varchar'  
-        , '      , tr10001.etf_hhp::varchar'  
-        , '      , tr10001.etf_llp::varchar'  
-        , '      , tr10001.etf_bp::varchar'  
-        , '      , tr10001.etf_ep::varchar'  
-        , '      , tr10001.etf_eq::varchar'  
-        , '      , tr10001.etf_d250h::varchar'  
-        , '      , tr10001.etf_vs250h::varchar'  
-        , '      , tr10001.etf_d250l::varchar'  
-        , '      , tr10001.etf_vs250l::varchar'  
-        , '      , tr10001.etf_pp::varchar'  
-        , '      , tr10001.etf_pinc::varchar'  
-        , '      , tr10001.etf_pcv::varchar'  
-        , '      , tr10001.etf_fvu::varchar'  
-        , '      , tr10001.etf_os::varchar'  
-        , '      , tr10001.etf_osr::varchar'  
+        , '      , tr10001.etf_fm'  
+        , '      , tr10001.etf_fv'  
+        , '      , tr10001.etf_equity'  
+        , '      , tr10001.etf_is'  
+        , '      , tr10001.etf_cr'  
+        , '      , tr10001.etf_yh'  
+        , '      , tr10001.etf_yl'  
+        , '      , tr10001.etf_mc'  
+        , '      , tr10001.etf_mcr'  
+        , '      , tr10001.etf_for'  
+        , '      , tr10001.etf_sp'  
+        , '      , tr10001.etf_250h'  
+        , '      , tr10001.etf_250l'  
+        , '      , tr10001.etf_op'  
+        , '      , tr10001.etf_hp'  
+        , '      , tr10001.etf_lp'  
+        , '      , tr10001.etf_hhp'  
+        , '      , tr10001.etf_llp'  
+        , '      , tr10001.etf_bp'  
+        , '      , tr10001.etf_ep'  
+        , '      , tr10001.etf_eq'  
+        , '      , tr10001.etf_d250h'  
+        , '      , tr10001.etf_vs250h'  
+        , '      , tr10001.etf_d250l'  
+        , '      , tr10001.etf_vs250l'  
+        , '      , tr10001.etf_pp'  
+        , '      , tr10001.etf_pinc'  
+        , '      , tr10001.etf_pcv'  
+        , '      , tr10001.etf_fvu'  
+        , '      , tr10001.etf_os'  
+        , '      , tr10001.etf_osr'  
         , '      , tr40005.trdd'  
-        , '      , ABS(tr40005.etf_cp)::varchar'  
-        , '      , tr40005.etf_inc::varchar'  
-        , '      , tr40005.etf_pcp::varchar'  
-        , '      , ABS(tr40005.etf_vol)::varchar'  
-        , '      , ABS(tr40005.etf_nav)::varchar'  
-        , '      , ABS(tr40005.etf_volaccu)::varchar'  
-        , '      , tr40005.etf_indexd::varchar'  
-        , '      , tr40005.etf_etfd::varchar'  
-        , '      , tr40005.etf_ter::varchar'  
-        , '      , tr40005.etf_ti::varchar'  
-        , '      , tr40005.etf_tiinc::varchar'  
-        , '      , EXTRACT(EPOCH FROM tr40005.date_updt)::varchar AS date_updt'  
+        , '      , ABS(tr40005.etf_cp)'  
+        , '      , tr40005.etf_inc'  
+        , '      , tr40005.etf_pcp'  
+        , '      , ABS(tr40005.etf_vol)'  
+        , '      , ABS(tr40005.etf_nav)'  
+        , '      , ABS(tr40005.etf_volaccu)'  
+        , '      , tr40005.etf_indexd'  
+        , '      , tr40005.etf_etfd'  
+        , '      , tr40005.etf_ter'  
+        , '      , tr40005.etf_ti'  
+        , '      , tr40005.etf_tiinc'  
+        , '      , tr40005.date_updt'  
         );
     
     query_text := CONCAT(
@@ -311,18 +308,9 @@ BEGIN
         , '          SELECT'  
         , '              avg_12m.item_code'  
         , '              , avg_12m.size_12m'  
-        , '              , CASE'  
-        , '                  WHEN avg_12m.size_12m <> 12 THEN -1'  
-        , '                  ELSE avg_12m.mmnt_12m'  
-        , '                  END AS mmnt_12m'  
-        , '              , CASE'  
-        , '                  WHEN avg_12m.size_12m <> 12 THEN -1'  
-        , '                  ELSE avg_12m.mmnt_score_12m'  
-        , '                  END AS mmnt_score_12m'  
-        , '              , CASE'  
-        , '                  WHEN avg_12m.size_12m <> 12 THEN -1'  
-        , '                  ELSE avg_12m.std_dev_12m'  
-        , '                  END AS std_dev_12m'  
+        , '              , avg_12m.mmnt_12m'  
+        , '              , avg_12m.mmnt_score_12m'  
+        , '              , avg_12m.std_dev_12m'  
         , '          FROM ('  
         , '              SELECT'  
         , '                  grp.item_code'  
@@ -433,7 +421,7 @@ BEGIN
     --RETURN query_text;
     
 END;
-$$
+$function$
 LANGUAGE plpgsql;
 
 COMMIT;

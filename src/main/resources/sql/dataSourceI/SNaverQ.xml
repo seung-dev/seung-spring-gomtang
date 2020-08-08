@@ -198,4 +198,89 @@ WHERE 1 = 1
 ]]>
 </update>
 
+<select id="n0104_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	item_code
+FROM
+	t_kw_kw10000
+WHERE 1 = 1
+	AND item_code NOT IN (
+		SELECT
+			item_code
+		FROM
+			t_kw_kw10000
+		WHERE 1 = 1
+			AND mrkt_type = '3'
+	)
+]]>
+</select>
+
+<select id="n0104_SR" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	hash
+FROM
+	t_item_n0104
+WHERE 1 = 1
+	AND item_code = #{item_code}
+	AND item_sd = #{item_sd}
+]]>
+</select>
+
+<update id="n0104_UR" parameterMap="parameterMap">
+<![CDATA[
+UPDATE t_item_n0104
+SET
+	date_updt = NOW()
+	, hash = #{hash}
+	, is_est = #{is_est}
+	, item_ta = #{item_ta}
+	, item_tl = #{item_tl}
+	, item_te = #{item_te}
+	, item_tr = #{item_tr}
+	, item_oi = #{item_oi}
+	, item_cfo = #{item_cfo}
+	, item_de = #{item_de}
+WHERE 1 = 1
+	AND item_code = #{item_code}
+	AND item_sd = #{item_sd}
+]]>
+</update>
+
+<insert id="n0104_IR" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_item_n0104 (
+	item_code
+	, item_sd
+	, date_inst
+	, date_updt
+	, hash
+	, is_est
+	, item_ta
+	, item_tl
+	, item_te
+	, item_tr
+	, item_oi
+	, item_cfo
+	, item_de
+	)
+VALUES (
+	#{item_code}
+	, #{item_sd}
+	, NOW()
+	, NOW()
+	, #{hash}
+	, #{is_est}
+	, #{item_ta}
+	, #{item_tl}
+	, #{item_te}
+	, #{item_tr}
+	, #{item_oi}
+	, #{item_cfo}
+	, #{item_de}
+	)
+]]>
+</insert>
+
 </mapper>

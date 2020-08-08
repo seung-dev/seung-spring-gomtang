@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sql.dataSourceI.SKiQ">
+
+<parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
+<resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
+
+<select id="ki0201_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	n0104.item_code
+	, JSON_AGG(
+		JSON_BUILD_OBJECT(
+			'item_sd'
+			, n0104.item_sd
+			, 'is_est'
+			, n0104.is_est
+			, 'item_ta'
+			, n0104.item_ta
+			, 'item_tl'
+			, n0104.item_tl
+			, 'item_te'
+			, n0104.item_te
+			, 'item_tr'
+			, n0104.item_tr
+			, 'item_oi'
+			, n0104.item_oi
+			, 'item_cfo'
+			, n0104.item_cfo
+			, 'item_de'
+			, n0104.item_de
+			)
+		) AS item_data
+FROM (
+	SELECT
+		item_code
+		, item_sd
+		, is_est
+		, item_ta
+		, item_tl
+		, item_te
+		, item_tr
+		, item_oi
+		, item_cfo
+		, item_de
+	FROM
+		t_item_n0104
+	WHERE 1 = 1
+]]>
+		<if test="item_code != null and item_code != ''"><![CDATA[
+		AND item_code = #{item_code}
+		]]></if>
+		<if test="item_sd_from != null and item_sd_from != ''"><![CDATA[
+		AND item_sd >= #{item_sd_from}
+		]]></if>
+		<if test="item_sd_to != null and item_sd_to != ''"><![CDATA[
+		AND item_sd <= #{item_sd_to}
+		]]></if>
+<![CDATA[
+	) n0104
+GROUP BY
+	n0104.item_code
+]]>
+</select>
+
+</mapper>

@@ -260,6 +260,14 @@ public class SKiwoomSI {
 			
 			sMapperI.insert("schd_prev", jobHistMap);
 			
+			Unirest
+				.get(sProperties.getJob().getProperty("seung.job.kiwoom.kw00000.url", ""))
+				.connectTimeout(1000 * 3)
+				.socketTimeout(1000 * 3)
+				.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+				.asBytes()
+				;
+			
 			HttpResponse<byte[]> httpResponse = Unirest
 					.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr99999.url", ""))
 					.connectTimeout(1000 * 3)
@@ -1424,14 +1432,17 @@ public class SKiwoomSI {
 			prev_IR = trddNo.getInt("prev");
 			post_IR = trddNo.getInt("post");
 			
+			SLinkedHashMap etf_calc_IL = sMapperI.selectOne("etf_calc_IL");
+			
 			message = String.format(
-					"tr40005_IR=%d, tr40005_UR=%d, tr40005_DO_NOTHING=%d, tr40005_IGNORE=%d, prev_IR=%d, post_IR=%d"
+					"tr40005_IR=%d, tr40005_UR=%d, tr40005_DO_NOTHING=%d, tr40005_IGNORE=%d, prev_IR=%d, post_IR=%d, etf_calc_IL=%d"
 					, tr40005_IR
 					, tr40005_UR
 					, tr40005_DO_NOTHING
 					, tr40005_IGNORE
 					, prev_IR
 					, post_IR
+					, etf_calc_IL.getInt("f_etf_calc")
 					)
 					;
 			

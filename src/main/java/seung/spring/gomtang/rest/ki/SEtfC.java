@@ -1,4 +1,4 @@
-package seung.spring.gomtang.rest.etf;
+package seung.spring.gomtang.rest.ki;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 import seung.spring.boot.conf.web.util.SRequest;
 import seung.spring.boot.conf.web.util.SResponse;
-import seung.spring.gomtang.rest.etf.service.SEtfS;
-import seung.spring.gomtang.rest.etf.util.Etf0101;
-import seung.spring.gomtang.rest.etf.util.Etf0102;
-import seung.spring.gomtang.rest.etf.util.Etf0103;
-import seung.spring.gomtang.rest.etf.util.Etf0111;
-import seung.spring.gomtang.rest.etf.util.Etf0112;
-import seung.spring.gomtang.rest.etf.util.Etf0113;
+import seung.spring.gomtang.rest.ki.service.SEtfS;
+import seung.spring.gomtang.rest.ki.util.Etf0101;
+import seung.spring.gomtang.rest.ki.util.Etf0102;
+import seung.spring.gomtang.rest.ki.util.Etf0103;
+import seung.spring.gomtang.rest.ki.util.Etf0111;
+import seung.spring.gomtang.rest.ki.util.Etf0112;
+import seung.spring.gomtang.rest.ki.util.Etf0113;
 
 @RestController
 @Slf4j

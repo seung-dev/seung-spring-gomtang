@@ -338,4 +338,39 @@ public class SJobSI implements SJobS {
 		return sResponse;
 	}
 	
+	@Override
+	public SResponse n0104(SRequest sRequest, SReflect sReflect) {
+		
+		log.debug("run");
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(sReflect.getRequest_code())
+				.request_time(sRequest.getRequest_time())
+				.request(sReflect)
+				.build()
+				;
+		
+		log.info("({}) ((START))", sResponse.getRequest_code());
+		
+		String error_message = "";
+		try {
+			
+			sResponse.putResponse("n0104", sNaverS.n0104("rest", "naver"));
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.info("({}) ", sResponse.getRequest_code(), e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+		}
+		
+		log.info("({}) ((END))", sResponse.getRequest_code());
+		sResponse.done();
+		return sResponse;
+	}
+	
 }

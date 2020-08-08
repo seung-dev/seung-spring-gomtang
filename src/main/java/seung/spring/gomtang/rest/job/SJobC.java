@@ -120,4 +120,15 @@ public class SJobC {
 		return sJobS.n0102(sRequest, sReflect);
 	}
 	
+	@RequestMapping(value = {"/rest/job/n0104"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public SResponse n0104(
+			SRequest sRequest
+			, @Valid @RequestBody SReflect sReflect
+			) throws Exception {
+		
+		log.debug("run");
+		
+		return sJobS.n0104(sRequest, sReflect);
+	}
+	
 }

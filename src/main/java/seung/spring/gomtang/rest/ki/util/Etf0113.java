@@ -1,8 +1,6 @@
-package seung.spring.gomtang.rest.etf.util;
+package seung.spring.gomtang.rest.ki.util;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -18,30 +16,14 @@ import seung.java.kimchi.util.SLinkedHashMap;
 
 @Setter
 @Getter
-public class Etf0101 {
+public class Etf0113 {
 
 	@Size(max = 36)
 	@NotEmpty
 	private String request_code;
 	
-	@Size(min = 8, max = 10)
 	@NotEmpty
-	private String mmnt_date;
-	
-	@Size(max = 1)
-	@NotEmpty
-	private String mmnt_unit;
-	
-	@Min(value = 1)
-	@NotNull
-	private int mmnt_scope;
-	
-	@Size(min =3, max = 3)
-	@NotEmpty
-	private String mmnt_min_max;
-	
-	@NotNull
-	private float mmnt_threshold;
+	private String item_code;
 	
 	public String toJsonString() {
 		return toJsonString(false);

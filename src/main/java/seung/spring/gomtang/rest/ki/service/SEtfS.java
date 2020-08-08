@@ -1,13 +1,13 @@
-package seung.spring.gomtang.rest.etf.service;
+package seung.spring.gomtang.rest.ki.service;
 
 import seung.spring.boot.conf.web.util.SRequest;
 import seung.spring.boot.conf.web.util.SResponse;
-import seung.spring.gomtang.rest.etf.util.Etf0101;
-import seung.spring.gomtang.rest.etf.util.Etf0102;
-import seung.spring.gomtang.rest.etf.util.Etf0103;
-import seung.spring.gomtang.rest.etf.util.Etf0111;
-import seung.spring.gomtang.rest.etf.util.Etf0112;
-import seung.spring.gomtang.rest.etf.util.Etf0113;
+import seung.spring.gomtang.rest.ki.util.Etf0101;
+import seung.spring.gomtang.rest.ki.util.Etf0102;
+import seung.spring.gomtang.rest.ki.util.Etf0103;
+import seung.spring.gomtang.rest.ki.util.Etf0111;
+import seung.spring.gomtang.rest.ki.util.Etf0112;
+import seung.spring.gomtang.rest.ki.util.Etf0113;
 
 public interface SEtfS {
 

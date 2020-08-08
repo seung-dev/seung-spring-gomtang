@@ -1,4 +1,4 @@
-package seung.spring.gomtang.rest.etf.service.impl;
+package seung.spring.gomtang.rest.ki.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +13,13 @@ import seung.java.kimchi.util.SLinkedHashMap;
 import seung.spring.boot.conf.datasource.SMapperI;
 import seung.spring.boot.conf.web.util.SRequest;
 import seung.spring.boot.conf.web.util.SResponse;
-import seung.spring.gomtang.rest.etf.service.SEtfS;
-import seung.spring.gomtang.rest.etf.util.Etf0101;
-import seung.spring.gomtang.rest.etf.util.Etf0102;
-import seung.spring.gomtang.rest.etf.util.Etf0103;
-import seung.spring.gomtang.rest.etf.util.Etf0111;
-import seung.spring.gomtang.rest.etf.util.Etf0112;
-import seung.spring.gomtang.rest.etf.util.Etf0113;
+import seung.spring.gomtang.rest.ki.service.SEtfS;
+import seung.spring.gomtang.rest.ki.util.Etf0101;
+import seung.spring.gomtang.rest.ki.util.Etf0102;
+import seung.spring.gomtang.rest.ki.util.Etf0103;
+import seung.spring.gomtang.rest.ki.util.Etf0111;
+import seung.spring.gomtang.rest.ki.util.Etf0112;
+import seung.spring.gomtang.rest.ki.util.Etf0113;
 
 @Slf4j
 @Service(value = "sEtfS")

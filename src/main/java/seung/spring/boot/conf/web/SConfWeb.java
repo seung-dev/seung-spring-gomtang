@@ -4,11 +4,15 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.BeanNameViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
@@ -71,5 +75,38 @@ public class SConfWeb extends WebMvcConfigurationSupport {
 		log.info("addNotWrappedModelKeys={}", "no-wrap");
 		return sMappingJackson2JsonView;
 	}// end of addSMappingJackson2JsonView
+	
+	@Override
+	protected void addCorsMappings(CorsRegistry registry) {
+//		super.addCorsMappings(registry);
+		registry
+			.addMapping("/rest/**")
+			.allowedMethods(HttpMethod.POST.name())
+			.allowedOrigins("*")
+			;
+		registry
+			.addMapping("/reflect")
+			.allowedMethods(HttpMethod.POST.name())
+			.allowedOrigins("*")
+			;
+	}
+	
+//	@Bean
+//	public WebMvcConfigurer webMvcConfigurer() {
+//		return new WebMvcConfigurer() {
+//			@Override
+//			public void addCorsMappings(CorsRegistry registry) {
+//				registry
+//					.addMapping("/rest/**")
+//					.addMapping("/reflect/**")
+//					.allowedOrigins("*")
+//					.allowedMethods(HttpMethod.POST.name())
+//					.allowCredentials(false)
+//					.allowedHeaders("*")
+//					.maxAge(3600)
+//					;
+//			}
+//		};
+//	}
 	
 }

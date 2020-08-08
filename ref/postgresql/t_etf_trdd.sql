@@ -7,9 +7,9 @@ CREATE TABLE t_etf_trdd (
 CREATE UNIQUE INDEX pk_t_etf_trdd ON t_etf_trdd (trdd DESC, trdd_no DESC);
 
 COMMENT ON TABLE t_etf_trdd IS '주식거래일 회차';
-COMMENT ON COLUMN t_etf_tr40005.trdd IS '주식거래일(trading day)';
-COMMENT ON COLUMN t_etf_tr40005.trdd_no IS '주식거래일 회차 - 기준일: 20200615=0';
-COMMENT ON COLUMN t_etf_tr40005.date_inst IS '등록일시';
+COMMENT ON COLUMN t_etf_trdd.trdd IS '주식거래일(trading day)';
+COMMENT ON COLUMN t_etf_trdd.trdd_no IS '주식거래일 회차 - 기준일: 20200615=0';
+COMMENT ON COLUMN t_etf_trdd.date_inst IS '등록일시';
 
 COMMIT;
 

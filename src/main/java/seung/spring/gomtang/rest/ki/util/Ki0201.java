@@ -1,4 +1,4 @@
-package seung.spring.gomtang.rest.etf.util;
+package seung.spring.gomtang.rest.ki.util;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -16,14 +16,21 @@ import seung.java.kimchi.util.SLinkedHashMap;
 
 @Setter
 @Getter
-public class Etf0112 {
+public class Ki0201 {
 
 	@Size(max = 36)
 	@NotEmpty
 	private String request_code;
 	
-	@NotEmpty
 	private String item_code;
+	
+	@Size(min = 6, max = 6)
+	@NotEmpty
+	private String item_sd_from;
+	
+	@Size(min = 6, max = 6)
+	@NotEmpty
+	private String item_sd_to;
 	
 	public String toJsonString() {
 		return toJsonString(false);

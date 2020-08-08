@@ -234,11 +234,11 @@ public class SNaverSI {
 			int n0102_UR = 0;
 			int n0102_DO_NOTHING = 0;
 			int n0102_IGNORE = 0;
-			List<SLinkedHashMap> n0103_SL = null;
-			int n0103_IR = 0;
-			int n0103_UR = 0;
-			int n0103_DO_NOTHING = 0;
-			int n0103_IGNORE = 0;
+			List<SLinkedHashMap> n0104_SL = null;
+			int n0104_IR = 0;
+			int n0104_UR = 0;
+			int n0104_DO_NOTHING = 0;
+			int n0104_IGNORE = 0;
 			boolean doInsert = false;
 			for(SLinkedHashMap kw10000_SR : sMapperI.selectList("kw10000_SL", new SLinkedHashMap().add("mrkt_type", "3").add("on_prgr", "1"))) {
 				
@@ -316,7 +316,7 @@ public class SNaverSI {
 					n0102_IGNORE++;
 				}
 				
-				n0103_SL = sMapperI.selectList("n0103_SL", query);
+				n0104_SL = sMapperI.selectList("n0104_SL", query);
 				for(SLinkedHashMap cu : n0102.getListSLinkedHashMap("cu")) {
 					
 					cuLog = cu;
@@ -327,15 +327,15 @@ public class SNaverSI {
 					query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
 					
 					doInsert = true;
-					for(SLinkedHashMap n0103_SR : n0103_SL) {
+					for(SLinkedHashMap n0104_SR : n0104_SL) {
 						if(
-								n0103_SR.getString("item_code").equals(query.getString("item_code"))
-								&& n0103_SR.getString("item_name_cu").equals(query.getString("item_name_cu"))
+								n0104_SR.getString("item_code").equals(query.getString("item_code"))
+								&& n0104_SR.getString("item_name_cu").equals(query.getString("item_name_cu"))
 								) {
-							if(n0103_SR.getString("hash").equals(query.getString("hash"))) {
-								n0103_DO_NOTHING++;
+							if(n0104_SR.getString("hash").equals(query.getString("hash"))) {
+								n0104_DO_NOTHING++;
 							} else {
-								n0103_UR += sMapperI.insert("n0103_UR", query);
+								n0104_UR += sMapperI.insert("n0104_UR", query);
 							}
 							doInsert = false;
 							break;
@@ -343,7 +343,7 @@ public class SNaverSI {
 					}
 					
 					if(doInsert) {
-						n0103_IR += sMapperI.insert("n0103_IR", query);
+						n0104_IR += sMapperI.insert("n0104_IR", query);
 					}
 					
 				}// end of cu
@@ -362,11 +362,11 @@ public class SNaverSI {
 							, n0102_IGNORE
 							)
 					, String.format(
-							", n0103_IR=%d, n0103_UR=%d, n0103_DO_NOTHING=%d, n0103_IGNORE=%d"
-							, n0103_IR
-							, n0103_UR
-							, n0103_DO_NOTHING
-							, n0103_IGNORE
+							", n0104_IR=%d, n0104_UR=%d, n0104_DO_NOTHING=%d, n0104_IGNORE=%d"
+							, n0104_IR
+							, n0104_UR
+							, n0104_DO_NOTHING
+							, n0104_IGNORE
 							)
 					);
 			errorCode = "0000";
@@ -396,6 +396,211 @@ public class SNaverSI {
 						, cuLog.toJsonString(true)
 						);
 			}
+			if(query != null) {
+				log.error(
+						"{}.{}.{}.query {}"
+						, jobHistMap.getString("schd_set", "")
+						, jobHistMap.getString("schd_code", "")
+						, schdNo
+						, query.toJsonString(true)
+						);
+			}
+			message = ExceptionUtils.getStackTrace(e);
+		} finally {
+			jobHistMap.put("error_code", errorCode);
+			jobHistMap.put("message", message);
+			log.info(
+					"{}.{}.{}.error_code {}"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					, jobHistMap.getString("error_code", "")
+					);
+			sMapperI.insert("schd_post", jobHistMap);
+			log.info(
+					"{}.{}.{} ((END))"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					);
+		}
+		
+		
+		return errorCode;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public synchronized String n0104(
+			String jobGroup
+			, String jobName
+			) {
+		
+		String errorCode = "E999";
+		String message = "";
+		String schdNo = "";
+		
+		SLinkedHashMap jobHistMap = new SLinkedHashMap()
+				.add("job_group", jobGroup)
+				.add("job_name", jobName)
+				.add("schd_set", jobName)
+				.add("schd_code", "n0104")
+				.add("error_code", errorCode)
+				.add("message", message)
+				;
+		
+		String itemCode = "";
+		SLinkedHashMap query = null;
+		try {
+			
+			schdNo = sMapperI.selectOne("schd_no").getString("schd_no", "");
+			jobHistMap.put("schd_no", schdNo);
+			jobHistMap.put("job_data", jobHistMap.toJsonString());
+			
+			log.info(
+					"{}.{}.{} ((START))"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					);
+			
+			sMapperI.insert("schd_prev", jobHistMap);
+			
+			int loopTry = 0;
+			HttpResponse<byte[]> httpResponse = null;
+			SLinkedHashMap response = null;
+			int n0104_IR = 0;
+			int n0104_UR = 0;
+			int n0104_DO_NOTHING = 0;
+			int n0104_IGNORE = 0;
+			SLinkedHashMap n0104_SR = null;
+			for(SLinkedHashMap item : sMapperI.selectList("n0104_SL")) {
+				
+				if(loopTry++ % 100 == 0) {
+					log.info(
+							"{}.{}.{}.try {}"
+							, jobHistMap.getString("schd_set", "")
+							, jobHistMap.getString("schd_code", "")
+							, schdNo
+							, loopTry
+							);
+				}
+				
+				itemCode = item.getString("item_code");
+				
+				httpResponse = Unirest
+						.post(sProperties.getJob().getProperty("seung.job.naver.n0104.url", ""))
+						.connectTimeout(1000 * 3)
+						.socketTimeout(1000 * 10)
+						.field("request_code", schdNo)
+						.field("item_code", itemCode)
+						.asBytes()
+						;
+				
+				if(HttpStatus.OK.value() != httpResponse.getStatus()) {
+					message = String.format(
+							"%s.%s.%s.response_code %d"
+							, jobHistMap.getString("schd_set", "")
+							, jobHistMap.getString("schd_code", "")
+							, schdNo
+							, httpResponse.getStatus()
+							);
+					continue;
+				}
+				
+				response = new SLinkedHashMap(new String(httpResponse.getBody(), "UTF-8"));
+				
+				if("D006".equals(response.getString("error_code", ""))) {
+					log.info("D006: {}", itemCode);
+				}
+				
+				if(!SCode.SUCCESS.equals(response.getString("error_code", ""))) {
+					message = String.format(
+							"%s.%s.%s.error_code %s"
+							, jobHistMap.getString("schd_set", "")
+							, jobHistMap.getString("schd_code", "")
+							, schdNo
+							, response.getString("error_code", "")
+							);
+					continue;
+				}
+				
+				for(SLinkedHashMap n0104 : response.getSLinkedHashMap("result").getListSLinkedHashMap("n0104")) {
+					
+					if(n0104.isEmpty("item_ta")
+							|| n0104.isEmpty("item_tl")
+							|| n0104.isEmpty("item_te")
+							|| n0104.isEmpty("item_tr")
+							|| n0104.isEmpty("item_oi")
+							|| n0104.isEmpty("item_cfo")
+							|| n0104.isEmpty("item_de")
+							) {
+						continue;
+					}
+					
+					query = new SLinkedHashMap();
+					query.put("item_code", itemCode);
+					query.put("item_sd", n0104.getString("item_sd", ""));
+					query.put("is_est", n0104.getInt("is_est"));
+					query.put("item_ta", n0104.getBigDecimal("item_ta"));
+					query.put("item_tl", n0104.getBigDecimal("item_tl"));
+					query.put("item_te", n0104.getBigDecimal("item_te"));
+					query.put("item_tr", n0104.getBigDecimal("item_tr"));
+					query.put("item_oi", n0104.getBigDecimal("item_oi"));
+					query.put("item_cfo", n0104.getBigDecimal("item_cfo"));
+					query.put("item_de", n0104.getBigDecimal("item_de"));
+					query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
+					
+					n0104_SR = sMapperI.selectOne("n0104_SR", query);
+					
+					if(n0104_SR == null) {
+						n0104_IR += sMapperI.insert("n0104_IR", query);
+					} else if(query.getString("hash", "").equals(n0104_SR.getString("hash", "1"))) {
+						n0104_IGNORE++;
+					} else if(!query.getString("hash", "").equals(n0104_SR.getString("hash", "1"))) {
+						n0104_UR += sMapperI.insert("n0104_UR", query);
+					}
+					
+				}
+				
+				Thread.sleep(200);
+				
+			}
+			
+			message = String.format(
+					"%s%s"
+					, String.format(
+							"n0104_IR=%d, n0104_UR=%d, n0104_DO_NOTHING=%d, n0104_IGNORE=%d"
+							, n0104_IR
+							, n0104_UR
+							, n0104_DO_NOTHING
+							, n0104_IGNORE
+							)
+					, String.format(
+							", n0104_IR=%d, n0104_UR=%d, n0104_DO_NOTHING=%d, n0104_IGNORE=%d"
+							, n0104_IR
+							, n0104_UR
+							, n0104_DO_NOTHING
+							, n0104_IGNORE
+							)
+					);
+			errorCode = "0000";
+			
+		} catch (Exception e) {
+			log.error(
+					"{}.{}.{}.exception {}"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					, jobHistMap.getString("exception", "" + e)
+					, e
+					);
+			log.error(
+					"{}.{}.{}.item_code={}"
+					, jobHistMap.getString("schd_set", "")
+					, jobHistMap.getString("schd_code", "")
+					, schdNo
+					, itemCode
+					);
 			if(query != null) {
 				log.error(
 						"{}.{}.{}.query {}"

@@ -384,4 +384,13 @@ FROM
 ]]>
 </select>
 
+<select id="etf_calc_IL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	f_etf_calc
+FROM
+	f_etf_calc()
+]]>
+</select>
+
 </mapper>
