@@ -62,19 +62,19 @@ BEGIN
 		, calc.d5_mmnt_size
 		, ROUND(calc.d5_mmnt / calc.d5_mmnt_size, 4) AS d5_mmnt
 		, ROUND(calc.d5_mmnt_score / calc.d5_mmnt_size, 4) AS d5_mmnt_score
-		, ROUND(calc.d5_std_dev / calc.d5_mmnt_size, 4) AS d5_std_dev
+		, calc.d5_std_dev
 		, calc.d10_mmnt_size
 		, ROUND(calc.d10_mmnt / calc.d10_mmnt_size, 4) AS d10_mmnt
 		, ROUND(calc.d10_mmnt_score / calc.d10_mmnt_size, 4) AS d10_mmnt_score
-		, ROUND(calc.d10_std_dev / calc.d10_mmnt_size, 4) AS d10_std_dev
+		, calc.d10_std_dev
 		, calc.d20_mmnt_size
 		, ROUND(calc.d20_mmnt / calc.d20_mmnt_size, 4) AS d20_mmnt
 		, ROUND(calc.d20_mmnt_score / calc.d20_mmnt_size, 4) AS d20_mmnt_score
-		, ROUND(calc.d20_std_dev / calc.d20_mmnt_size, 4) AS d20_std_dev
+		, calc.d20_std_dev
 		, calc.d60_mmnt_size
 		, ROUND(calc.d60_mmnt / calc.d60_mmnt_size, 4) AS d60_mmnt
 		, ROUND(calc.d60_mmnt_score / calc.d60_mmnt_size, 4) AS d60_mmnt_score
-		, ROUND(calc.d60_std_dev / calc.d60_mmnt_size, 4) AS d60_std_dev
+		, calc.d60_std_dev
 	FROM (
 		SELECT
 			grp.item_code
@@ -85,19 +85,19 @@ BEGIN
 			, SUM(grp.d5_mmnt_size) AS d5_mmnt_size
 			, SUM(grp.d5_mmnt) AS d5_mmnt
 			, SUM(grp.d5_mmnt_score)::numeric AS d5_mmnt_score
-			, SUM(grp.d5_std_dev) AS d5_std_dev
+			, STDDEV_SAMP(CASE WHEN grp.d5_mmnt_size = 1 THEN grp.d5_std_dev END) AS d5_std_dev
 			, SUM(grp.d10_mmnt_size) AS d10_mmnt_size
 			, SUM(grp.d10_mmnt) AS d10_mmnt
 			, SUM(grp.d10_mmnt_score)::numeric AS d10_mmnt_score
-			, SUM(grp.d10_std_dev) AS d10_std_dev
+			, STDDEV_SAMP(CASE WHEN grp.d10_mmnt_size = 1 THEN grp.d10_std_dev END) AS d10_std_dev
 			, SUM(grp.d20_mmnt_size) AS d20_mmnt_size
 			, SUM(grp.d20_mmnt) AS d20_mmnt
 			, SUM(grp.d20_mmnt_score)::numeric AS d20_mmnt_score
-			, SUM(grp.d20_std_dev) AS d20_std_dev
+			, STDDEV_SAMP(CASE WHEN grp.d20_mmnt_size = 1 THEN grp.d20_std_dev END) AS d20_std_dev
 			, SUM(grp.d60_mmnt_size) AS d60_mmnt_size
 			, SUM(grp.d60_mmnt) AS d60_mmnt
 			, SUM(grp.d60_mmnt_score)::numeric AS d60_mmnt_score
-			, SUM(grp.d60_std_dev) AS d60_std_dev
+			, STDDEV_SAMP(CASE WHEN grp.d60_mmnt_size = 1 THEN grp.d60_std_dev END) AS d60_std_dev
 		FROM (
 			SELECT
 				raw.item_code
@@ -149,7 +149,7 @@ BEGIN
 						ELSE 0
 						END AS d5_mmnt
 					, CASE
-						WHEN suf.trdd_no > lst.trdd_no - 5 THEN ABS(suf.etf_cp - pre.etf_cp) / pre.etf_cp
+						WHEN suf.trdd_no > lst.trdd_no - 5 THEN (suf.etf_cp - pre.etf_cp) / pre.etf_cp
 						ELSE 0
 						END AS d5_std_dev
 					, CASE
@@ -161,7 +161,7 @@ BEGIN
 						ELSE 0
 						END AS d10_mmnt
 					, CASE
-						WHEN suf.trdd_no > lst.trdd_no - 10 THEN ABS(suf.etf_cp - pre.etf_cp) / pre.etf_cp
+						WHEN suf.trdd_no > lst.trdd_no - 10 THEN (suf.etf_cp - pre.etf_cp) / pre.etf_cp
 						ELSE 0
 						END AS d10_std_dev
 					, CASE
@@ -173,7 +173,7 @@ BEGIN
 						ELSE 0
 						END AS d20_mmnt
 					, CASE
-						WHEN suf.trdd_no > lst.trdd_no - 20 THEN ABS(suf.etf_cp - pre.etf_cp) / pre.etf_cp
+						WHEN suf.trdd_no > lst.trdd_no - 20 THEN (suf.etf_cp - pre.etf_cp) / pre.etf_cp
 						ELSE 0
 						END AS d20_std_dev
 					, CASE
@@ -185,7 +185,7 @@ BEGIN
 						ELSE 0
 						END AS d60_mmnt
 					, CASE
-						WHEN suf.trdd_no > lst.trdd_no - 60 THEN ABS(suf.etf_cp - pre.etf_cp) / pre.etf_cp
+						WHEN suf.trdd_no > lst.trdd_no - 60 THEN (suf.etf_cp - pre.etf_cp) / pre.etf_cp
 						ELSE 0
 						END AS d60_std_dev
 				FROM
@@ -264,30 +264,30 @@ BEGIN
 				, calc.m3_mmnt_size
 				, ROUND(calc.m3_mmnt / calc.m3_mmnt_size, 4) AS m3_mmnt
 				, ROUND(calc.m3_mmnt_score / calc.m3_mmnt_size, 4) AS m3_mmnt_score
-				, ROUND(calc.m3_std_dev / calc.m3_mmnt_size, 4) AS m3_std_dev
+				, calc.m3_std_dev
 				, calc.m6_mmnt_size
 				, ROUND(calc.m6_mmnt / calc.m6_mmnt_size, 4) AS m6_mmnt
 				, ROUND(calc.m6_mmnt_score / calc.m6_mmnt_size, 4) AS m6_mmnt_score
-				, ROUND(calc.m6_std_dev / calc.m6_mmnt_size, 4) AS m6_std_dev
+				, calc.m6_std_dev
 				, calc.m12_mmnt_size
 				, ROUND(calc.m12_mmnt / calc.m12_mmnt_size, 4) AS m12_mmnt
 				, ROUND(calc.m12_mmnt_score / calc.m12_mmnt_size, 4) AS m12_mmnt_score
-				, ROUND(calc.m12_std_dev / calc.m12_mmnt_size, 4) AS m12_std_dev
+				, calc.m12_std_dev
 			FROM (
 				SELECT
 					grp.item_code
 					, SUM(grp.m3_mmnt_size) AS m3_mmnt_size
 					, SUM(grp.m3_mmnt) AS m3_mmnt
 					, SUM(grp.m3_mmnt_score)::numeric AS m3_mmnt_score
-					, SUM(grp.m3_std_dev) AS m3_std_dev
+					, STDDEV_SAMP(CASE WHEN grp.m3_mmnt_size = 1 THEN grp.m3_std_dev END) AS m3_std_dev
 					, SUM(grp.m6_mmnt_size) AS m6_mmnt_size
 					, SUM(grp.m6_mmnt) AS m6_mmnt
 					, SUM(grp.m6_mmnt_score)::numeric AS m6_mmnt_score
-					, SUM(grp.m6_std_dev) AS m6_std_dev
+					, STDDEV_SAMP(CASE WHEN grp.m6_mmnt_size = 1 THEN grp.m6_std_dev END) AS m6_std_dev
 					, SUM(grp.m12_mmnt_size) AS m12_mmnt_size
 					, SUM(grp.m12_mmnt) AS m12_mmnt
 					, SUM(grp.m12_mmnt_score)::numeric AS m12_mmnt_score
-					, SUM(grp.m12_std_dev) AS m12_std_dev
+					, STDDEV_SAMP(CASE WHEN grp.m12_mmnt_size = 1 THEN grp.m12_std_dev END) AS m12_std_dev
 				FROM (
 					SELECT
 						raw.item_code
@@ -317,7 +317,7 @@ BEGIN
 								ELSE 0
 								END AS m3_mmnt
 							, CASE
-								WHEN suf.trdd_no > lst.trdd_no - 20 * 3 THEN ABS(suf.etf_cp - pre.etf_cp) / pre.etf_cp
+								WHEN suf.trdd_no > lst.trdd_no - 20 * 3 THEN (suf.etf_cp - pre.etf_cp) / pre.etf_cp
 								ELSE 0
 								END AS m3_std_dev
 							, CASE
@@ -329,7 +329,7 @@ BEGIN
 								ELSE 0
 								END AS m6_mmnt
 							, CASE
-								WHEN suf.trdd_no > lst.trdd_no - 20 * 6 THEN ABS(suf.etf_cp - pre.etf_cp) / pre.etf_cp
+								WHEN suf.trdd_no > lst.trdd_no - 20 * 6 THEN (suf.etf_cp - pre.etf_cp) / pre.etf_cp
 								ELSE 0
 								END AS m6_std_dev
 							, CASE
@@ -341,7 +341,7 @@ BEGIN
 								ELSE 0
 								END AS m12_mmnt
 							, CASE
-								WHEN suf.trdd_no > lst.trdd_no - 20 * 12 THEN ABS(suf.etf_cp - pre.etf_cp) / pre.etf_cp
+								WHEN suf.trdd_no > lst.trdd_no - 20 * 12 THEN (suf.etf_cp - pre.etf_cp) / pre.etf_cp
 								ELSE 0
 								END AS m12_std_dev
 						FROM

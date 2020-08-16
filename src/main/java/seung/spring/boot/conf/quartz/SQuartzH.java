@@ -48,10 +48,15 @@ public class SQuartzH {
 		
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
 		JobKey jobKey = JobKey.jobKey(name, group);
+		
+		JobDataMap jobDataMap = scheduler.getJobDetail(jobKey).getJobDataMap();
+		jobDetail.put("job_group", jobDataMap.get("job_group"));
+		jobDetail.put("job_name", jobDataMap.get("job_name"));
+		jobDetail.put("dscr", jobDataMap.get("dscr"));
+		jobDetail.put("cron_expr", jobDataMap.get("cron_expr"));
+		jobDetail.put("clss", jobDataMap.get("clss"));
+		
 		List<Trigger> triggersOfJob = (List<Trigger>) scheduler.getTriggersOfJob(jobKey);
-		if(triggersOfJob.isEmpty()) {
-			throw new SchedulerException("Triggers of job is empty.");
-		}
 		Trigger trigger = triggersOfJob.get(0);
 		jobDetail.put("start_time", SDate.getDateString("yyyy-MM-dd HH:mm:ss", trigger.getStartTime()));
 		jobDetail.put("next_fire_time", SDate.getDateString("yyyy-MM-dd HH:mm:ss", trigger.getNextFireTime()));

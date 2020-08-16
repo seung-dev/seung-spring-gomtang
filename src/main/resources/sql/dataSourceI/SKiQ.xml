@@ -10,6 +10,7 @@
 <![CDATA[
 SELECT
 	n0104.item_code
+	, (SELECT item_name FROM t_kw_kw10000 WHERE mrkt_type = '1' AND item_code = n0104.item_code) AS item_name
 	, JSON_AGG(
 		JSON_BUILD_OBJECT(
 			'item_sd'
@@ -47,6 +48,14 @@ FROM (
 	FROM
 		t_item_n0104
 	WHERE 1 = 1
+		AND item_code NOT IN (
+			SELECT
+				item_code
+			FROM
+				t_kw_kw10000 tkk
+			WHERE 1 = 1
+				AND mrkt_type = '3'
+		)
 ]]>
 		<if test="item_code != null and item_code != ''"><![CDATA[
 		AND item_code = #{item_code}

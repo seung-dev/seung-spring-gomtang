@@ -63,7 +63,7 @@ FROM
 ]]>
 </select>
 
-<select id="quartz0101" resultMap="resultMap">
+<select id="quartz0101_SL" resultMap="resultMap">
 <![CDATA[
 SELECT
 	sched_name AS schd_name
