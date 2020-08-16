@@ -1,9 +1,11 @@
 package seung.spring.gomtang.job.fin.service;
 
+import java.io.File;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -921,6 +923,9 @@ public class SKiwoomSI {
 			int tr10081_UR = 0;
 			int tr10081_DO_NOTHING = 0;
 			int tr10081_IGNORE = 0;
+			
+			File logFile = null;
+			String responseText = "";
 			for(SLinkedHashMap kw10000_SR : sMapperI.selectList("kw10000_SL", new SLinkedHashMap().add("mrkt_type", "3").add("on_prgr", "1"))) {
 				
 				itemCode = kw10000_SR.getString("item_code");
@@ -1000,7 +1005,11 @@ public class SKiwoomSI {
 					throw new SGomtangException(message);
 				}
 				
-				response = new SLinkedHashMap(new String(httpResponse.getBody(), "UTF-8"));
+				logFile = new File(String.format("var/tr10081/%s.json", itemCode));
+				logFile.delete();
+				responseText = new String(httpResponse.getBody(), "UTF-8");
+				FileUtils.write(logFile, responseText, "UTF-8");
+				response = new SLinkedHashMap(responseText);
 				
 				comm = response.getListSLinkedHashMap("comm");
 				if(comm.isEmpty()) {
@@ -1226,6 +1235,8 @@ public class SKiwoomSI {
 			int tr40005_IGNORE = 0;
 			int prev_IR = 0;
 			int post_IR = 0;
+			File logFile = null;
+			String responseText = "";
 			for(SLinkedHashMap kw10000_SR : sMapperI.selectList("kw10000_SL", new SLinkedHashMap().add("mrkt_type", "3").add("on_prgr", "1"))) {
 				
 				itemCode = kw10000_SR.getString("item_code");
@@ -1304,7 +1315,11 @@ public class SKiwoomSI {
 					throw new SGomtangException(message);
 				}
 				
-				response = new SLinkedHashMap(new String(httpResponse.getBody(), "UTF-8"));
+				logFile = new File(String.format("var/tr40005/%s.json", itemCode));
+				logFile.delete();
+				responseText = new String(httpResponse.getBody(), "UTF-8");
+				FileUtils.write(logFile, responseText, "UTF-8");
+				response = new SLinkedHashMap(responseText);
 				
 				comm = response.getListSLinkedHashMap("comm");
 				if(comm.isEmpty()) {

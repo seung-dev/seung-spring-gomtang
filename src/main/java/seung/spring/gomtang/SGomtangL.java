@@ -1,5 +1,7 @@
 package seung.spring.gomtang;
 
+import java.io.File;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
@@ -28,6 +30,9 @@ public class SGomtangL {
 		log.debug("run");
 		
 		log.info(SString.toJson(sProperties, true));
+		
+		new File("var/tr10081").mkdirs();
+		new File("var/tr40005").mkdirs();
 		
 		// job init
 //		sJobI.initJob();
