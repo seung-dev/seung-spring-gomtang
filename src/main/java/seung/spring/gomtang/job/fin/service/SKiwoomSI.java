@@ -1005,7 +1005,7 @@ public class SKiwoomSI {
 					throw new SGomtangException(message);
 				}
 				
-				logFile = new File(String.format("var/tr10081/%s.json", itemCode));
+				logFile = new File(String.format("var/tr10081/d%s/%s.json", SDate.getDateString("dd"), itemCode));
 				logFile.delete();
 				responseText = new String(httpResponse.getBody(), "UTF-8");
 				FileUtils.write(logFile, responseText, "UTF-8");
@@ -1315,7 +1315,7 @@ public class SKiwoomSI {
 					throw new SGomtangException(message);
 				}
 				
-				logFile = new File(String.format("var/tr40005/%s.json", itemCode));
+				logFile = new File(String.format("var/tr40005/d%s/%s.json", SDate.getDateString("dd"), itemCode));
 				logFile.delete();
 				responseText = new String(httpResponse.getBody(), "UTF-8");
 				FileUtils.write(logFile, responseText, "UTF-8");
