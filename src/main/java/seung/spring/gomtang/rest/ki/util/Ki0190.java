@@ -1,6 +1,7 @@
 package seung.spring.gomtang.rest.ki.util;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -16,21 +17,11 @@ import seung.java.kimchi.util.SLinkedHashMap;
 
 @Setter
 @Getter
-public class Ki0201 {
+public class Ki0190 {
 
 	@Size(max = 36)
 	@NotBlank
 	private String request_code;
-	
-	private String item_code;
-	
-	@Size(min = 6, max = 6)
-	@NotBlank
-	private String item_sd_from;
-	
-	@Size(min = 6, max = 6)
-	@NotBlank
-	private String item_sd_to;
 	
 	public String toJsonString() {
 		return toJsonString(false);
@@ -51,5 +42,8 @@ public class Ki0201 {
 					;
 		}
 	}
+	
+	@NotBlank
+	private String item_attr;
 	
 }

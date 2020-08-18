@@ -69,6 +69,11 @@ dependencies {
 	// commons
 	implementation('org.apache.commons:commons-csv:1.8')
 	
+	// jackson
+	//implementation('com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.3')
+	implementation('com.fasterxml.jackson.dataformat:jackson-dataformat-xml')
+
+	
 	// seung
 	implementation(project(path: ':seung-java-kimchi', configuration: 'default'))
 	

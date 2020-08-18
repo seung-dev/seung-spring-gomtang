@@ -164,11 +164,11 @@ WHERE 1 = 1
 <![CDATA[
 SELECT
 	item_code
+	, item_name
 FROM
 	t_kw_kw10000 kw10000
 WHERE 1 = 1
 	AND mrkt_type = '3'
-	AND on_prgr = '1'
 ORDER BY item_code
 ]]>
 </select>
@@ -188,7 +188,8 @@ ORDER BY trdd DESC
 SELECT
 	item_code
 	, trdd
-	, etf_cp
+	, ABS(etf_cp) AS etf_cp
+	, ABS(etf_vol) AS etf_vol
 FROM
 	t_kw_tr40005
 WHERE 1 = 1

@@ -1,10 +1,16 @@
 package seung.spring.gomtang.rest.ki.service.impl;
 
+import java.io.BufferedWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
@@ -546,88 +552,87 @@ public class SEtfSI implements SEtfS {
 //		return sResponse;
 //	}
 //	
-//	@Override
-//	public SResponse etf9002(SRequest sRequest) {
-//		
-//		String apiCode = "etf9002";
-//		String error_message = "";
-//		String requestCode = sRequest.getData().getString("request_code", "");
-//		log.info("{}.{} ((START))", apiCode, requestCode);
-//		
-//		SResponse sResponse = SResponse.builder()
-//				.request_code(requestCode)
-//				.error_code(SCode.ERROR)
-//				.data(sRequest.getData())
-//				.build()
-//				;
-//		
-//		SLinkedHashMap query = null;
-//		try {
-//			
-//			log.info("{}.{}.query: {}", apiCode, requestCode, sRequest.getData().toJsonString());
-//			
-//			String uri = "e:/temps/etf_cp_20200728.csv";
-//			
-//			List<String> headers = new ArrayList<>();
-//			headers.add("date");
-//			for(SLinkedHashMap etf9002_A : sMapperI.selectList("etf9002_A")) {
-//				headers.add(etf9002_A.getString("item_code"));
-//			}
-//			String[] header = headers.toArray(new String[headers.size()]);
-//			
-//			int times = 0;
-//			try(
-//					BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(uri));
-//					CSVPrinter csvPrinter = new CSVPrinter(bufferedWriter, CSVFormat.DEFAULT.withHeader(header));
-//					) {
-//				
-//				String trdd = "";
-//				SLinkedHashMap record = null;
-//				List<String> records = null;
-//				for(SLinkedHashMap etf9002_B : sMapperI.selectList("etf9002_B")) {
-//					
-//					if(++times % 100 == 1) {
-//						log.info("times={}", times);
-//					}
-//					
-//					trdd = etf9002_B.getString("trdd");
-//					
-//					record = new SLinkedHashMap();
-//					records = new ArrayList<>();
-//					for(SLinkedHashMap etf9002_C : sMapperI.selectList("etf9002_C", etf9002_B)) {
-//						record.put(etf9002_C.getString("item_code"), etf9002_C.getString("etf_cp", ""));
-//					}
-//					
-//					for(String itemCode : header) {
-//						if(records.isEmpty()) {
-//							records.add(trdd);
-//						} else {
-//							records.add(record.getString(itemCode, ""));
-//						}
-//					}
-//					
-//					csvPrinter.printRecord(records.toArray(new String[headers.size()]));
-//					
-//				}
-//				
-//			}
-//			
-//			sResponse.success();
-//			
-//		} catch (Exception e) {
-//			log.error("{}.{}.exception", apiCode, requestCode, e);
-//			log.error("{}.{}.query", apiCode, requestCode, query.toJsonString(true));
-//			error_message = ExceptionUtils.getStackTrace(e);
-//			if(error_message == null || "".equals(error_message)) {
-//				error_message = "" + e;
-//			}
-//		} finally {
-//			sResponse.setError_message(error_message);
-//		}
-//		
-//		log.info("{}.{} ((END))", apiCode, requestCode);
-//		sResponse.setResponse_time(String.valueOf(new Date().getTime()));
-//		return sResponse;
-//	}
+	@Override
+	public SResponse etf9002(SRequest sRequest) {
+		
+		String apiCode = "etf9002";
+		String error_message = "";
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code("")
+				.build()
+				;
+		
+		SLinkedHashMap query = null;
+		try {
+			
+			String uri = "e:/temps/etf_cp_20200819.csv";
+			
+			List<String> itemCodes = new ArrayList<>();
+			itemCodes.add("");
+			List<String> itemNames = new ArrayList<>();
+			itemNames.add("");
+			for(SLinkedHashMap etf9002_A : sMapperI.selectList("etf9002_A")) {
+				itemCodes.add(etf9002_A.getString("item_code"));
+				itemNames.add(etf9002_A.getString("item_name"));
+			}
+			String[] header = itemCodes.toArray(new String[itemCodes.size()]);
+			
+			int times = 0;
+			try(
+					BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(uri));
+					
+					) {
+				
+				
+				bufferedWriter.write('\ufeff');
+				CSVPrinter csvPrinter = new CSVPrinter(bufferedWriter, CSVFormat.DEFAULT.withHeader(itemCodes.toArray(new String[itemCodes.size()])));
+				
+				csvPrinter.printRecord(itemNames.toArray(new String[itemNames.size()]));
+				
+				String trdd = "";
+				SLinkedHashMap record = null;
+				List<String> records = null;
+				for(SLinkedHashMap etf9002_B : sMapperI.selectList("etf9002_B")) {
+					
+					if(++times % 100 == 1) {
+						log.info("times={}", times);
+					}
+					
+					trdd = etf9002_B.getString("trdd");
+					
+					record = new SLinkedHashMap();
+					records = new ArrayList<>();
+					for(SLinkedHashMap etf9002_C : sMapperI.selectList("etf9002_C", etf9002_B)) {
+						record.put(etf9002_C.getString("item_code"), etf9002_C.getString("etf_cp", ""));
+					}
+					
+					for(String itemCode : header) {
+						if(records.isEmpty()) {
+							records.add(trdd);
+						} else {
+							records.add(record.getString(itemCode, ""));
+						}
+					}
+					
+					csvPrinter.printRecord(records.toArray(new String[itemCodes.size()]));
+					
+				}
+				
+			}
+			
+			sResponse.success();
+			
+		} catch (Exception e) {
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+		}
+		
+		return sResponse;
+	}
 	
 }

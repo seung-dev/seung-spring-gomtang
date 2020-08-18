@@ -29,6 +29,6 @@ public interface SEtfS {
 	
 //	public SResponse etf9001(SRequest sRequest);
 //	
-//	public SResponse etf9002(SRequest sRequest);
+	public SResponse etf9002(SRequest sRequest);
 	
 }
