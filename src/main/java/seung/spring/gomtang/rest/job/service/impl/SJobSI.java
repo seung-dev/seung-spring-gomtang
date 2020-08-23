@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import seung.spring.boot.conf.web.util.SReflect;
 import seung.spring.boot.conf.web.util.SRequest;
 import seung.spring.boot.conf.web.util.SResponse;
+import seung.spring.gomtang.job.fin.service.SEbestSI;
 import seung.spring.gomtang.job.fin.service.SKiwoomSI;
 import seung.spring.gomtang.job.fin.service.SNaverSI;
 import seung.spring.gomtang.rest.job.service.SJobS;
@@ -22,6 +23,9 @@ public class SJobSI implements SJobS {
 	
 	@Resource(name = "sNaverS")
 	private SNaverSI sNaverS;
+	
+	@Resource(name = "sEbestS")
+	private SEbestSI sEbestS;
 	
 	@Override
 	public SResponse sr33333(SRequest sRequest, SReflect sReflect) {
@@ -356,6 +360,50 @@ public class SJobSI implements SJobS {
 		try {
 			
 			sResponse.putResponse("n0104", sNaverS.n0104("rest", "naver"));
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.info("({}) ", sResponse.getRequest_code(), e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+		}
+		
+		log.info("({}) ((END))", sResponse.getRequest_code());
+		sResponse.done();
+		return sResponse;
+	}
+	
+	@Override
+	public SResponse ebest(SRequest sRequest, SReflect sReflect) {
+		
+		log.debug("run");
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(sReflect.getRequest_code())
+				.request_time(sRequest.getRequest_time())
+				.request(sReflect)
+				.build()
+				;
+		
+		log.info("({}) ((START))", sResponse.getRequest_code());
+		
+		String error_message = "";
+		try {
+			
+			switch (sReflect.getData()) {
+				case "t8430":
+					sResponse.putResponse("t8430", sEbestS.t8430("ebest", "t8430"));
+					break;
+				case "t8413":
+					sResponse.putResponse("t8413", sEbestS.t8413("ebest", "t8413"));
+					break;
+				default:
+					break;
+			}
 			sResponse.success();
 			
 		} catch (Exception e) {

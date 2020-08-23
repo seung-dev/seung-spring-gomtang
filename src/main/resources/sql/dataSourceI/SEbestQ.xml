@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sql.dataSourceI.SEbestQ">
+
+<parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
+<resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
+
+<select id="eb_t8430_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		shcode
+		, hash
+	FROM
+		t_eb_t8430
+	ORDER BY shcode
+]]>
+</select>
+
+<update id="eb_t8430_UR" parameterMap="parameterMap">
+<![CDATA[
+	UPDATE t_eb_t8430
+	SET
+		date_updt = NOW()
+		, hash = #{hash}
+		, gubun = #{gubun}
+		, etfgubun = #{etfgubun}
+		, hname = #{hname}
+		, expcode = #{expcode}
+		, uplmtprice = #{uplmtprice}
+		, dnlmtprice = #{dnlmtprice}
+		, jnilclose = #{jnilclose}
+		, memedan = #{memedan}
+		, recprice = #{recprice}
+	WHERE 1 = 1
+		AND shcode = #{shcode}
+]]>
+</update>
+
+<insert id="eb_t8430_IR" parameterMap="parameterMap">
+<![CDATA[
+	INSERT INTO t_eb_t8430 (
+		shcode
+		, date_inst
+		, date_updt
+		, hash
+		, gubun
+		, etfgubun
+		, hname
+		, expcode
+		, uplmtprice
+		, dnlmtprice
+		, jnilclose
+		, memedan
+		, recprice
+		)
+	VALUES (
+		#{shcode}
+		, NOW()
+		, NOW()
+		, #{hash}
+		, #{gubun}
+		, #{etfgubun}
+		, #{hname}
+		, #{expcode}
+		, #{uplmtprice}
+		, #{dnlmtprice}
+		, #{jnilclose}
+		, #{memedan}
+		, #{recprice}
+		)
+]]>
+</insert>
+
+<select id="eb_t8413_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		date
+		, hash
+	FROM
+		t_eb_t8413
+	WHERE 1 = 1
+		AND shcode = #{shcode}
+	ORDER BY date DESC
+	LIMIT 20
+]]>
+</select>
+
+<update id="eb_t8413_UR" parameterMap="parameterMap">
+<![CDATA[
+	UPDATE t_eb_t8413
+	SET
+		date_updt = NOW()
+		, hash = #{hash}
+		, open = #{open}
+		, high = #{high}
+		, low = #{low}
+		, close = #{close}
+		, jdiff_vol = #{jdiff_vol}
+		, value = #{value}
+		, jongchk = #{jongchk}
+		, rate = #{rate}
+		, pricechk = #{pricechk}
+		, ratevalue = #{ratevalue}
+		, sign = #{sign}
+	WHERE 1 = 1
+		AND shcode = #{shcode}
+		AND date = #{date}
+]]>
+</update>
+
+<insert id="eb_t8413_IR" parameterMap="parameterMap">
+<![CDATA[
+	INSERT INTO t_eb_t8413 (
+		shcode
+		, date
+		, date_inst
+		, date_updt
+		, hash
+		, open
+		, high
+		, low
+		, close
+		, jdiff_vol
+		, value
+		, jongchk
+		, rate
+		, pricechk
+		, ratevalue
+		, sign
+		)
+	VALUES (
+		#{shcode}
+		, #{date}
+		, NOW()
+		, NOW()
+		, #{hash}
+		, #{open}
+		, #{high}
+		, #{low}
+		, #{close}
+		, #{jdiff_vol}
+		, #{value}
+		, #{jongchk}
+		, #{rate}
+		, #{pricechk}
+		, #{ratevalue}
+		, #{sign}
+		)
+]]>
+</insert>
+
+<select id="eb_t1903_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		date
+		, hash
+	FROM
+		t_eb_t1903
+	WHERE 1 = 1
+		AND shcode = #{shcode}
+	ORDER BY date DESC
+	LIMIT 20
+]]>
+</select>
+
+<update id="eb_t1903_UR" parameterMap="parameterMap">
+<![CDATA[
+	UPDATE t_eb_t1903
+	SET
+		date_updt = #{date_updt}
+		, hash = #{hash}
+		, price = #{price}
+		, sign = #{sign}
+		, change = #{change}
+		, volume = #{volume}
+		, navdifff = #{navdifff}
+		, nav = #{nav}
+		, navchange = #{navchange}
+		, crate = #{crate}
+		, grate = #{grate}
+		, jisu = #{jisu}
+		, jichange = #{jichange}
+		, jirate = #{jirate}
+	WHERE 1 = 1
+		AND shcode = #{shcode}
+		AND date = #{date}
+]]>
+</update>
+
+<insert id="eb_t1903_IR" parameterMap="parameterMap">
+<![CDATA[
+	INSERT INTO t_eb_t1903 (
+		shcode
+		, date
+		, date_inst
+		, date_updt
+		, hash
+		, price
+		, sign
+		, change
+		, volume
+		, navdifff
+		, nav
+		, navchange
+		, crate
+		, grate
+		, jisu
+		, jichange
+		, jirate
+		)
+	VALUES (
+		#{shcode}
+		, #{date}
+		, #{date_inst}
+		, #{date_updt}
+		, #{hash}
+		, #{price}
+		, #{sign}
+		, #{change}
+		, #{volume}
+		, #{navdifff}
+		, #{nav}
+		, #{navchange}
+		, #{crate}
+		, #{grate}
+		, #{jisu}
+		, #{jichange}
+		, #{jirate}
+		)
+]]>
+</insert>
+
+</mapper>

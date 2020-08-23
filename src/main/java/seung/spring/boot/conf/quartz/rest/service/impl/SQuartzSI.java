@@ -21,6 +21,7 @@ import seung.spring.boot.conf.quartz.rest.service.SQuartzS;
 import seung.spring.boot.conf.quartz.rest.util.Quartz0101;
 import seung.spring.boot.conf.quartz.rest.util.Quartz0111;
 import seung.spring.boot.conf.quartz.rest.util.Quartz0112;
+import seung.spring.boot.conf.quartz.rest.util.Quartz0131;
 import seung.spring.boot.conf.web.util.SRequest;
 import seung.spring.boot.conf.web.util.SResponse;
 
@@ -244,6 +245,55 @@ public class SQuartzSI implements SQuartzS {
 		} finally {
 			sResponse.setError_message(error_message);
 			sResponse.putResponse("quartz0121_UR", quartz0121_UR);
+		}
+		
+		log.info("({}) ((END))", sResponse.getRequest_code());
+		sResponse.done();
+		return sResponse;
+	}
+	
+	/* (non-javadoc)
+	 * @see seung.spring.gomtang.quartz.service.SQuartzS#quartz0131(seung.spring.boot.conf.web.util.SRequest)
+	 */
+	@Override
+	public SResponse quartz0131(SRequest sRequest, Quartz0131 quartz0131) {
+		
+		log.debug("run");
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(quartz0131.getRequest_code())
+				.request_time(sRequest.getRequest_time())
+				.request(quartz0131)
+				.build()
+				;
+		
+		log.info("({}) ((START))", sResponse.getRequest_code());
+		
+		SLinkedHashMap query = null;
+		int quartz0131_DR = 0;
+		String error_message = "";
+		try {
+			
+			log.info("({}) request={}", sResponse.getRequest_code(), quartz0131.toJsonString());
+			
+			query = new SLinkedHashMap(quartz0131);
+			
+			quartz0131_DR = sQuartzH.delete(
+					query.getString("job_group")
+					, query.getString("job_name")
+					);
+			
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.info("({}) query={}", sResponse.getRequest_code(), query.toJsonString(), e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+			sResponse.putResponse("quartz0131_DR", quartz0131_DR);
 		}
 		
 		log.info("({}) ((END))", sResponse.getRequest_code());

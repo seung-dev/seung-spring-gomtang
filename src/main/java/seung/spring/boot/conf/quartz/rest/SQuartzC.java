@@ -3,12 +3,9 @@ package seung.spring.boot.conf.quartz.rest;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +13,7 @@ import seung.spring.boot.conf.quartz.rest.service.SQuartzS;
 import seung.spring.boot.conf.quartz.rest.util.Quartz0101;
 import seung.spring.boot.conf.quartz.rest.util.Quartz0111;
 import seung.spring.boot.conf.quartz.rest.util.Quartz0112;
+import seung.spring.boot.conf.quartz.rest.util.Quartz0131;
 import seung.spring.boot.conf.web.util.SRequest;
 import seung.spring.boot.conf.web.util.SResponse;
 
@@ -68,6 +66,17 @@ public class SQuartzC {
 		log.debug("run");
 		
 		return sQuartzS.quartz0121(sRequest, quartz0111);
+	}
+	
+	@RequestMapping(value = {"/rest/quartz/quartz0131"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public SResponse quartz0131(
+			SRequest sRequest
+			, @Valid @RequestBody Quartz0131 quartz0131
+			) throws Exception {
+		
+		log.debug("run");
+		
+		return sQuartzS.quartz0131(sRequest, quartz0131);
 	}
 	
 //	@ApiOperation(response = SResponse.class, value = "JOB(SIMPLE) EDIT", notes = "QUARTZ")

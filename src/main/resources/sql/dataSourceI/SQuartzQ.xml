@@ -43,7 +43,7 @@ INSERT INTO t_schd_post (
 VALUES (
 	#{schd_no}
 	, #{error_code}
-	, #{message}
+	, SUBSTRING(#{message}, 1, 1000)
 	, NOW()
 	)
 ]]>

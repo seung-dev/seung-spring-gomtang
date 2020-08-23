@@ -131,4 +131,15 @@ public class SJobC {
 		return sJobS.n0104(sRequest, sReflect);
 	}
 	
+	@RequestMapping(value = {"/rest/job/ebest"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public SResponse ebest(
+			SRequest sRequest
+			, @Valid @RequestBody SReflect sReflect
+			) throws Exception {
+		
+		log.debug("run");
+		
+		return sJobS.ebest(sRequest, sReflect);
+	}
+	
 }
