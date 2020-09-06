@@ -14,9 +14,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import lombok.extern.slf4j.Slf4j;
 
+@EnableAsync
+@EnableScheduling
 @PropertySources({
 	@PropertySource(value = "classpath:s-security.properties")
 	, @PropertySource(value = "classpath:s-datasource.properties")

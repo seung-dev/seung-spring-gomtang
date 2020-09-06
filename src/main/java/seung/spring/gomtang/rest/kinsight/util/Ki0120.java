@@ -1,6 +1,7 @@
-package seung.spring.gomtang.rest.ki.util;
+package seung.spring.gomtang.rest.kinsight.util;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -10,13 +11,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import seung.java.kimchi.util.SLinkedHashMap;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Setter
 @Getter
-public class Ki0190 {
+public class Ki0120 {
 
 	@Size(max = 36)
 	@NotBlank
@@ -43,6 +50,16 @@ public class Ki0190 {
 	}
 	
 	@NotBlank
-	private String item_attr;
+	private String shcode;
+	
+	@NotNull
+	private int page_index;
+	
+	@NotNull
+	private int page_size;
+	
+	private String trdd_from;
+	
+	private String trdd_to;
 	
 }

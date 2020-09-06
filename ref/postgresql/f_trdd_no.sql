@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION f_trdd_no (
+CREATE OR REPLACE FUNCTION f_ki_ki011001 (
 )
 RETURNS TABLE (
 	prev int
@@ -21,17 +21,17 @@ BEGIN
 		, ord.trdd_no
 	FROM (
 		SELECT
-			ROW_NUMBER() OVER(ORDER BY trdd ASC) AS trdd_no
-			, tr40005.trdd
+			ROW_NUMBER() OVER(ORDER BY date ASC) AS trdd_no
+			, t8413.date AS trdd
 		FROM
 			(
 				SELECT
-					DISTINCT trdd
+					DISTINCT date
 				FROM
-					t_kw_tr40005
+					t_eb_t8413
 				WHERE 1 = 1
-					AND trdd >= base_date
-			) tr40005
+					AND date >= base_date
+			) t8413
 		) ord
 		LEFT OUTER JOIN t_etf_trdd trd
 			ON 1 = 1
@@ -51,17 +51,17 @@ BEGIN
 		, ord.trdd_no * -1 + 1 AS trdd_no
 	FROM (
 		SELECT
-			ROW_NUMBER() OVER(ORDER BY trdd DESC) AS trdd_no
-			, tr40005.trdd
+			ROW_NUMBER() OVER(ORDER BY date DESC) AS trdd_no
+			, t8413.date AS trdd
 		FROM
 			(
 				SELECT
-					DISTINCT trdd
+					DISTINCT date
 				FROM
-					t_kw_tr40005
+					t_eb_t8413
 				WHERE 1 = 1
-					AND trdd < base_date
-			) tr40005
+					AND date < base_date
+			) t8413
 		) ord
 		LEFT OUTER JOIN t_etf_trdd trd
 			ON 1 = 1

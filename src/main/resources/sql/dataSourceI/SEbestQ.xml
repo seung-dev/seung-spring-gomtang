@@ -13,6 +13,13 @@
 		, hash
 	FROM
 		t_eb_t8430
+	WHERE 1 = 1
+]]>
+	<if test="job_name != null and job_name == 't1903'"><![CDATA[
+		AND gubun = '1'
+		AND etfgubun = '1'
+	]]></if>
+<![CDATA[
 	ORDER BY shcode
 ]]>
 </select>
@@ -98,10 +105,6 @@
 		, close = #{close}
 		, jdiff_vol = #{jdiff_vol}
 		, value = #{value}
-		, jongchk = #{jongchk}
-		, rate = #{rate}
-		, pricechk = #{pricechk}
-		, ratevalue = #{ratevalue}
 		, sign = #{sign}
 	WHERE 1 = 1
 		AND shcode = #{shcode}
@@ -123,10 +126,6 @@
 		, close
 		, jdiff_vol
 		, value
-		, jongchk
-		, rate
-		, pricechk
-		, ratevalue
 		, sign
 		)
 	VALUES (
@@ -141,10 +140,6 @@
 		, #{close}
 		, #{jdiff_vol}
 		, #{value}
-		, #{jongchk}
-		, #{rate}
-		, #{pricechk}
-		, #{ratevalue}
 		, #{sign}
 		)
 ]]>
@@ -168,13 +163,13 @@
 <![CDATA[
 	UPDATE t_eb_t1903
 	SET
-		date_updt = #{date_updt}
+		date_updt = NOW()
 		, hash = #{hash}
 		, price = #{price}
 		, sign = #{sign}
 		, change = #{change}
 		, volume = #{volume}
-		, navdifff = #{navdifff}
+		, navdiff = #{navdiff}
 		, nav = #{nav}
 		, navchange = #{navchange}
 		, crate = #{crate}
@@ -200,7 +195,7 @@
 		, sign
 		, change
 		, volume
-		, navdifff
+		, navdiff
 		, nav
 		, navchange
 		, crate
@@ -212,14 +207,14 @@
 	VALUES (
 		#{shcode}
 		, #{date}
-		, #{date_inst}
-		, #{date_updt}
+		, NOW()
+		, NOW()
 		, #{hash}
 		, #{price}
 		, #{sign}
 		, #{change}
 		, #{volume}
-		, #{navdifff}
+		, #{navdiff}
 		, #{nav}
 		, #{navchange}
 		, #{crate}
@@ -230,5 +225,44 @@
 		)
 ]]>
 </insert>
+
+<select id="eb_t8430_prev_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		shcode
+	FROM
+		t_eb_t8430
+	WHERE 1 = 1
+		AND gubun = '1'
+		AND etfgubun = '1'
+	ORDER BY shcode
+]]>
+</select>
+
+<select id="eb_t8413_prev_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		date
+		, hash
+	FROM
+		t_eb_t8413
+	WHERE 1 = 1
+		AND shcode = #{shcode}
+	ORDER BY date DESC
+]]>
+</select>
+
+<select id="eb_t1903_prev_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		date
+		, hash
+	FROM
+		t_eb_t1903
+	WHERE 1 = 1
+		AND shcode = #{shcode}
+	ORDER BY date DESC
+]]>
+</select>
 
 </mapper>

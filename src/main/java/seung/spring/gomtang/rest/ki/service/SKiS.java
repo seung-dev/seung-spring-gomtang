@@ -2,8 +2,6 @@ package seung.spring.gomtang.rest.ki.service;
 
 import java.util.Map;
 
-import javax.validation.Valid;
-
 import seung.spring.boot.conf.web.util.SRequest;
 import seung.spring.boot.conf.web.util.SResponse;
 import seung.spring.gomtang.rest.ki.util.Ki0201;

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sql.dataSourceI.SKinsightQ">
+
+<parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
+<resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
+
+<select id="f_ki_ki010000" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		*
+	FROM
+		f_ki_ki010000(#{request})
+]]>
+</select>
+
+<select id="f_ki_ki011000" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		*
+	FROM
+		f_ki_ki011000(#{request})
+]]>
+</select>
+
+<select id="f_ki_ki012000" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		*
+	FROM
+		f_ki_ki012000(#{request})
+]]>
+</select>
+
+<select id="f_ki_ki030000" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		*
+	FROM
+		f_ki_ki030000(#{request})
+]]>
+</select>
+
+<select id="f_ki_ki031000" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		*
+	FROM
+		f_ki_ki031000(#{request})
+]]>
+	<if test="mmnt_min_max != null and mmnt_min_max == 'min'"><![CDATA[
+	ORDER BY mmnt DESC
+	]]></if>
+	<if test="mmnt_min_max != null and mmnt_min_max == 'max'"><![CDATA[
+	ORDER BY mmnt ASC
+	]]></if>
+</select>
+
+</mapper>

@@ -149,14 +149,14 @@ public class SEtfC {
 //		return "jsonView";
 //	}
 //	
-	@RequestMapping(value = {"/rest/etf/etf9002"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
-	public SResponse etf9002(
-			SRequest sRequest
-			) throws Exception {
-		
-		log.debug("run");
-		
-		return sEtfS.etf9002(sRequest);
-	}
+//	@RequestMapping(value = {"/rest/etf/etf9002"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+//	public SResponse etf9002(
+//			SRequest sRequest
+//			) throws Exception {
+//		
+//		log.debug("run");
+//		
+//		return sEtfS.etf9002(sRequest);
+//	}
 	
 }

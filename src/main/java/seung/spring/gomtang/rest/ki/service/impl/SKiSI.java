@@ -88,6 +88,7 @@ public class SKiSI implements SKiS {
 		return sResponse;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, ?> ki0190(SRequest sRequest, Ki0201 ki0201) {
 		

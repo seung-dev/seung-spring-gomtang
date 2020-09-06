@@ -5,16 +5,12 @@ CREATE TABLE t_eb_t8413 (
 	, date_inst timestamp DEFAULT NOW()
 	, date_updt timestamp DEFAULT NOW()
 	, hash varchar(32)
-	, open decimal(10, 2)
-	, high decimal(10, 2)
-	, low decimal(10, 2)
-	, close decimal(10, 2)
-	, jdiff_vol bigint
-	, value bigint
-	, jongchk bigint
-	, rate decimal(6, 2)
-	, pricechk bigint
-	, ratevalue bigint
+	, open int
+	, high int
+	, low int
+	, close int
+	, jdiff_vol int
+	, value int
 	, sign varchar(1)
 );
 
@@ -33,10 +29,6 @@ COMMENT ON COLUMN t_eb_t8413.low IS '저가';
 COMMENT ON COLUMN t_eb_t8413.close IS '종가';
 COMMENT ON COLUMN t_eb_t8413.jdiff_vol IS '거래량';
 COMMENT ON COLUMN t_eb_t8413.value IS '거래대금';
-COMMENT ON COLUMN t_eb_t8413.jongchk IS '수정구분';
-COMMENT ON COLUMN t_eb_t8413.rate IS '수정비율';
-COMMENT ON COLUMN t_eb_t8413.pricechk IS '수정주가반영항목';
-COMMENT ON COLUMN t_eb_t8413.ratevalue IS '수정비율반영거래대금';
 COMMENT ON COLUMN t_eb_t8413.sign IS '종가등락구분 - 1: 상한, 2: 상승, 3: 보합';
 
 COMMIT;
