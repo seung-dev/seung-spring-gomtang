@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import kong.unirest.HttpResponse;
@@ -16,6 +17,7 @@ import seung.java.kimchi.util.SCode;
 import seung.java.kimchi.util.SLinkedHashMap;
 import seung.spring.boot.conf.SProperties;
 import seung.spring.boot.conf.datasource.SMapperI;
+import seung.spring.gomtang.job.fin.factory.SNaverF;
 import seung.spring.gomtang.util.SGomtangException;
 
 @Slf4j
@@ -27,6 +29,9 @@ public class SNaverSI {
 	
 	@Resource(name = "sMapperI")
 	private SMapperI sMapperI;
+	
+	@Resource(name = "sNaverF")
+	private SNaverF sNaverF;
 	
 	@SuppressWarnings("unchecked")
 	public synchronized String n0101(
@@ -429,6 +434,7 @@ public class SNaverSI {
 		return errorCode;
 	}
 	
+	@Async
 	@SuppressWarnings("unchecked")
 	public synchronized String n0104(
 			String jobGroup
@@ -470,10 +476,9 @@ public class SNaverSI {
 			SLinkedHashMap response = null;
 			int n0104_IR = 0;
 			int n0104_UR = 0;
-			int n0104_DO_NOTHING = 0;
 			int n0104_IGNORE = 0;
 			SLinkedHashMap n0104_SR = null;
-			for(SLinkedHashMap item : sMapperI.selectList("n0104_SL")) {
+			for(SLinkedHashMap item : sMapperI.selectList("naver_n0104_SL")) {
 				
 				if(loopTry++ % 100 == 0) {
 					log.info(
@@ -485,46 +490,9 @@ public class SNaverSI {
 							);
 				}
 				
-				itemCode = item.getString("item_code");
+				itemCode = item.getString("shcode");
 				
-				httpResponse = Unirest
-						.post(sProperties.getJob().getProperty("seung.job.naver.n0104.url", ""))
-						.connectTimeout(1000 * 3)
-						.socketTimeout(1000 * 10)
-						.field("request_code", schdNo)
-						.field("item_code", itemCode)
-						.asBytes()
-						;
-				
-				if(HttpStatus.OK.value() != httpResponse.getStatus()) {
-					message = String.format(
-							"%s.%s.%s.response_code %d"
-							, jobHistMap.getString("schd_set", "")
-							, jobHistMap.getString("schd_code", "")
-							, schdNo
-							, httpResponse.getStatus()
-							);
-					continue;
-				}
-				
-				response = new SLinkedHashMap(new String(httpResponse.getBody(), "UTF-8"));
-				
-				if("D006".equals(response.getString("error_code", ""))) {
-					log.info("D006: {}", itemCode);
-				}
-				
-				if(!SCode.SUCCESS.equals(response.getString("error_code", ""))) {
-					message = String.format(
-							"%s.%s.%s.error_code %s"
-							, jobHistMap.getString("schd_set", "")
-							, jobHistMap.getString("schd_code", "")
-							, schdNo
-							, response.getString("error_code", "")
-							);
-					continue;
-				}
-				
-				for(SLinkedHashMap n0104 : response.getSLinkedHashMap("result").getListSLinkedHashMap("n0104")) {
+				for(SLinkedHashMap n0104 : sNaverF.n0104(itemCode)) {
 					
 					if(n0104.isEmpty("item_ta")
 							|| n0104.isEmpty("item_tl")
@@ -546,19 +514,27 @@ public class SNaverSI {
 					query.put("item_te", n0104.getBigDecimal("item_te"));
 					query.put("item_tr", n0104.getBigDecimal("item_tr"));
 					query.put("item_oi", n0104.getBigDecimal("item_oi"));
+					if(!n0104.isEmpty("item_ni")) {
+						query.put("item_ni", n0104.getBigDecimal("item_ni"));
+					}
+					if(!n0104.isEmpty("item_nici")) {
+						query.put("item_nici", n0104.getBigDecimal("item_nici"));
+					}
 					query.put("item_cfo", n0104.getBigDecimal("item_cfo"));
 					query.put("item_de", n0104.getBigDecimal("item_de"));
 					query.put("hash", SConvert.digestToHex("MD5", query.toJsonString()));
 					
-					n0104_SR = sMapperI.selectOne("n0104_SR", query);
-					
-					if(n0104_SR == null) {
-						n0104_IR += sMapperI.insert("n0104_IR", query);
-					} else if(query.getString("hash", "").equals(n0104_SR.getString("hash", "1"))) {
-						n0104_IGNORE++;
-					} else if(!query.getString("hash", "").equals(n0104_SR.getString("hash", "1"))) {
-						n0104_UR += sMapperI.insert("n0104_UR", query);
+					if(1 == sMapperI.update("naver_n0104_UR", query)) {
+						n0104_UR++;
+					} else {
+						n0104_IR += sMapperI.insert("naver_n0104_IR", query);
 					}
+					
+//					if(n0104.isEmpty("hash")) {
+//					} else if(query.getString("hash", "").equals(n0104.getString("hash", ""))) {
+//						n0104_IGNORE++;
+//					} else {
+//					}
 					
 				}
 				
@@ -569,17 +545,15 @@ public class SNaverSI {
 			message = String.format(
 					"%s%s"
 					, String.format(
-							"n0104_IR=%d, n0104_UR=%d, n0104_DO_NOTHING=%d, n0104_IGNORE=%d"
+							"n0104_IR=%d, n0104_UR=%d, n0104_IGNORE=%d"
 							, n0104_IR
 							, n0104_UR
-							, n0104_DO_NOTHING
 							, n0104_IGNORE
 							)
 					, String.format(
-							", n0104_IR=%d, n0104_UR=%d, n0104_DO_NOTHING=%d, n0104_IGNORE=%d"
+							", n0104_IR=%d, n0104_UR=%d, n0104_IGNORE=%d"
 							, n0104_IR
 							, n0104_UR
-							, n0104_DO_NOTHING
 							, n0104_IGNORE
 							)
 					);

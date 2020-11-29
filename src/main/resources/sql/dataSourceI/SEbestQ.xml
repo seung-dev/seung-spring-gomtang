@@ -79,6 +79,64 @@
 ]]>
 </insert>
 
+<select id="eb_t9945_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		shcode
+		, hash
+	FROM
+		t_eb_t9945
+	WHERE 1 = 1
+]]>
+	<if test="job_name != null and job_name == 't1903'"><![CDATA[
+		AND gubun = '1'
+		AND etfgubun = '1'
+	]]></if>
+<![CDATA[
+	ORDER BY shcode
+]]>
+</select>
+
+<update id="eb_t9945_UR" parameterMap="parameterMap">
+<![CDATA[
+	UPDATE t_eb_t9945
+	SET
+		date_updt = NOW()
+		, hash = #{hash}
+		, hname = #{hname}
+		, expcode = #{expcode}
+		, etfchk = #{etfchk}
+		, filler = #{filler}
+	WHERE 1 = 1
+		AND shcode = #{shcode}
+]]>
+</update>
+
+<insert id="eb_t9945_IR" parameterMap="parameterMap">
+<![CDATA[
+	INSERT INTO t_eb_t9945 (
+		shcode
+		, date_inst
+		, date_updt
+		, hash
+		, hname
+		, expcode
+		, etfchk
+		, filler
+		)
+	VALUES (
+		#{shcode}
+		, NOW()
+		, NOW()
+		, #{hash}
+		, #{hname}
+		, #{expcode}
+		, #{etfchk}
+		, #{filler}
+		)
+]]>
+</insert>
+
 <select id="eb_t8413_SL" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
 	SELECT
@@ -226,43 +284,88 @@
 ]]>
 </insert>
 
-<select id="eb_t8430_prev_SL" parameterMap="parameterMap" resultMap="resultMap">
+<select id="eb_t1305_SL" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
 	SELECT
+		date
+		, hash
+	FROM
+		t_eb_t1305
+	WHERE 1 = 1
+		AND shcode = #{shcode}
+	ORDER BY date DESC
+	LIMIT 20
+]]>
+</select>
+
+<update id="eb_t1305_UR" parameterMap="parameterMap">
+<![CDATA[
+	UPDATE t_eb_t1305
+	SET
+		date_updt = NOW()
+		, hash = #{hash}
+		, open = #{open}
+		, high = #{high}
+		, low = #{low}
+		, close = #{close}
+		, sign = #{sign}
+		, change = #{change}
+		, diff = #{diff}
+		, volume = #{volume}
+		, fpvolume = #{fpvolume}
+		, covolume = #{covolume}
+		, ppvolume = #{ppvolume}
+		, value = #{value}
+		, marketcap = #{marketcap}
+	WHERE 1 = 1
+		AND shcode = #{shcode}
+		AND date = #{date}
+]]>
+</update>
+
+<insert id="eb_t1305_IR" parameterMap="parameterMap">
+<![CDATA[
+	INSERT INTO t_eb_t1305 (
 		shcode
-	FROM
-		t_eb_t8430
-	WHERE 1 = 1
-		AND gubun = '1'
-		AND etfgubun = '1'
-	ORDER BY shcode
-]]>
-</select>
-
-<select id="eb_t8413_prev_SL" parameterMap="parameterMap" resultMap="resultMap">
-<![CDATA[
-	SELECT
-		date
+		, date
+		, date_inst
+		, date_updt
 		, hash
-	FROM
-		t_eb_t8413
-	WHERE 1 = 1
-		AND shcode = #{shcode}
-	ORDER BY date DESC
+		, open
+		, high
+		, low
+		, close
+		, sign
+		, change
+		, diff
+		, volume
+		, fpvolume
+		, covolume
+		, ppvolume
+		, value
+		, marketcap
+		)
+	VALUES (
+		#{shcode}
+		, #{date}
+		, NOW()
+		, NOW()
+		, #{hash}
+		, #{open}
+		, #{high}
+		, #{low}
+		, #{close}
+		, #{sign}
+		, #{change}
+		, #{diff}
+		, #{volume}
+		, #{fpvolume}
+		, #{covolume}
+		, #{ppvolume}
+		, #{value}
+		, #{marketcap}
+		)
 ]]>
-</select>
-
-<select id="eb_t1903_prev_SL" parameterMap="parameterMap" resultMap="resultMap">
-<![CDATA[
-	SELECT
-		date
-		, hash
-	FROM
-		t_eb_t1903
-	WHERE 1 = 1
-		AND shcode = #{shcode}
-	ORDER BY date DESC
-]]>
-</select>
+</insert>
 
 </mapper>

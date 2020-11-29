@@ -398,6 +398,9 @@ public class SJobSI implements SJobS {
 				case "t8430":
 					sResponse.putResponse("t8430", sEbestS.t8430("ebest", "t8430"));
 					break;
+				case "t1305":
+					sResponse.putResponse("t1305", sEbestS.t1305("ebest", "t1305"));
+					break;
 				case "t8413":
 					sResponse.putResponse("t8413", sEbestS.t8413("ebest", "t8413"));
 					break;

@@ -24,12 +24,86 @@
 ]]>
 </select>
 
+<select id="f_ki_ki011001" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		*
+	FROM
+		f_ki_ki011001()
+]]>
+</select>
+
 <select id="f_ki_ki012000" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
 	SELECT
 		*
 	FROM
 		f_ki_ki012000(#{request})
+]]>
+</select>
+
+<update id="ki_ki0121" parameterMap="parameterMap">
+<![CDATA[
+	UPDATE t_ki_ki0120
+	SET
+		asset = #{asset}
+		, region = #{region}
+		, category = #{category}
+	WHERE 1 = 1
+		AND shcode = #{shcode}
+]]>
+</update>
+
+<select id="ki_ki020000" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		*
+	FROM
+		f_ki_ki020000(#{request})
+]]>
+</select>
+
+<select id="ki_ki021000" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		shcode
+		, hname
+	FROM
+		t_eb_t8430
+	WHERE 1 = 1
+		AND gubun = '1'
+		AND etfgubun = '1'
+	ORDER BY shcode
+]]>
+</select>
+
+<select id="ki_ki021010" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		trdd
+	FROM
+		t_ki_ki0110
+	ORDER BY trdd DESC
+]]>
+</select>
+
+<select id="ki_ki021020" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		CONCAT(shcode, date) AS key
+		, close
+	FROM
+		t_eb_t1305
+	WHERE 1 = 1
+		AND shcode IN (
+		SELECT
+			shcode
+		FROM
+			t_eb_t8430
+		WHERE 1 = 1
+			AND gubun = '1'
+			AND etfgubun = '1'
+			)
 ]]>
 </select>
 
@@ -55,6 +129,15 @@
 	<if test="mmnt_min_max != null and mmnt_min_max == 'max'"><![CDATA[
 	ORDER BY mmnt ASC
 	]]></if>
+</select>
+
+<select id="f_ki_ki031001" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		*
+	FROM
+		f_ki_ki031001()
+]]>
 </select>
 
 </mapper>

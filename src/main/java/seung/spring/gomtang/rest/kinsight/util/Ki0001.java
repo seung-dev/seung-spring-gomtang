@@ -22,7 +22,7 @@ import seung.java.kimchi.util.SLinkedHashMap;
 @Builder
 @Setter
 @Getter
-public class Ki0310 {
+public class Ki0001 {
 
 	@Size(max = 36)
 	@NotBlank
@@ -48,19 +48,15 @@ public class Ki0310 {
 		}
 	}
 	
-	@Builder.Default
-	private String mmnt_date = "";
+	@NotBlank
+	private String to;
 	
-	@Builder.Default
-	private String mmnt_unit = "d";
+	private String cc;
 	
-	@Builder.Default
-	private int mmnt_scope = 5;
+	@NotBlank
+	private String subject;
 	
-	@Builder.Default
-	private String mmnt_min_max = "min";
-	
-	@Builder.Default
-	private int mmnt_threshold = 1;
+	@NotBlank
+	private String content;
 	
 }

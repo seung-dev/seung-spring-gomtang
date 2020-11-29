@@ -70,7 +70,7 @@ public class SKiwoomSI {
 					.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr33333.url", ""))
 					.connectTimeout(1000 * 3)
 					.socketTimeout(1000 * 60 * 10)
-					.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+					.header(sProperties.getJob().getProperty("seung.job.pridecho.api.key.name", ""), sProperties.getJob().getProperty("seung.job.pridecho.api.key.value", ""))
 					.asBytes()
 					;
 			
@@ -168,7 +168,7 @@ public class SKiwoomSI {
 					.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr66666.url", ""))
 					.connectTimeout(1000 * 3)
 					.socketTimeout(1000 * 60 * 10)
-					.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+					.header(sProperties.getJob().getProperty("seung.job.pridecho.api.key.name", ""), sProperties.getJob().getProperty("seung.job.pridecho.api.key.value", ""))
 					.asBytes()
 					;
 			
@@ -266,7 +266,7 @@ public class SKiwoomSI {
 				.get(sProperties.getJob().getProperty("seung.job.kiwoom.kw00000.url", ""))
 				.connectTimeout(1000 * 3)
 				.socketTimeout(1000 * 3)
-				.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+				.header(sProperties.getJob().getProperty("seung.job.pridecho.api.key.name", ""), sProperties.getJob().getProperty("seung.job.pridecho.api.key.value", ""))
 				.asBytes()
 				;
 			
@@ -274,7 +274,7 @@ public class SKiwoomSI {
 					.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr99999.url", ""))
 					.connectTimeout(1000 * 3)
 					.socketTimeout(1000 * 60 * 10)
-					.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+					.header(sProperties.getJob().getProperty("seung.job.pridecho.api.key.name", ""), sProperties.getJob().getProperty("seung.job.pridecho.api.key.value", ""))
 					.asBytes()
 					;
 			
@@ -372,7 +372,7 @@ public class SKiwoomSI {
 					.get(sProperties.getJob().getProperty("seung.job.kiwoom.kw00000.url", ""))
 					.connectTimeout(1000 * 3)
 					.socketTimeout(1000 * 3)
-					.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+					.header(sProperties.getJob().getProperty("seung.job.pridecho.api.key.name", ""), sProperties.getJob().getProperty("seung.job.pridecho.api.key.value", ""))
 					.asBytes()
 					;
 			
@@ -503,7 +503,7 @@ public class SKiwoomSI {
 						.post(sProperties.getJob().getProperty("seung.job.kiwoom.kw10000.url", ""))
 						.connectTimeout(1000 * 3)
 						.socketTimeout(1000 * 30)
-						.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+						.header(sProperties.getJob().getProperty("seung.job.pridecho.api.key.name", ""), sProperties.getJob().getProperty("seung.job.pridecho.api.key.value", ""))
 						.header("Content-Type", "application/json")
 						.body(new SLinkedHashMap().add("market_type", market_type).toJsonString())
 						.asBytes()
@@ -700,7 +700,7 @@ public class SKiwoomSI {
 						.connectTimeout(1000 * 3)
 						.socketTimeout(1000 * 3)
 						.header("Content-Type", "application/json")
-						.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+						.header(sProperties.getJob().getProperty("seung.job.pridecho.api.key.name", ""), sProperties.getJob().getProperty("seung.job.pridecho.api.key.value", ""))
 						.body(new SLinkedHashMap().add("item_code", tr10001_SR.getString("item_code")).toJsonString())
 						.asBytes()
 						;
@@ -958,7 +958,7 @@ public class SKiwoomSI {
 								.connectTimeout(1000 * 3)
 								.socketTimeout(1000 * 30)
 								.header("Content-Type", "application/json")
-								.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+								.header(sProperties.getJob().getProperty("seung.job.pridecho.api.key.name", ""), sProperties.getJob().getProperty("seung.job.pridecho.api.key.value", ""))
 								.body(new SLinkedHashMap()
 										.add("date", SDate.getDateString("yyyyMMdd"))
 										.add("repeat_600", "1")
@@ -976,7 +976,7 @@ public class SKiwoomSI {
 							.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr99999.url", ""))
 							.connectTimeout(1000 * 3)
 							.socketTimeout(1000 * 60 * 10)
-							.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+							.header(sProperties.getJob().getProperty("seung.job.pridecho.api.key.name", ""), sProperties.getJob().getProperty("seung.job.pridecho.api.key.value", ""))
 							.asBytes()
 							;
 						
@@ -986,7 +986,7 @@ public class SKiwoomSI {
 							.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr66666.url", ""))
 							.connectTimeout(1000 * 3)
 							.socketTimeout(1000 * 60 * 10)
-							.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+							.header(sProperties.getJob().getProperty("seung.job.pridecho.api.key.name", ""), sProperties.getJob().getProperty("seung.job.pridecho.api.key.value", ""))
 							.asBytes()
 							;
 					}
@@ -1269,7 +1269,7 @@ public class SKiwoomSI {
 								.connectTimeout(1000 * 3)
 								.socketTimeout(1000 * 30)
 								.header("Content-Type", "application/json")
-								.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+								.header(sProperties.getJob().getProperty("seung.job.pridecho.api.key.name", ""), sProperties.getJob().getProperty("seung.job.pridecho.api.key.value", ""))
 								.body(new SLinkedHashMap()
 										.add("repeat_30", "1")
 										.add("item_code", itemCode)
@@ -1286,7 +1286,7 @@ public class SKiwoomSI {
 						.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr99999.url", ""))
 						.connectTimeout(1000 * 3)
 						.socketTimeout(1000 * 60 * 10)
-						.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+						.header(sProperties.getJob().getProperty("seung.job.pridecho.api.key.name", ""), sProperties.getJob().getProperty("seung.job.pridecho.api.key.value", ""))
 						.asBytes()
 						;
 						
@@ -1296,7 +1296,7 @@ public class SKiwoomSI {
 						.get(sProperties.getJob().getProperty("seung.job.kiwoom.sr66666.url", ""))
 						.connectTimeout(1000 * 3)
 						.socketTimeout(1000 * 60 * 10)
-						.header(sProperties.getJob().getProperty("seung.job.kiwoom.api.key.name", ""), sProperties.getJob().getProperty("seung.job.kiwoom.api.key.value", ""))
+						.header(sProperties.getJob().getProperty("seung.job.pridecho.api.key.name", ""), sProperties.getJob().getProperty("seung.job.pridecho.api.key.value", ""))
 						.asBytes()
 						;
 					}

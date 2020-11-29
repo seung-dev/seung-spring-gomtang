@@ -283,4 +283,78 @@ VALUES (
 ]]>
 </insert>
 
+
+<select id="naver_n0104_SL" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	t8430.shcode
+FROM
+	t_eb_t8430 t8430
+WHERE 1 = 1
+	AND t8430.etfgubun = '0'
+ORDER BY shcode
+]]>
+</select>
+
+<update id="naver_n0104_UR" parameterMap="parameterMap">
+<![CDATA[
+UPDATE t_naver_n0104
+SET
+	date_updt = NOW()
+	, hash = #{hash}
+	, is_est = #{is_est}
+	, item_ta = #{item_ta}
+	, item_tl = #{item_tl}
+	, item_te = #{item_te}
+	, item_tr = #{item_tr}
+	, item_oi = #{item_oi}
+	, item_ni = #{item_ni}
+	, item_nici = #{item_nici}
+	, item_cfo = #{item_cfo}
+	, item_de = #{item_de}
+WHERE 1 = 1
+	AND item_code = #{item_code}
+	AND item_sd = #{item_sd}
+]]>
+</update>
+
+<insert id="naver_n0104_IR" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_naver_n0104 (
+	item_code
+	, item_sd
+	, date_inst
+	, date_updt
+	, hash
+	, is_est
+	, item_ta
+	, item_tl
+	, item_te
+	, item_tr
+	, item_oi
+	, item_ni
+	, item_nici
+	, item_cfo
+	, item_de
+	)
+VALUES (
+	#{item_code}
+	, #{item_sd}
+	, NOW()
+	, NOW()
+	, #{hash}
+	, #{is_est}
+	, #{item_ta}
+	, #{item_tl}
+	, #{item_te}
+	, #{item_tr}
+	, #{item_oi}
+	, #{item_ni}
+	, #{item_nici}
+	, #{item_cfo}
+	, #{item_de}
+	)
+]]>
+</insert>
+
 </mapper>

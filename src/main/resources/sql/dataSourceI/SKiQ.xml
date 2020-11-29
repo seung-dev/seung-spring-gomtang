@@ -6,11 +6,11 @@
 <parameterMap id="parameterMap" type="seung.java.kimchi.util.SLinkedHashMap"></parameterMap>
 <resultMap    id="resultMap" type="seung.java.kimchi.util.SLinkedHashMap"></resultMap>
 
-<select id="ki0201_SL" parameterMap="parameterMap" resultMap="resultMap">
+<select id="ki0200_SL" parameterMap="parameterMap" resultMap="resultMap">
 <![CDATA[
 SELECT
-	ki0201.item_code
-	, (SELECT item_name FROM t_kw_kw10000 WHERE mrkt_type = '1' AND item_code = ki0201.item_code) AS item_name
+	ki0201.item_code AS shcode
+	, (SELECT hname FROM t_eb_t8430 WHERE 1 = 1 AND shcode = ki0201.item_code) AS hname
 	, ki0201.item_data
 FROM (
 	SELECT
@@ -39,6 +39,10 @@ FROM (
 					, n0104.item_tr
 					, 'item_oi'
 					, n0104.item_oi
+					, 'item_ni'
+					, n0104.item_ni
+					, 'item_nici'
+					, n0104.item_nici
 					, 'item_cfo'
 					, n0104.item_cfo
 					, 'item_de'
@@ -54,19 +58,13 @@ FROM (
 					, item_te
 					, item_tr
 					, item_oi
+					, item_ni
+					, item_nici
 					, item_cfo
 					, item_de
 				FROM
-					t_item_n0104
+					t_naver_n0104
 				WHERE 1 = 1
-					AND item_code NOT IN (
-						SELECT
-							item_code
-						FROM
-							t_kw_kw10000 tkk
-						WHERE 1 = 1
-							AND mrkt_type = '3'
-					)
 ]]>
 					<if test="item_code != null and item_code != ''"><![CDATA[
 					AND item_code = #{item_code}

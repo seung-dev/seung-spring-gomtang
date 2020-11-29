@@ -10,23 +10,27 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import seung.java.kimchi.util.SLinkedHashMap;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Setter
 @Getter
-public class Ki0310 {
+public class Ki0200 {
 
 	@Size(max = 36)
 	@NotBlank
 	private String request_code;
+	
+	private String item_code;
+	
+	@Size(min = 6, max = 6)
+	@NotBlank
+	private String item_sd_from;
+	
+	@Size(min = 6, max = 6)
+	@NotBlank
+	private String item_sd_to;
 	
 	public String toJsonString() {
 		return toJsonString(false);
@@ -47,20 +51,5 @@ public class Ki0310 {
 					;
 		}
 	}
-	
-	@Builder.Default
-	private String mmnt_date = "";
-	
-	@Builder.Default
-	private String mmnt_unit = "d";
-	
-	@Builder.Default
-	private int mmnt_scope = 5;
-	
-	@Builder.Default
-	private String mmnt_min_max = "min";
-	
-	@Builder.Default
-	private int mmnt_threshold = 1;
 	
 }
