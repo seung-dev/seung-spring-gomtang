@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
 import lombok.extern.slf4j.Slf4j;
 import seung.java.kimchi.util.SLinkedHashMap;
 import seung.spring.boot.conf.SProperties;
@@ -39,6 +41,9 @@ import seung.spring.gomtang.rest.kinsight.util.Ki0200;
 import seung.spring.gomtang.rest.kinsight.util.Ki0210;
 import seung.spring.gomtang.rest.kinsight.util.Ki0300;
 import seung.spring.gomtang.rest.kinsight.util.Ki0310;
+import seung.spring.gomtang.rest.kinsight.util.Ki0420;
+import seung.spring.gomtang.rest.kinsight.util.Ki0440;
+import seung.spring.gomtang.rest.kinsight.util.Ki0450;
 
 @Service(value = "sKinsightS")
 @Slf4j
@@ -579,6 +584,251 @@ public class SKinsightSI implements SKinsightS {
 				sResponse.putResponse("ki0310_S", f_ki_ki031000.size());
 				sResponse.putResponse("ki0310_SL", f_ki_ki031000);
 			}
+		}
+		
+		log.info("({}) ((END))", sResponse.getRequest_code());
+		sResponse.done();
+		return sResponse;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public SResponse ki0420(SRequest sRequest, Ki0420 ki0420) {
+		
+		log.debug("run");
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(ki0420.getRequest_code())
+				.request_time(sRequest.getRequest_time())
+				.request(ki0420)
+				.build()
+				;
+		
+		log.info("({}) ((START))", sResponse.getRequest_code());
+		
+		SLinkedHashMap query = null;
+		String error_message = "";
+		int ki0420_UR = 0;
+		int ki0420_IR = 0;
+		try {
+			
+			log.info("({}) request={}", sResponse.getRequest_code(), ki0420.toJsonString());
+			
+			query = new SLinkedHashMap(ki0420);
+			
+			ki0420_UR = sMapperI.update(
+					"ki_ki042000"
+					, query
+					);
+			
+			if(0 == ki0420_UR) {
+				ki0420_IR = sMapperI.update(
+						"ki_ki042010"
+						, query
+						);
+			}
+			
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.info("({}) query={}", sResponse.getRequest_code(), query.toJsonString(), e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+			sResponse.putResponse("ki0420_UR", ki0420_UR);
+			sResponse.putResponse("ki0420_IR", ki0420_IR);
+		}
+		
+		log.info("({}) ((END))", sResponse.getRequest_code());
+		sResponse.done();
+		return sResponse;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public SResponse ki0440(SRequest sRequest, Ki0440 ki0440) {
+		
+		log.debug("run");
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(ki0440.getRequest_code())
+				.request_time(sRequest.getRequest_time())
+				.request(ki0440)
+				.build()
+				;
+		
+		log.info("({}) ((START))", sResponse.getRequest_code());
+		
+		SLinkedHashMap query = null;
+		String error_message = "";
+		try {
+			
+			log.info("({}) request={}", sResponse.getRequest_code(), ki0440.toJsonString());
+			
+			query = new SLinkedHashMap(ki0440);
+			SLinkedHashMap data = sMapperI.selectOne("ki_ki043001", query);
+			
+			HttpResponse<byte[]> httpResponse = Unirest
+					.post("http://beforeALB-1915436010.ap-northeast-2.elb.amazonaws.com/kinsight/Portfolio/t0424")
+					.connectTimeout(1000 * 5)
+					.socketTimeout(1000 * 5)
+					.header("Content-Type", "application/json")
+					.header(sProperties.getJob().getProperty("seung.job.pridecho.api.key.name", ""), sProperties.getJob().getProperty("seung.job.pridecho.api.key.value", ""))
+					.body(new SLinkedHashMap()
+							.add("request_code", ki0440.getRequest_code())
+							.add("kinsightID", ki0440.getMemb_email())
+							.add("secret", ki0440.getMemb_email())
+							.toJsonString()
+							)
+					.asBytes()
+					;
+			
+			String responseText = new String(httpResponse.getBody(), "UTF-8");
+			SLinkedHashMap response = new SLinkedHashMap(responseText);
+			
+			SLinkedHashMap t0424_SR = response.getSLinkedHashMap("response").getSLinkedHashMap("t0424_SR");
+			String accno = t0424_SR.getString("accountNo", "");
+			
+			List<SLinkedHashMap> t0424_SL = response.getSLinkedHashMap("response").getListSLinkedHashMap("t0424_SL");
+			for(SLinkedHashMap t0424 : t0424_SL) {
+				
+				query = new SLinkedHashMap(t0424);
+				query.put("memb_code", data.getString("memb_code", ""));
+				query.put("inv_sec_code", data.getString("inv_sec_code", ""));
+				query.put("inv_sec_id", data.getString("inv_sec_id", ""));
+				query.put("accno", accno);
+				query.put("date_no", data.getString("date_no"));
+				
+				sMapperI.insert("ki_ki043020", query);
+			}// end of t0424_SL
+			
+			query = new SLinkedHashMap();
+			query.put("memb_code", data.getString("memb_code", ""));
+			query.put("inv_sec_code", data.getString("inv_sec_code", ""));
+			query.put("inv_sec_id", data.getString("inv_sec_id", ""));
+			query.put("accno", accno);
+			query.put("date_no", data.getString("date_no"));
+			query.put("sunamt", t0424_SR.getString("sunamt", ""));
+			query.put("dtsunik", t0424_SR.getString("dtsunik", ""));
+			query.put("mamt", t0424_SR.getString("mamt", ""));
+			query.put("sunamt1", t0424_SR.getString("sunamt1", ""));
+			query.put("cts_expcode", t0424_SR.getString("cts_expcode", ""));
+			query.put("tappamt", t0424_SR.getString("tappamt", ""));
+			query.put("tdtsunik", t0424_SR.getString("tdtsunik", ""));
+			
+			sMapperI.insert("ki_ki043030", query);
+			if(0 == sMapperI.update("ki_ki043040", query)) {
+				sMapperI.insert("ki_ki043050", query);
+			}
+			
+		} catch (Exception e) {
+			log.info("({}) query={}", sResponse.getRequest_code(), query.toJsonString(), e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		}
+		
+		List<SLinkedHashMap> ki_ki043000 = null;
+		try {
+			
+			query = new SLinkedHashMap()
+					.add("request", ki0440.toJsonString())
+					;
+			
+			ki_ki043000 = sMapperI.selectList(
+					"ki_ki043000"
+					, query
+					);
+			
+			List<SLinkedHashMap> ki_ki044000 = null;
+			for(SLinkedHashMap ki0430 : ki_ki043000) {
+				
+				if(ki0430.isEmpty("accno")) {
+					continue;
+				}
+				
+				query = new SLinkedHashMap()
+						.add("request", ki0430.toJsonString())
+						;
+				ki_ki044000 = sMapperI.selectList("ki_ki044000", query);
+				ki0430.put("items", ki_ki044000 == null ? new ArrayList<>() : ki_ki044000);
+				
+			}// end of ki_ki043000
+			
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.info("({}) query={}", sResponse.getRequest_code(), query.toJsonString(), e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+			if(ki_ki043000 != null) {
+				sResponse.putResponse("ki0440_SL", ki_ki043000);
+			} else {
+				sResponse.putResponse("ki0440_SL", new ArrayList<>());
+			}
+		}
+		
+		log.info("({}) ((END))", sResponse.getRequest_code());
+		sResponse.done();
+		return sResponse;
+	}
+
+	@Override
+	public SResponse ki0450(SRequest sRequest, Ki0450 ki0450) {
+		
+		log.debug("run");
+		
+		SResponse sResponse = SResponse.builder()
+				.request_code(ki0450.getRequest_code())
+				.request_time(sRequest.getRequest_time())
+				.request(ki0450)
+				.build()
+				;
+		
+		log.info("({}) ((START))", sResponse.getRequest_code());
+		
+		SLinkedHashMap query = null;
+		String error_message = "";
+		int ki0450_UR = 0;
+		int ki0450_IR = 0;
+		try {
+			
+			log.info("({}) request={}", sResponse.getRequest_code(), ki0450.toJsonString());
+			
+			query = new SLinkedHashMap(ki0450);
+			
+			ki0450_UR = sMapperI.update(
+					"ki_ki045000"
+					, query
+					);
+			
+			if(0 == ki0450_UR) {
+				ki0450_IR = sMapperI.update(
+						"ki_ki045010"
+						, query
+						);
+			}
+			
+			sResponse.success();
+			
+		} catch (Exception e) {
+			log.info("({}) query={}", sResponse.getRequest_code(), query.toJsonString(), e);
+			error_message = ExceptionUtils.getStackTrace(e);
+			if(error_message == null || "".equals(error_message)) {
+				error_message = "" + e;
+			}
+		} finally {
+			sResponse.setError_message(error_message);
+			sResponse.putResponse("ki0450_UR", ki0450_UR);
+			sResponse.putResponse("ki0450_IR", ki0450_IR);
 		}
 		
 		log.info("({}) ((END))", sResponse.getRequest_code());

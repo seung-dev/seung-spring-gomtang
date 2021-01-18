@@ -140,4 +140,308 @@
 ]]>
 </select>
 
+<select id="ki_ki043010" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		*
+	FROM
+		f_ki_ki043010()
+]]>
+</select>
+
+<insert id="ki_ki043020" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_ki_ki0440 (
+	memb_code
+	, inv_sec_code
+	, inv_sec_id
+	, accno
+	, date_no
+	, shcode
+	, jangb
+	, janqty
+	, mdposqt
+	, pamt
+	, mamt
+	, sinamt
+	, lastdt
+	, msat
+	, mpms
+	, mdat
+	, mpmd
+	, jsat
+	, jpms
+	, jdat
+	, jpmd
+	, sysprocseq
+	, loandt
+	, hname
+	, marketgb
+	, jonggb
+	, janrt
+	, price
+	, appamt
+	, dtsunik
+	, sunikrt
+	, fee
+	, tax
+	, sininter
+	)
+VALUES (
+	#{memb_code}
+	, #{inv_sec_code}
+	, #{inv_sec_id}
+	, #{accno}
+	, #{date_no}
+	, #{expcode}
+	, #{jangb}
+	, #{janqty}
+	, #{mdposqt}
+	, #{pamt}
+	, #{mamt}
+	, #{sinamt}
+	, #{lastdt}
+	, #{msat}
+	, #{mpms}
+	, #{mdat}
+	, #{mpmd}
+	, #{jsat}
+	, #{jpms}
+	, #{jdat}
+	, #{jpmd}
+	, #{sysprocseq}
+	, #{loandt}
+	, #{hname}
+	, #{marketgb}
+	, #{jonggb}
+	, #{janrt}
+	, #{price}
+	, #{appamt}
+	, #{dtsunik}
+	, #{sunikrt}
+	, #{fee}
+	, #{tax}
+	, #{sininter}
+	)
+]]>
+</insert>
+
+<insert id="ki_ki043030" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_ki_ki0431 (
+	memb_code
+	, inv_sec_code
+	, inv_sec_id
+	, accno
+	, date_no
+	, sunamt
+	, dtsunik
+	, mamt
+	, sunamt1
+	, cts_expcode
+	, tappamt
+	, tdtsunik
+	)
+VALUES (
+	#{memb_code}
+	, #{inv_sec_code}
+	, #{inv_sec_id}
+	, #{accno}
+	, #{date_no}
+	, #{sunamt}::numeric
+	, #{dtsunik}::numeric
+	, #{mamt}::numeric
+	, #{sunamt1}::numeric
+	, #{cts_expcode}
+	, #{tappamt}::numeric
+	, #{tdtsunik}::numeric
+	)
+]]>
+</insert>
+
+<update id="ki_ki043040" parameterMap="parameterMap">
+<![CDATA[
+UPDATE t_ki_ki0430
+SET
+	date_updt = NOW()
+	, date_no = #{date_no}
+	, sunamt = #{sunamt}::numeric
+	, dtsunik = #{dtsunik}::numeric
+	, mamt = #{mamt}::numeric
+	, sunamt1 = #{sunamt1}::numeric
+	, cts_expcode = #{cts_expcode}
+	, tappamt = #{tappamt}::numeric
+	, tdtsunik = #{tdtsunik}::numeric
+WHERE 1 = 1
+	AND memb_code = #{memb_code}
+	AND inv_sec_code = #{inv_sec_code}
+	AND inv_sec_id = #{inv_sec_id}
+	AND accno = #{accno}
+]]>
+</update>
+
+<insert id="ki_ki043050" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_ki_ki0430 (
+	memb_code
+	, inv_sec_code
+	, inv_sec_id
+	, accno
+	, date_no
+	, sunamt
+	, dtsunik
+	, mamt
+	, sunamt1
+	, cts_expcode
+	, tappamt
+	, tdtsunik
+	)
+VALUES (
+	#{memb_code}
+	, #{inv_sec_code}
+	, #{inv_sec_id}
+	, #{accno}
+	, #{date_no}
+	, #{sunamt}::numeric
+	, #{dtsunik}::numeric
+	, #{mamt}::numeric
+	, #{sunamt1}::numeric
+	, #{cts_expcode}
+	, #{tappamt}::numeric
+	, #{tdtsunik}::numeric
+	)
+]]>
+</insert>
+
+<select id="ki_ki043000" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		*
+	FROM
+		f_ki_ki043000(#{request})
+]]>
+</select>
+
+<select id="ki_ki043001" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	ki0400.memb_code
+	, ki0400.memb_email
+	, ki0410.inv_sec_code
+	, ki0410.inv_sec_id
+	, ki0410.inv_sec_enc
+	, TO_CHAR(NOW(), 'YYYYMMDDHH24MISS')::varchar AS date_no
+FROM
+	t_ki_ki0400 ki0400
+	, t_ki_ki0410 ki0410
+WHERE 1 = 1
+	AND ki0400.memb_code = ki0410.memb_code
+	AND ki0400.memb_email = #{memb_email}
+]]>
+</select>
+
+<update id="ki_ki042000" parameterMap="parameterMap">
+<![CDATA[
+UPDATE t_ki_ki0420
+SET
+	date_updt = NOW()
+	, is_rebal = #{is_rebal}
+	, rebal_intv = #{rebal_intv}
+WHERE 1 = 1
+	AND memb_code = (
+		SELECT
+			memb_code
+		FROM
+			t_ki_ki0400
+		WHERE 1 = 1
+			AND memb_email = #{memb_email}
+	)
+	AND inv_sec_code = #{inv_sec_code}
+	AND inv_sec_id = #{inv_sec_id}
+]]>
+</update>
+
+<insert id="ki_ki042010" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_ki_ki0420 (
+	memb_code
+	, inv_sec_code
+	, inv_sec_id
+	, is_rebal
+	, rebal_intv
+	)
+SELECT
+	memb_code
+	, #{inv_sec_code}
+	, #{inv_sec_id}
+	, #{is_rebal}
+	, #{rebal_intv}
+FROM
+	t_ki_ki0400
+WHERE 1 = 1
+	AND memb_email = #{memb_email}
+]]>
+</insert>
+
+<select id="ki_ki044000" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+	SELECT
+		*
+	FROM
+		f_ki_ki044000(#{request})
+]]>
+</select>
+
+<update id="ki_ki045000" parameterMap="parameterMap">
+<![CDATA[
+UPDATE t_ki_ki0450
+SET
+	date_updt = NOW()
+	, memb_rate = #{memb_rate}
+	, rebal_rate = #{rebal_rate}
+	, lose_rate = #{lose_rate}
+WHERE 1 = 1
+	AND memb_code = (
+		SELECT
+			memb_code
+		FROM
+			t_ki_ki0400
+		WHERE 1 = 1
+			AND memb_email = #{memb_email}
+	)
+	AND inv_sec_code = #{inv_sec_code}
+	AND inv_sec_id = #{inv_sec_id}
+	AND accno = #{accno}
+	AND shcode = #{shcode}
+]]>
+</update>
+
+<insert id="ki_ki045010" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO t_ki_ki0450 (
+	memb_code
+	, inv_sec_code
+	, inv_sec_id
+	, accno
+	, shcode
+	, memb_rate
+	, rebal_rate
+	, lose_rate
+	)
+SELECT
+	memb_code
+	, #{inv_sec_code}
+	, #{inv_sec_id}
+	, #{accno}
+	, #{shcode}
+	, #{memb_rate}
+	, #{rebal_rate}
+	, #{lose_rate}
+FROM
+	t_ki_ki0400
+WHERE 1 = 1
+	AND memb_email = #{memb_email}
+]]>
+</insert>
+
 </mapper>

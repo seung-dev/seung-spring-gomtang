@@ -21,6 +21,9 @@ import seung.spring.gomtang.rest.kinsight.util.Ki0200;
 import seung.spring.gomtang.rest.kinsight.util.Ki0210;
 import seung.spring.gomtang.rest.kinsight.util.Ki0300;
 import seung.spring.gomtang.rest.kinsight.util.Ki0310;
+import seung.spring.gomtang.rest.kinsight.util.Ki0420;
+import seung.spring.gomtang.rest.kinsight.util.Ki0440;
+import seung.spring.gomtang.rest.kinsight.util.Ki0450;
 
 @RestController
 @Slf4j
@@ -126,6 +129,39 @@ public class SKinsightC {
 		log.debug("run");
 		
 		return sKinsightS.ki0310(sRequest, ki0310);
+	}
+	
+	@RequestMapping(value = {"/rest/ki/ki0420"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public SResponse ki0420(
+			SRequest sRequest
+			, @Valid @RequestBody Ki0420 ki0420
+			) throws Exception {
+		
+		log.debug("run");
+		
+		return sKinsightS.ki0420(sRequest, ki0420);
+	}
+	
+	@RequestMapping(value = {"/rest/ki/ki0440"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public SResponse ki0440(
+			SRequest sRequest
+			, @Valid @RequestBody Ki0440 ki0440
+			) throws Exception {
+		
+		log.debug("run");
+		
+		return sKinsightS.ki0440(sRequest, ki0440);
+	}
+	
+	@RequestMapping(value = {"/rest/ki/ki0450"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public SResponse ki0450(
+			SRequest sRequest
+			, @Valid @RequestBody Ki0450 ki0450
+			) throws Exception {
+		
+		log.debug("run");
+		
+		return sKinsightS.ki0450(sRequest, ki0450);
 	}
 	
 }

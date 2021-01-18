@@ -18,6 +18,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import lombok.extern.slf4j.Slf4j;
+import seung.spring.boot.util.SBoot;
 
 @EnableAsync
 @EnableScheduling
@@ -83,5 +84,10 @@ public class SConfBoot {
 		return sProperties;
 		
 	}// end of addConfigProperties
+	
+	@Bean(name = "sBoot")
+	public SBoot sBoot() {
+		return SBoot.builder().build();
+	}
 	
 }
