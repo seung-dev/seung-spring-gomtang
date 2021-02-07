@@ -23,7 +23,7 @@ import seung.java.kimchi.util.SLinkedHashMap;
 @Builder
 @Setter
 @Getter
-public class Ki0420 {
+public class Ki0460 {
 
 	@Size(max = 36)
 	@NotBlank
@@ -52,19 +52,8 @@ public class Ki0420 {
 	@NotBlank
 	private String memb_email;
 	
-	@NotBlank
-	private String inv_sec_code;
+	private String date_from;
 	
-	@NotBlank
-	private String inv_sec_id;
-	
-	@NotNull
-	private Integer is_rebal;
-	
-	@NotBlank
-	private String rebal_intv;
-	
-	@NotBlank
-	private String cash_rate;
+	private String date_to;
 	
 }

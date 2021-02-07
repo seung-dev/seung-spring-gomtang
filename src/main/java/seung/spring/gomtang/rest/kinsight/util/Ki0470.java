@@ -1,7 +1,6 @@
 package seung.spring.gomtang.rest.kinsight.util;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -23,7 +22,7 @@ import seung.java.kimchi.util.SLinkedHashMap;
 @Builder
 @Setter
 @Getter
-public class Ki0420 {
+public class Ki0470 {
 
 	@Size(max = 36)
 	@NotBlank
@@ -51,20 +50,5 @@ public class Ki0420 {
 	
 	@NotBlank
 	private String memb_email;
-	
-	@NotBlank
-	private String inv_sec_code;
-	
-	@NotBlank
-	private String inv_sec_id;
-	
-	@NotNull
-	private Integer is_rebal;
-	
-	@NotBlank
-	private String rebal_intv;
-	
-	@NotBlank
-	private String cash_rate;
 	
 }

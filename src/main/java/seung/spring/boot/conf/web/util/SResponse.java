@@ -1,6 +1,7 @@
 package seung.spring.boot.conf.web.util;
 
 import java.util.Date;
+import java.util.Map;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -43,6 +44,12 @@ public class SResponse {
 	@SuppressWarnings("unchecked")
 	public SResponse putResponse(Object key, Object value) {
 		this.response.put(key, value);
+		return this;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public SResponse putResponse(Map map) {
+		this.response.putAll(map);
 		return this;
 	}
 	

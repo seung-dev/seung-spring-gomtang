@@ -24,6 +24,8 @@ import seung.spring.gomtang.rest.kinsight.util.Ki0310;
 import seung.spring.gomtang.rest.kinsight.util.Ki0420;
 import seung.spring.gomtang.rest.kinsight.util.Ki0440;
 import seung.spring.gomtang.rest.kinsight.util.Ki0450;
+import seung.spring.gomtang.rest.kinsight.util.Ki0460;
+import seung.spring.gomtang.rest.kinsight.util.Ki0470;
 
 @RestController
 @Slf4j
@@ -162,6 +164,28 @@ public class SKinsightC {
 		log.debug("run");
 		
 		return sKinsightS.ki0450(sRequest, ki0450);
+	}
+	
+	@RequestMapping(value = {"/rest/ki/ki0460"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public SResponse ki0460(
+			SRequest sRequest
+			, @Valid @RequestBody Ki0460 request
+			) throws Exception {
+		
+		log.debug("run");
+		
+		return sKinsightS.ki0460(sRequest, request);
+	}
+	
+	@RequestMapping(value = {"/rest/ki/ki0470"}, method = {RequestMethod.POST}, produces = "application/json; charset=UTF-8")
+	public SResponse ki0470(
+			SRequest sRequest
+			, @Valid @RequestBody Ki0470 request
+			) throws Exception {
+		
+		log.debug("run");
+		
+		return sKinsightS.ki0470(sRequest, request);
 	}
 	
 }

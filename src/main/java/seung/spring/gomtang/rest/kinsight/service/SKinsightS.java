@@ -14,6 +14,8 @@ import seung.spring.gomtang.rest.kinsight.util.Ki0310;
 import seung.spring.gomtang.rest.kinsight.util.Ki0420;
 import seung.spring.gomtang.rest.kinsight.util.Ki0440;
 import seung.spring.gomtang.rest.kinsight.util.Ki0450;
+import seung.spring.gomtang.rest.kinsight.util.Ki0460;
+import seung.spring.gomtang.rest.kinsight.util.Ki0470;
 
 public interface SKinsightS {
 
@@ -33,5 +35,7 @@ public interface SKinsightS {
 	SResponse ki0420(SRequest sRequest, Ki0420 ki0420);
 	SResponse ki0440(SRequest sRequest, Ki0440 ki0440);
 	SResponse ki0450(SRequest sRequest, Ki0450 ki0450);
+	SResponse ki0460(SRequest sRequest, Ki0460 request);
+	SResponse ki0470(SRequest sRequest, Ki0470 request);
 	
 }
