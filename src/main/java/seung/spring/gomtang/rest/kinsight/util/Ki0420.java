@@ -64,7 +64,10 @@ public class Ki0420 {
 	@NotBlank
 	private String rebal_intv;
 	
-	@NotBlank
-	private String cash_rate;
+	private Double cash_rate;
+	
+	private Double take_profit;
+	
+	private Double stop_loss;
 	
 }
