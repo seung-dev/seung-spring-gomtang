@@ -34,12 +34,13 @@ public class SJobSC {
 //		sEbestS.sr66666("ebest", "sr66666", "2");
 //	}
 	
-	@Scheduled(cron = "0 0 20 * * MON-FRI")
+//	@Scheduled(cron = "0 0 20 * * MON-FRI")
+	@Scheduled(fixedDelay = 1000 * 60 * 10)
 	void ebestMiningDaily() {
 //		sEbestS.t8413("ebest", "t8413");
-		sEbestS.t8430("ebest", "t8430");
-		sEbestS.t9945("ebest", "t9945");
-		sEbestS.t1305("ebest", "t1305");
+//		sEbestS.t8430("ebest", "t8430");
+//		sEbestS.t9945("ebest", "t9945");
+//		sEbestS.t1305("ebest", "t1305");
 		sEbestS.t1903("ebest", "t1903");
 		sEbestS.post("ebest", "post");
 	}

@@ -262,7 +262,7 @@
 		, jichange
 		, jirate
 		)
-	VALUES (
+	SELECT
 		#{shcode}
 		, #{date}
 		, NOW()
@@ -280,6 +280,15 @@
 		, #{jisu}
 		, #{jichange}
 		, #{jirate}
+	WHERE 1 = 1
+		AND NOT EXISTS (
+			SELECT
+				1
+			FROM
+				t_eb_t1903
+			WHERE 1 = 1
+				AND shcode = #{shcode}
+				AND date = #{date}
 		)
 ]]>
 </insert>

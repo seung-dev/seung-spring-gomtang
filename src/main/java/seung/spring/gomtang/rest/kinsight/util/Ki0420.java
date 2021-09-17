@@ -66,6 +66,9 @@ public class Ki0420 {
 	
 	private Double cash_rate;
 	
+	@NotBlank
+	private String rebal_amt;
+	
 	private Double take_profit;
 	
 	private Double stop_loss;
